@@ -10,6 +10,7 @@ local Library={}
 local UIS=game:GetService("UserInputService")
 local Players=game:GetService("Players")
 local HttpService=game:GetService("HttpService")
+local TweenService=game:GetService("TweenService")
 local ConfigFolder="Skido"
 local PluginFolder=ConfigFolder.."/skido_plugin"
 local function HasFS()
@@ -175,6 +176,14 @@ TabLayout.Padding=UDim.new(0,6)
     PagesCorner.Parent=Pages
     Folder.Parent=Pages
     Folder.Name="PageFolder"
+    local CenterDivider=Instance.new("Frame")
+    CenterDivider.Name="XK5NG_Divider"
+    CenterDivider.Parent=Pages
+    CenterDivider.BackgroundColor3=Color3.fromRGB(45,45,45)
+    CenterDivider.BorderSizePixel=0
+    CenterDivider.Position=UDim2.new(.5,0,.06,0)
+    CenterDivider.Size=UDim2.new(0,1,0,295)
+    CenterDivider.ZIndex=5
     Title.Parent=Frame
     Title.BackgroundTransparency=1
     Title.Position=UDim2.new(.025,0,.015,0)
@@ -921,16 +930,14 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             T.TextSize=10
             T.TextXAlignment=Enum.TextXAlignment.Left
             Bind.Parent=H
-            Bind.BackgroundColor3=Color3.fromRGB(25,25,25)
-            Bind.Position=
-                holdToggle
-                and UDim2.new(.42,0,0,5)
-or (picker and UDim2.new(.49,0,0,5) or UDim2.new(.57,0,0,5))
-            Bind.Size=UDim2.new(0,holdToggle and 45 or 52,0,20)
+            Bind.BackgroundColor3=Color3.fromRGB(35,35,35)
+            Bind.Position=UDim2.new(.60,0,0,5)
+            Bind.Size=UDim2.new(0,34,0,16)
             Bind.Font=Enum.Font.GothamSemibold
-            Bind.TextColor3=Color3.fromRGB(150,150,150)
-            Bind.TextSize=10
+            Bind.TextColor3=Color3.fromRGB(200,200,200)
+            Bind.TextSize=9
             Bind.Visible=hasBind or UIS.TouchEnabled
+            Bind.AutoButtonColor=false
             BindC.CornerRadius=UDim.new(0,4)
             BindC.Parent=Bind
             local ModeButton
@@ -990,11 +997,11 @@ or (picker and UDim2.new(.49,0,0,5) or UDim2.new(.57,0,0,5))
                 and keybind
                 or nil
             if UIS.TouchEnabled then
-                Bind.Text="Show"
+                Bind.Text="Key"
             elseif currentBind then
 Bind.Text=currentBind.Name:gsub("MouseButton", "MB")
             else
-                Bind.Text="None"
+                Bind.Text="Key"
             end
             TB.Parent=H
             TB.BackgroundTransparency=1
@@ -2478,5 +2485,161 @@ task.defer(function()
     UpdateWindowLayout()
 end)
 return PageYep
+end
+--// XK5NG INTRO: info card first, then character viewport slides in
+function Library:ShowIntro(lines, titleText, holdTime)
+    local infoLines=lines or {
+        "discord.gg/stando",
+        "For mobile user or xeno user",
+        "Dont use the flame mode for ragebot",
+        "XKSNG GUI R-PT2-V2.5",
+        "Loaded",
+    }
+    if type(infoLines)=="string" then
+        local split={}
+        for line in tostring(infoLines):gmatch("[^\n]+") do table.insert(split, line) end
+        infoLines=split
+    end
+    titleText=titleText or "XKSNG GUI R-PT2-V2.5"
+    holdTime=tonumber(holdTime) or 6
+    local parent=game.CoreGui
+    local ok,plrGui=pcall(function() return Players.LocalPlayer:WaitForChild("PlayerGui", 5) end)
+    local IntroGui=Instance.new("ScreenGui")
+    IntroGui.Name="XK5NG_Intro"
+    IntroGui.ResetOnSpawn=false
+    IntroGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
+    pcall(function() IntroGui.Parent=parent end)
+    if not IntroGui.Parent and ok and plrGui then IntroGui.Parent=plrGui end
+    --// Info card (black box, top)
+    local Card=Instance.new("Frame")
+    local CardCorner=Instance.new("UICorner")
+    local CardLayout=Instance.new("UIListLayout")
+    Card.Parent=IntroGui
+    Card.BackgroundColor3=Color3.fromRGB(8,8,8)
+    Card.BorderSizePixel=0
+    Card.AnchorPoint=Vector2.new(.5,0)
+    Card.Position=UDim2.new(.5,0,-.4,0)
+    Card.Size=UDim2.new(0,300,0,30+(#infoLines*17))
+    CardCorner.CornerRadius=UDim.new(0,6)
+    CardCorner.Parent=Card
+    CardLayout.Parent=Card
+    CardLayout.HorizontalAlignment=Enum.HorizontalAlignment.Left
+    CardLayout.SortOrder=Enum.SortOrder.LayoutOrder
+    CardLayout.Padding=UDim.new(0,2)
+    local CardPad=Instance.new("UIPadding")
+    CardPad.PaddingTop=UDim.new(0,8)
+    CardPad.PaddingLeft=UDim.new(0,10)
+    CardPad.PaddingRight=UDim.new(0,10)
+    CardPad.Parent=Card
+    local labels={}
+    for _,line in ipairs(infoLines) do
+        local L=Instance.new("TextLabel")
+        L.Parent=Card
+        L.BackgroundTransparency=1
+        L.Size=UDim2.new(1,0,0,15)
+        L.Font=Enum.Font.GothamSemibold
+        L.Text=tostring(line)
+        L.TextColor3=Color3.new(1,1,1)
+        L.TextSize=11
+        L.TextXAlignment=Enum.TextXAlignment.Left
+        L.TextTransparency=1
+        table.insert(labels, L)
+    end
+    --// Character box (below card)
+    local CharBox=Instance.new("Frame")
+    local CharCorner=Instance.new("UICorner")
+    CharBox.Parent=IntroGui
+    CharBox.BackgroundColor3=Color3.fromRGB(200,200,200)
+    CharBox.BorderSizePixel=0
+    CharBox.AnchorPoint=Vector2.new(.5,0)
+    CharBox.Position=UDim2.new(.5,0,1.2,0)
+    CharBox.Size=UDim2.new(0,300,0,260)
+    CharCorner.CornerRadius=UDim.new(0,6)
+    CharCorner.Parent=CharBox
+    local Viewport=Instance.new("ViewportFrame")
+    Viewport.Parent=CharBox
+    Viewport.BackgroundTransparency=1
+    Viewport.Position=UDim2.new(0,0,0,0)
+    Viewport.Size=UDim2.new(1,0,1,0)
+    Viewport.LightColor=Color3.new(1,1,1)
+    Viewport.LightDirection=Vector3.new(0,-1,-1)
+    Viewport.Ambient=Color3.new(.7,.7,.7)
+    local LoadedLabel=Instance.new("TextLabel")
+    LoadedLabel.Parent=CharBox
+    LoadedLabel.BackgroundTransparency=1
+    LoadedLabel.Position=UDim2.new(0,0,0,4)
+    LoadedLabel.Size=UDim2.new(1,0,0,16)
+    LoadedLabel.Font=Enum.Font.GothamBold
+    LoadedLabel.Text=titleText.." Loaded"
+    LoadedLabel.TextColor3=Color3.fromRGB(20,20,20)
+    LoadedLabel.TextSize=11
+    --// Build character model
+    task.spawn(function()
+        local model=nil
+        pcall(function()
+            local lp=Players.LocalPlayer
+            local char=lp.Character or lp.CharacterAdded:Wait()
+            char.Archivable=true
+            local clone=char:Clone()
+            clone.Parent=nil
+            for _,d in ipairs(clone:GetDescendants()) do
+                if d:IsA("Script") or d:IsA("LocalScript") or d:IsA("Animator") then
+                    pcall(function() d:Destroy() end)
+                end
+            end
+            model=clone
+        end)
+        if model then
+            local wm=Instance.new("WorldModel")
+            wm.Parent=Viewport
+            model.Parent=wm
+            local hrp=model:FindFirstChild("HumanoidRootPart") or model:FindFirstChildWhichIsA("BasePart")
+            local cam=Instance.new("Camera")
+            cam.Parent=Viewport
+            Viewport.CurrentCamera=cam
+            if hrp then
+                local focus=hrp.Position
+                cam.CFrame=CFrame.new(focus+Vector3.new(0,.5,5.5), focus+Vector3.new(0,.5,0))
+                task.spawn(function()
+                    local t0=tick()
+                    while Viewport.Parent and tick()-t0<holdTime+4 do
+                        local a=(tick()-t0)*.4
+                        if hrp.Parent then
+                            cam.CFrame=CFrame.new(focus+Vector3.new(math.sin(a)*5.5,.5,math.cos(a)*5.5), focus+Vector3.new(0,.5,0))
+                        end
+                        task.wait(.03)
+                    end
+                end)
+            end
+        else
+            local F=Instance.new("TextLabel")
+            F.Parent=Viewport
+            F.BackgroundTransparency=1
+            F.Size=UDim2.new(1,0,1,0)
+            F.Font=Enum.Font.GothamBold
+            F.Text=":)"
+            F.TextColor3=Color3.fromRGB(40,40,40)
+            F.TextSize=60
+        end
+    end)
+    --// Animation: notif first, then character next
+    TweenService:Create(Card, TweenInfo.new(.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(.5,0,.06,0)}):Play()
+    for i,L in ipairs(labels) do
+        task.delay(.25+i*.18, function()
+            if L.Parent then TweenService:Create(L, TweenInfo.new(.3), {TextTransparency=0}):Play() end
+        end)
+    end
+    task.delay(.4+(#labels*.18), function()
+        if CharBox.Parent then TweenService:Create(CharBox, TweenInfo.new(.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(.5,0,.06+Card.AbsoluteSize.Y/IntroGui.AbsoluteSize.Y+.02,0)}):Play() end
+    end)
+    task.delay(holdTime, function()
+        if not IntroGui.Parent then return end
+        local out1=TweenService:Create(Card, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(.5,0,-.4,0)})
+        local out2=TweenService:Create(CharBox, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(.5,0,1.2,0)})
+        out1:Play() out2:Play()
+        out2.Completed:Wait()
+        pcall(function() IntroGui:Destroy() end)
+    end)
+    return IntroGui
 end
 return Library
