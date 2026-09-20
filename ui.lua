@@ -1,4 +1,3 @@
-
 local function DestroyYep()
     for i=1,69 do
         local g=game.CoreGui:FindFirstChild("fu8rj82n")
@@ -931,6 +930,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
             H.Size=UDim2.new(0,214,0,26)
+            H.ClipsDescendants=true
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
             B.Parent=H
@@ -1758,6 +1758,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
             H.Size=UDim2.new(0,214,0,26)
+            H.ClipsDescendants=true
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
             T.Parent=H
@@ -2906,7 +2907,7 @@ CursorGui.ResetOnSpawn=false
 CursorGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
 CursorGui.DisplayOrder=999
 CursorGui.Enabled=false
-CursorGui.Parent=Gui
+CursorGui.Parent=Gui.Parent
 local Arrow=Instance.new("Frame")
 Arrow.Parent=CursorGui
 Arrow.BackgroundTransparency=1
@@ -2926,6 +2927,11 @@ local function SetCustomCursor(on)
     CursorGui.Enabled=CursorOn
     pcall(function() UIS.MouseIconEnabled=not CursorOn end)
 end
+Gui.Destroying:Connect(function()
+    CursorOn=false
+    pcall(function() UIS.MouseIconEnabled=true end)
+    pcall(function() CursorGui:Destroy() end)
+end)
 UIS.InputChanged:Connect(function(i)
     if CursorOn and i.UserInputType==Enum.UserInputType.MouseMovement then
 Arrow.Position=UDim2.new(0,i.Position.X-5,0,i.Position.Y-3)
