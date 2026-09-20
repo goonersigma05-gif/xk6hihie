@@ -11,6 +11,45 @@ local UIS=game:GetService("UserInputService")
 local Players=game:GetService("Players")
 local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
+--// THEME ENGINE (module scope; UI hooks assigned inside CreateWindow)
+local Themes={
+    {Name="Crimson Night",Accent=Color3.fromRGB(220,70,80),Window=Color3.fromRGB(22,14,16),Panel=Color3.fromRGB(16,10,12),Row=Color3.fromRGB(34,20,24),Hi=Color3.fromRGB(48,28,32)},
+    {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(13,20,15),Panel=Color3.fromRGB(9,15,11),Row=Color3.fromRGB(18,32,22),Hi=Color3.fromRGB(26,46,32)},
+    {Name="Espresso",Accent=Color3.fromRGB(215,160,95),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(16,12,9),Row=Color3.fromRGB(37,28,20),Hi=Color3.fromRGB(52,40,28)},
+    {Name="Gray",Accent=Color3.fromRGB(225,225,225),Window=Color3.fromRGB(24,24,24),Panel=Color3.fromRGB(17,17,17),Row=Color3.fromRGB(36,36,36),Hi=Color3.fromRGB(52,52,52)},
+    {Name="Midnight Blue",Accent=Color3.fromRGB(100,150,255),Window=Color3.fromRGB(12,15,24),Panel=Color3.fromRGB(9,11,18),Row=Color3.fromRGB(18,24,38),Hi=Color3.fromRGB(26,34,54)},
+    {Name="Obsidian Purple",Accent=Color3.fromRGB(175,115,255),Window=Color3.fromRGB(17,13,24),Panel=Color3.fromRGB(12,9,17),Row=Color3.fromRGB(26,19,38),Hi=Color3.fromRGB(38,28,54)},
+    {Name="PinkEdition",Accent=Color3.fromRGB(255,115,185),Window=Color3.fromRGB(25,14,20),Panel=Color3.fromRGB(18,10,14),Row=Color3.fromRGB(40,22,32),Hi=Color3.fromRGB(56,32,46)},
+    {Name="Rust & Bone",Accent=Color3.fromRGB(220,135,65),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,29,20),Hi=Color3.fromRGB(54,41,28)},
+}
+local CurrentTheme=Themes[1]
+local ThemeRegistry={}
+local function RegTheme(obj,role) if obj then table.insert(ThemeRegistry,{o=obj,r=role}) end return obj end
+local UpdateThemeUI=function() end
+local SaveSettingsFn=function() end
+local function ApplyTheme(t)
+    if type(t)~="table" or not t.Name then return end
+    CurrentTheme=t
+    for _,e in ipairs(ThemeRegistry) do
+        local o=e.o
+        if o and o.Parent then
+            pcall(function()
+                if e.r=="Window" then o.BackgroundColor3=t.Window
+                elseif e.r=="Panel" then o.BackgroundColor3=t.Panel
+                elseif e.r=="Row" then o.BackgroundColor3=t.Row
+                elseif e.r=="Hi" then o.BackgroundColor3=t.Hi
+                elseif e.r=="Accent" or e.r=="Dot" then o.BackgroundColor3=t.Accent
+                end
+            end)
+        end
+    end
+    pcall(UpdateThemeUI)
+    pcall(SaveSettingsFn)
+end
+local function FindTheme(name)
+    for _,t in ipairs(Themes) do if t.Name:lower()==tostring(name or ""):lower() then return t end end
+    return nil
+end
 local ConfigFolder="winhvh"
 local PluginFolder=ConfigFolder.."/winhvh_plugin"
 local function HasFS()
@@ -138,6 +177,7 @@ function Library:CreateWindow(windowname,windowinfo)
     Frame.Position=UDim2.new(.27,0,.29,0)
     Frame.Size=UDim2.new(0,620,0,400)
     Frame.Active=true
+    RegTheme(Frame,"Window")
     Scale.Scale=1.1
     Scale.Parent=Frame
     Corner.CornerRadius=UDim.new(0,7)
@@ -147,6 +187,7 @@ function Library:CreateWindow(windowname,windowinfo)
     Dash.BorderSizePixel=0
     Dash.Position=UDim2.new(.018,0,.168,0)
     Dash.Size=UDim2.new(0,130,0,318)
+    RegTheme(Dash,"Panel")
     DashCorner.CornerRadius=UDim.new(0,6)
     DashCorner.Parent=Dash
     Tabs.Parent=Dash
@@ -172,6 +213,7 @@ TabLayout.Padding=UDim.new(0,6)
     Pages.BorderSizePixel=0
     Pages.Position=UDim2.new(.245,0,.168,0)
     Pages.Size=UDim2.new(0,456,0,318)
+    RegTheme(Pages,"Panel")
     PagesCorner.CornerRadius=UDim.new(0,6)
     PagesCorner.Parent=Pages
     Folder.Parent=Pages
@@ -822,7 +864,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         local Layout=Instance.new("UIGridLayout")
         Tab.Name="Tab"
         Tab.Parent=Tabs
-        Tab.BackgroundColor3=visible and Color3.fromRGB(28,28,28) or Color3.fromRGB(13,13,13)
+        Tab.BackgroundColor3=visible and CurrentTheme.Hi or CurrentTheme.Panel
         Tab.BorderSizePixel=0
         Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
@@ -887,8 +929,8 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
                     local selected=t==Tab
                     t.BackgroundColor3=
                         selected
-                        and Color3.fromRGB(28,28,28)
-                        or Color3.fromRGB(13,13,13)
+                        and CurrentTheme.Hi
+                        or CurrentTheme.Panel
                     t.TextColor3=
                         selected
                         and Color3.new(1,1,1)
@@ -898,13 +940,14 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=Color3.fromRGB(28,28,28) then Tab.BackgroundColor3=Color3.fromRGB(20,20,20) end end)
-Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and Color3.fromRGB(28,28,28) or Color3.fromRGB(13,13,13) end)
+Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=CurrentTheme.Hi then Tab.BackgroundColor3=CurrentTheme.Row end end)
+Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and CurrentTheme.Hi or CurrentTheme.Panel end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
         local function RegisterElement(obj,name,typ)
             Register(obj,name,Home,typ)
+            RegTheme(obj,"Row")
         end
         --// LABEL
         function Elements:addLabel(name,info)
@@ -941,6 +984,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             B.Text=name or ""
             B.TextColor3=Color3.new(1,1,1)
             B.TextSize=11
+            B.TextTruncate=Enum.TextTruncate.AtEnd
             local Dot=Instance.new("Frame")
             Dot.Parent=H
             Dot.BackgroundColor3=Color3.new(1,1,1)
@@ -948,6 +992,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             Dot.AnchorPoint=Vector2.new(.5,.5)
             Dot.Position=UDim2.new(.93,0,.5,0)
             Dot.Size=UDim2.new(0,5,0,5)
+            RegTheme(Dot,"Dot")
             local DotC=Instance.new("UICorner")
             DotC.CornerRadius=UDim.new(1,0)
             DotC.Parent=Dot
@@ -1798,6 +1843,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             Trail.BackgroundColor3=Color3.new(1,1,1)
             Trail.Size=UDim2.new(0,1,1,0)
             Trail.ZIndex=2
+            RegTheme(Trail,"Accent")
             TC.CornerRadius=UDim.new(0,4)
             TC.Parent=Trail
             Knob.Parent=B
@@ -1899,7 +1945,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local function close() open=false Panel.Visible=false H.Size=UDim2.new(0,214,0,26) Icon.ImageColor3=Color3.new(1,1,1) task.defer(UpdateCanvas) end
             local function visual(btn,v)
                 local yes=multi and selections[v] or selected==v
-                btn.BackgroundColor3=yes and Color3.new(1,1,1) or Color3.fromRGB(15,15,15)
+                btn.BackgroundColor3=yes and CurrentTheme.Accent or Color3.fromRGB(15,15,15)
                 btn.TextColor3=yes and Color3.fromRGB(10,10,10) or Color3.new(1,1,1)
             end
             local function get()
@@ -2011,9 +2057,51 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     local ConfigNameBox
     local ConfigDropdown
     local ConfigStatus
-ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
+    local AutoBtn
+    local ThemeRowText
+    local function CurrentName()
+        local v=ConfigNameBox and ConfigNameBox.Text or CurrentConfig
+        if tostring(v):lower()=="name..." or tostring(v)=="" then v=CurrentConfig end
+        return CleanName(v)
+    end
+    local function SaveSettings()
+        if not SetupFolder() then return end
+        pcall(function() writefile(ConfigFolder.."/settings.json", HttpService:JSONEncode({Config=CurrentConfig,AutoLoad=AutoLoad,Theme=CurrentTheme.Name})) end)
+    end
+    SaveSettingsFn=function() SaveSettings() end
+    local function UpdateAutoBtn()
+        if AutoBtn then AutoBtn.Text="Auto load : "..((AutoLoad and CurrentConfig) or "none") end
+    end
+    local function ConfigSpacer()
+        local S=Instance.new("Frame")
+        S.Parent=ConfigPage.__Page
+        S.BackgroundTransparency=1
+        S.BorderSizePixel=0
+        S.Size=UDim2.new(0,214,0,26)
+        S.Active=false
+    end
+    do
+        local T=Instance.new("TextLabel")
+        T.Parent=Folder
+        T.Visible=false
+        T.BackgroundTransparency=1
+        T.Size=UDim2.new(0,0,0,0)
+        T.Font=Enum.Font.GothamSemibold
+        T.Text=""
+        T.TextColor3=Color3.fromRGB(140,140,140)
+        T.TextSize=9
+        ConfigStatus=T
+    end
+    local function SetStatus(text,good)
+        if ConfigStatus then
+            ConfigStatus.Text=text
+            ConfigStatus.TextColor3=good and Color3.new(1,1,1) or Color3.fromRGB(255,120,120)
+        end
+        if good then pcall(function() Library:Notify(text) end) end
+    end
+    -- L1: config name
     local _,InputBox=ConfigPage:addTextBox(
-        "",
+        "Config name",
         "Name...",
         function(v)
             if tostring(v)~=""
@@ -2023,28 +2111,12 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
         end
 )
     ConfigNameBox=InputBox
-    ConfigPage:addButton(
-        "Refresh",
-        function()
-            local files=GetConfigFiles()
-            if ConfigDropdown then ConfigDropdown.Refresh(files) end
-            if #files==0 then
-                ConfigStatus.Text="No configs found"
-                ConfigStatus.TextColor3=
-                    Color3.fromRGB(140,140,140)
-            else
-                ConfigStatus.Text=
-                    "Found "
-                    ..#files
-                    .." config"
-                    ..(#files==1 and "" or "s")
-                ConfigStatus.TextColor3=
-                    Color3.new(1,1,1)
-            end
-        end
-)
+    -- R1: auto load state
+    local _,AutoB=ConfigPage:addButton("Auto load : none",function() UpdateAutoBtn() end)
+    AutoBtn=AutoB
+    -- L2: config list
     ConfigDropdown=ConfigPage:addDropdown(
-        "",
+        "Config list",
         {},
         5,
         function(v)
@@ -2052,35 +2124,164 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
             if ConfigNameBox then ConfigNameBox.Text=CurrentConfig end
         end
 )
+    -- R2: set auto load
+    ConfigPage:addButton(
+        "Set as auto load",
+        function()
+            local n=CurrentName()
+            CurrentConfig=n
+            AutoLoad=true
+            SaveSettings()
+            UpdateAutoBtn()
+            SetStatus("Auto load: "..n,true)
+        end
+)
+    -- L3: refresh list
+    ConfigPage:addButton(
+        "Refresh list",
+        function()
+            local files=GetConfigFiles()
+            if ConfigDropdown then ConfigDropdown.Refresh(files) end
+            if #files==0 then
+                SetStatus("No configs found",false)
+            else
+                SetStatus("Found "..#files.." config"..(#files==1 and "" or "s"),true)
+            end
+        end
+)
+    -- R3: clear auto load
+    ConfigPage:addButton(
+        "Clear auto load",
+        function()
+            AutoLoad=false
+            SaveSettings()
+            UpdateAutoBtn()
+            SetStatus("Auto load cleared",true)
+        end
+)
+    -- L4: create config
+    ConfigPage:addButton(
+        "Create config",
+        function()
+            local n=CurrentName()
+            if SaveConfig(n) then
+                if ConfigDropdown then
+                    ConfigDropdown.Refresh(GetConfigFiles())
+                    ConfigDropdown.Set(n)
+                end
+            end
+        end
+)
+    -- R4: theme row (opens theme panel on the right)
+    local ThemeRowH=Instance.new("Frame") local ThemeRowC=Instance.new("UICorner")
+    ThemeRowH.Parent=ConfigPage.__Page ThemeRowH.BackgroundColor3=Color3.fromRGB(23,23,23) ThemeRowH.BorderSizePixel=0 ThemeRowH.Size=UDim2.new(0,214,0,26)
+    ThemeRowC.CornerRadius=UDim.new(0,5) ThemeRowC.Parent=ThemeRowH
+    RegTheme(ThemeRowH,"Row")
+    ThemeRowText=Instance.new("TextLabel")
+    ThemeRowText.Parent=ThemeRowH ThemeRowText.BackgroundTransparency=1 ThemeRowText.Position=UDim2.new(.024,0,0,0) ThemeRowText.Size=UDim2.new(0,160,1,0) ThemeRowText.Font=Enum.Font.GothamSemibold ThemeRowText.Text="Theme - "..CurrentTheme.Name ThemeRowText.TextColor3=Color3.new(1,1,1) ThemeRowText.TextSize=11 ThemeRowText.TextXAlignment=Enum.TextXAlignment.Left ThemeRowText.TextTruncate=Enum.TextTruncate.AtEnd ThemeRowText.ClipsDescendants=true
     do
-        local H=Instance.new("Frame")
-        local C=Instance.new("UICorner")
-        local T=Instance.new("TextLabel")
-        H.Parent=ConfigPage.__Page
-        H.BackgroundColor3=Color3.fromRGB(23,23,23)
-        H.BorderSizePixel=0
-        H.Size=UDim2.new(0,214,0,26)
-        C.CornerRadius=UDim.new(0,5)
-        C.Parent=H
-        T.Parent=H
-        T.BackgroundTransparency=1
-        T.Position=UDim2.new(0,7,0,0)
-        T.Size=UDim2.new(1,-14,1,0)
-        T.Font=Enum.Font.GothamSemibold
-        T.Text="Loaded: None"
-        T.TextColor3=Color3.fromRGB(140,140,140)
-        T.TextSize=9
-        T.TextXAlignment=Enum.TextXAlignment.Left
-        ConfigStatus=T
+        for i,dy in ipairs({8,12,16}) do
+            local HB=Instance.new("Frame")
+            HB.Parent=ThemeRowH HB.BackgroundColor3=Color3.new(1,1,1) HB.BorderSizePixel=0 HB.Position=UDim2.new(.88,0,0,dy) HB.Size=UDim2.new(0,14,0,2)
+        end
     end
-    local function SetStatus(text,good)
-        if not ConfigStatus then return end
-        ConfigStatus.Text=text
-        ConfigStatus.TextColor3=
-            good
-            and Color3.new(1,1,1)
-            or Color3.fromRGB(255,120,120)
+    local ThemeRowBtn=Instance.new("TextButton")
+    ThemeRowBtn.Parent=ThemeRowH ThemeRowBtn.BackgroundTransparency=1 ThemeRowBtn.Size=UDim2.new(1,0,1,0) ThemeRowBtn.Text="" ThemeRowBtn.AutoButtonColor=false
+    Register(ThemeRowH,"Theme - "..CurrentTheme.Name,ConfigPage.__Page,"Dropdown")
+    --// THEME PANEL (right side with a gap)
+    local ThemePanel=Instance.new("Frame")
+    local ThemePanelC=Instance.new("UICorner")
+    ThemePanel.Parent=Frame
+    ThemePanel.BackgroundColor3=Color3.fromRGB(15,15,15)
+    ThemePanel.BorderSizePixel=0
+    ThemePanel.Position=UDim2.new(1,10,0,222)
+    ThemePanel.Size=UDim2.new(0,230,0,196)
+    ThemePanel.Visible=false
+    ThemePanel.ZIndex=90
+    ThemePanelC.CornerRadius=UDim.new(0,6)
+    ThemePanelC.Parent=ThemePanel
+    RegTheme(ThemePanel,"Panel")
+    local ThemeClose=Instance.new("TextButton") local ThemeCloseC=Instance.new("UICorner")
+    ThemeClose.Parent=ThemePanel ThemeClose.BackgroundColor3=Color3.fromRGB(25,25,25) ThemeClose.BorderSizePixel=0 ThemeClose.Position=UDim2.new(0,8,0,8) ThemeClose.Size=UDim2.new(0,64,0,22) ThemeClose.Font=Enum.Font.GothamSemibold ThemeClose.Text="Close" ThemeClose.TextColor3=Color3.new(1,1,1) ThemeClose.TextSize=10 ThemeClose.AutoButtonColor=false ThemeClose.ZIndex=91
+    ThemeCloseC.CornerRadius=UDim.new(0,5) ThemeCloseC.Parent=ThemeClose
+    local ThemeSearch=Instance.new("TextBox") local ThemeSearchC=Instance.new("UICorner")
+    ThemeSearch.Parent=ThemePanel ThemeSearch.BackgroundColor3=Color3.fromRGB(10,10,10) ThemeSearch.BorderSizePixel=0 ThemeSearch.Position=UDim2.new(0,80,0,8) ThemeSearch.Size=UDim2.new(1,-88,0,22) ThemeSearch.Font=Enum.Font.GothamSemibold ThemeSearch.PlaceholderText="Search..." ThemeSearch.PlaceholderColor3=Color3.fromRGB(100,100,100) ThemeSearch.Text="" ThemeSearch.TextColor3=Color3.new(1,1,1) ThemeSearch.TextSize=10 ThemeSearch.ClearTextOnFocus=false ThemeSearch.ZIndex=91
+    ThemeSearchC.CornerRadius=UDim.new(0,5) ThemeSearchC.Parent=ThemeSearch
+    local ThemeList=Instance.new("ScrollingFrame") local ThemeListLayout=Instance.new("UIListLayout")
+    ThemeList.Parent=ThemePanel ThemeList.BackgroundTransparency=1 ThemeList.BorderSizePixel=0 ThemeList.Position=UDim2.new(0,8,0,38) ThemeList.Size=UDim2.new(1,-16,1,-46) ThemeList.ScrollBarThickness=3 ThemeList.ScrollBarImageColor3=Color3.fromRGB(70,70,70) ThemeList.CanvasSize=UDim2.new(0,0,0,0) ThemeList.AutomaticCanvasSize=Enum.AutomaticSize.Y ThemeList.ZIndex=91
+    ThemeListLayout.Parent=ThemeList ThemeListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center ThemeListLayout.SortOrder=Enum.SortOrder.LayoutOrder ThemeListLayout.Padding=UDim.new(0,4)
+    local ThemeRows={}
+    for _,t in ipairs(Themes) do
+        local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
+        local Dot=Instance.new("Frame") local DotC=Instance.new("UICorner")
+        local L=Instance.new("TextLabel")
+        R.Parent=ThemeList R.BackgroundColor3=Color3.fromRGB(20,20,20) R.BorderSizePixel=0 R.Size=UDim2.new(1,-4,0,24) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="" R.ZIndex=91
+        RC.CornerRadius=UDim.new(0,5) RC.Parent=R
+        RegTheme(R,"Row")
+        Dot.Parent=R Dot.BackgroundColor3=t.Accent Dot.BorderSizePixel=0 Dot.AnchorPoint=Vector2.new(.5,.5) Dot.Position=UDim2.new(0,14,0.5,0) Dot.Size=UDim2.new(0,10,0,10) Dot.ZIndex=92
+        DotC.CornerRadius=UDim.new(1,0) DotC.Parent=Dot
+        L.Parent=R L.BackgroundTransparency=1 L.Position=UDim2.new(0,28,0,0) L.Size=UDim2.new(1,-32,1,0) L.Font=Enum.Font.GothamSemibold L.Text=t.Name L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.ZIndex=92
+        table.insert(ThemeRows,{Row=R,Dot=Dot,Theme=t})
+        R.MouseButton1Click:Connect(function() ApplyTheme(t) end)
     end
+    local function RefreshThemeList()
+        for _,e in ipairs(ThemeRows) do
+            local sel=e.Theme==CurrentTheme
+            e.Dot.BackgroundColor3=sel and Color3.new(1,1,1) or e.Theme.Accent
+        end
+    end
+    RefreshThemeList()
+    ThemeSearch:GetPropertyChangedSignal("Text"):Connect(function()
+        local q=tostring(ThemeSearch.Text or ""):lower()
+        for _,e in ipairs(ThemeRows) do
+            e.Row.Visible=q=="" or e.Theme.Name:lower():find(q,1,true)~=nil
+        end
+    end)
+    ThemeClose.MouseButton1Click:Connect(function() ThemePanel.Visible=false end)
+    ThemeRowBtn.MouseButton1Click:Connect(function() ThemePanel.Visible=not ThemePanel.Visible end)
+    UpdateThemeUI=function()
+        if ThemeRowText then ThemeRowText.Text="Theme - "..CurrentTheme.Name end
+        RefreshThemeList()
+    end
+    -- L5: save config
+    ConfigPage:addButton(
+        "Save config",
+        function()
+            SaveConfig(CurrentName())
+        end
+)
+    ConfigSpacer()
+    -- L6: load config
+    ConfigPage:addButton(
+        "Load config",
+        function()
+            LoadConfig(CurrentName())
+        end
+)
+    ConfigSpacer()
+    -- L7: unload config
+    ConfigPage:addButton(
+        "Unload config",
+        function()
+            UnloadConfig()
+        end
+)
+    ConfigSpacer()
+    -- L8: delete config
+    ConfigPage:addButton(
+        "Delete config",
+        function()
+            local n=CurrentName()
+            if DeleteConfig(n) then
+                if ConfigDropdown then ConfigDropdown.Refresh(GetConfigFiles()) end
+                if n==CurrentConfig then
+                    CurrentConfig="Default"
+                    if ConfigNameBox then ConfigNameBox.Text="Name..." end
+                end
+            end
+        end
+)
+    ConfigSpacer()
     local function SaveConfig(name)
         if not SetupFolder() then
             SetStatus("Filesystem unavailable",false)
@@ -2228,73 +2429,16 @@ SetStatus("Failed to delete", false)
 SetStatus("Deleted: "..name, true)
         return true
     end
-    ConfigPage:addButton(
-        "Load",
-        function()
-            local name=
-                ConfigNameBox
-                and ConfigNameBox.Text
-                or CurrentConfig
-            if tostring(name):lower()=="name..."
-            or tostring(name)=="" then
-                name=CurrentConfig
-            end
-            LoadConfig(name)
+    local function UnloadConfig()
+        for _,entry in ipairs(ResetEntries) do
+            local v=entry.Default
+            if entry.Type=="Toggle" then v=false end
+            if v~=nil then pcall(entry.Set,v) end
         end
-)
-    ConfigPage:addButton(
-        "Save",
-        function()
-            local name=
-                ConfigNameBox
-                and ConfigNameBox.Text
-                or CurrentConfig
-            if tostring(name):lower()=="name..."
-            or tostring(name)=="" then
-                name=CurrentConfig
-            end
-            SaveConfig(name)
-            if ConfigDropdown then
-ConfigDropdown.Refresh(GetConfigFiles())
-                ConfigDropdown.Set(name)
-            end
-        end
-)
-    ConfigPage:addToggle(
-        "Auto Load",
-        false,
-        function(v)
-            AutoLoad=v
-            if not SetupFolder() then return end
-            local name=
-                ConfigNameBox
-                and ConfigNameBox.Text
-                or CurrentConfig
-            if tostring(name):lower()=="name..."
-            or tostring(name)=="" then
-                name=CurrentConfig
-            end
-            local settings={
-                Config=name,
-                AutoLoad=v
-            }
-pcall(function() writefile(ConfigFolder.."/settings.json", HttpService:JSONEncode(settings)) end)
-        end
-)
-    ConfigPage:addButton(
-        "Delete",
-        function()
-            local name=
-                ConfigNameBox
-                and ConfigNameBox.Text
-                or CurrentConfig
-            if tostring(name):lower()=="name..."
-            or tostring(name)=="" then
-                name=CurrentConfig
-            end
-            DeleteConfig(name)
-        end
-)
+        UpdateTogglePanel()
+        UpdateWindowLayout()
+        SetStatus("Unloaded",true)
+    end
     local function ResetAll()
         for _,entry in ipairs(ResetEntries) do
             local resetValue=entry.Default
@@ -2325,8 +2469,7 @@ pcall(function() writefile(ConfigFolder.."/settings.json", HttpService:JSONEncod
         UpdateWindowLayout()
     end
     ResetButton.MouseButton1Click:Connect(ResetAll)
-    --// PLUGIN SECTION
-ConfigPage:addLabel("Plugins", "Load Lua plugins from winhvh/winhvh_plugin")
+    --// PLUGIN SECTION (backend only, no UI; system still works)
 local PluginDropdown
 local PluginStatus
 local function RefreshPluginDropdown()
@@ -2347,37 +2490,7 @@ local function RefreshPluginDropdown()
         end
     end
 end
-PluginDropdown=ConfigPage:addDropdown(
-    "",
-    {},
-    6,
-    function()
-    end
-)
-ConfigPage:addButton("Refresh Plugins", function() RefreshPluginDropdown() end)
-do
-    local H=Instance.new("Frame")
-    local C=Instance.new("UICorner")
-    local T=Instance.new("TextLabel")
-    H.Parent=ConfigPage.__Page
-    H.BackgroundColor3=Color3.fromRGB(23,23,23)
-    H.BorderSizePixel=0
-    H.Size=UDim2.new(0,214,0,26)
-    C.CornerRadius=UDim.new(0,5)
-    C.Parent=H
-    T.Parent=H
-    T.BackgroundTransparency=1
-    T.Position=UDim2.new(0,7,0,0)
-    T.Size=UDim2.new(1,-14,1,0)
-    T.Font=Enum.Font.GothamSemibold
-    T.Text="Plugin loader ready"
-    T.TextColor3=Color3.fromRGB(140,140,140)
-    T.TextSize=9
-    T.TextXAlignment=Enum.TextXAlignment.Left
-    T.TextWrapped=true
-    PluginStatus=T
-end
---// PLUGIN EXECUTION
+    --// PLUGIN EXECUTION
 local function ResolvePluginResult(result)
     local current=result
     for i=1,8 do
@@ -2564,45 +2677,6 @@ table.insert(errors, requestedName..": "..tostring(page))
     end
     return true
 end
---// UI SETTINGS
-ConfigPage:addLabel("Interface", "Scale and performance controls")
-ConfigPage:addSlider(
-    "UI Scale",
-    80,
-    130,
-    function(v)
-        UIScaleValue=v/100
-        Scale.Scale=UIScaleValue
-    end,
-    110
-)
-ConfigPage:addToggle(
-    "Performance Mode",
-    false,
-    function(v)
-        PerformanceMode=v==true
-        for _,page in ipairs(Folder:GetChildren()) do
-            if page:IsA("ScrollingFrame") then page.ScrollBarThickness=PerformanceMode and 2 or 4 end
-        end
-        if PerformanceMode then UpdateWindowLayout() end
-    end
-)
-ConfigPage:addButton(
-    "Load Plugin",
-    function()
-        local selected=
-            PluginDropdown
-            and PluginDropdown.Get()
-        if not selected then
-            if PluginStatus then
-                PluginStatus.Text="Select a plugin first"
-                PluginStatus.TextColor3=Color3.fromRGB(255,120,120)
-            end
-            return
-        end
-        LoadPlugin(tostring(selected))
-    end
-)
 --// INITIAL SETTINGS
 task.spawn(function()
     if not SetupFolder() then return end
@@ -2618,10 +2692,14 @@ local decodedOk,data=pcall(function() return HttpService:JSONDecode(contents) en
                 end
                 AutoLoad=data.AutoLoad==true
                 if ConfigNameBox then ConfigNameBox.Text=CurrentConfig end
+                local th=FindTheme(data.Theme)
+                if th then CurrentTheme=th end
             end
         end
     end
     task.wait(.15)
+    UpdateAutoBtn()
+    UpdateThemeUI()
     if ConfigDropdown then ConfigDropdown.Refresh(GetConfigFiles()) end
     if PluginDropdown then RefreshPluginDropdown() end
     if AutoLoad then
@@ -2638,7 +2716,7 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=false,Notifications=true,CustomCursor=false,CustomKick=true}
+local SettingsState={KeybindList=true,Notifications=true,CustomCursor=true,CustomKick=true}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
@@ -2652,6 +2730,7 @@ local function MakeCheckRow(parent,labelText,default,y)
     local H=Instance.new("Frame") local HC=Instance.new("UICorner") local T=Instance.new("TextLabel")
     local Box=Instance.new("TextButton") local BoxC=Instance.new("UICorner")
     H.Parent=parent H.BackgroundColor3=Color3.fromRGB(20,20,20) H.BorderSizePixel=0 H.Position=UDim2.new(0,8,0,y) H.Size=UDim2.new(1,-16,0,26) H.ZIndex=91
+    RegTheme(H,"Row")
     HC.CornerRadius=UDim.new(0,5) HC.Parent=H
     T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92
     Box.Parent=H Box.BackgroundColor3=Color3.fromRGB(35,35,35) Box.BorderSizePixel=0 Box.Position=UDim2.new(1,-26,0.5,-8) Box.Size=UDim2.new(0,16,0,16) Box.Text="" Box.AutoButtonColor=false Box.ZIndex=92
@@ -2676,6 +2755,7 @@ SettingsPanel.Position=UDim2.new(1,10,0,40)
 SettingsPanel.Size=UDim2.new(0,210,0,172)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
+RegTheme(SettingsPanel,"Panel")
 SettingsCorner.CornerRadius=UDim.new(0,6)
 SettingsCorner.Parent=SettingsPanel
 ToggleSettingsPanel=function() SettingsPanel.Visible=not SettingsPanel.Visible end
@@ -2687,6 +2767,7 @@ do
     KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=11 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left KeyLabel.ZIndex=92
     KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=11 KeyPill.AutoButtonColor=false KeyPill.ZIndex=92
     KeyPillC.CornerRadius=UDim.new(0,5) KeyPillC.Parent=KeyPill
+    RegTheme(KeyRow,"Row")
     local listening=false
     KeyPill.MouseButton1Click:Connect(function() listening=true KeyPill.Text="..." end)
     UIS.InputBegan:Connect(function(i,gp)
@@ -2730,6 +2811,7 @@ HotkeysPanel.Size=UDim2.new(0,170,0,34)
 HotkeysPanel.Visible=SettingsState.KeybindList
 HotkeysPanel.Active=true
 HotkeysPanel.ZIndex=80
+RegTheme(HotkeysPanel,"Panel")
 HotkeysCorner.CornerRadius=UDim.new(0,6)
 HotkeysCorner.Parent=HotkeysPanel
 HotkeysHead.Parent=HotkeysPanel
@@ -2773,6 +2855,7 @@ KeyPopup.Position=UDim2.new(0,150,0,100)
 KeyPopup.Size=UDim2.new(0,196,0,118)
 KeyPopup.Visible=false
 KeyPopup.ZIndex=200
+RegTheme(KeyPopup,"Panel")
 KeyPopupCorner.CornerRadius=UDim.new(0,6)
 KeyPopupCorner.Parent=KeyPopup
 local PopupCtx=nil
@@ -2878,7 +2961,8 @@ RefreshHotkeys=function()
         if ok and typeof(key)=="EnumItem" then
             n+=1
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "")             R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
+            RegTheme(R,"Row")
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         end
     end
@@ -2931,6 +3015,7 @@ UIS.InputChanged:Connect(function(i)
 Arrow.Position=UDim2.new(0,i.Position.X-4,0,i.Position.Y-2)
     end
 end)
+if SettingsState.CustomCursor then SetCustomCursor(true) end
 --// NOTIFY TOAST (gated by Show notifications)
 function Library:Notify(text,dur)
     if not Library.NotificationsEnabled then return end
@@ -3119,5 +3204,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=7
+Library.Version=9
 return Library
