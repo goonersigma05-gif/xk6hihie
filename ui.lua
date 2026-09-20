@@ -2908,20 +2908,14 @@ CursorGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
 CursorGui.DisplayOrder=999
 CursorGui.Enabled=false
 CursorGui.Parent=Gui.Parent
-local Arrow=Instance.new("Frame")
+local Arrow=Instance.new("ImageLabel")
 Arrow.Parent=CursorGui
 Arrow.BackgroundTransparency=1
+Arrow.BorderSizePixel=0
 Arrow.Position=UDim2.new(.5,0,.5,0)
-Arrow.Size=UDim2.new(0,22,0,22)
-local function CursorBar(w,h,px,py,rot)
-    local B=Instance.new("Frame")
-    B.Parent=Arrow B.BackgroundColor3=Color3.new(1,1,1) B.BorderSizePixel=0 B.AnchorPoint=Vector2.new(.5,.5) B.Position=UDim2.new(0,px,0,py) B.Size=UDim2.new(0,w,0,h) B.Rotation=rot
-    local S=Instance.new("UIStroke") S.Color=Color3.fromRGB(0,0,0) S.Thickness=1 S.Parent=B
-    return B
-end
-CursorBar(3,17,11,10,45)
-CursorBar(3,8,5,8,12)
-CursorBar(3,8,9,4,78)
+Arrow.Size=UDim2.new(0,32,0,32)
+Arrow.Image="rbxassetid://512397953"
+Arrow.ZIndex=2
 local function SetCustomCursor(on)
     CursorOn=on==true
     CursorGui.Enabled=CursorOn
@@ -2934,7 +2928,7 @@ Gui.Destroying:Connect(function()
 end)
 UIS.InputChanged:Connect(function(i)
     if CursorOn and i.UserInputType==Enum.UserInputType.MouseMovement then
-Arrow.Position=UDim2.new(0,i.Position.X-5,0,i.Position.Y-3)
+Arrow.Position=UDim2.new(0,i.Position.X-4,0,i.Position.Y-2)
     end
 end)
 --// NOTIFY TOAST (gated by Show notifications)
@@ -3115,4 +3109,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
+Library.Version=5
 return Library
