@@ -3096,7 +3096,7 @@ function Library:ShowIntro(lines, titleText, holdTime)
         end)
     end
     task.delay(.4+(#labels*.18), function()
-        if CharBox.Parent then TweenService:Create(CharBox, TweenInfo.new(.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(0,12,.06+Card.AbsoluteSize.Y/math.max(1,IntroGu i.AbsoluteSize.Y)+.02,0)}):Play() end
+        if CharBox.Parent then TweenService:Create(CharBox, TweenInfo.new(.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(0,12,.06+Card.AbsoluteSize.Y/math.max(1,IntroGui.AbsoluteSize.Y)+.02,0)}):Play() end
     end)
     task.delay(holdTime, function()
         if not IntroGui.Parent then return end
