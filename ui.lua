@@ -1,4 +1,3 @@
--- yas
 local function DestroyYep()
     for i=1,69 do
         local g=game.CoreGui:FindFirstChild("fu8rj82n")
@@ -2703,14 +2702,14 @@ do
 end
 do
     local r1=MakeCheckRow(SettingsPanel,"Keybind list",SettingsState.KeybindList,42)
-    r1.OnChange=function(v) SettingsState.KeybindList=v HotkeysPanel.Visible=v end
-    SettingSetters["KeybindList"]=function(v) r1.Set(v) SettingsState.KeybindList=v==true HotkeysPanel.Visible=v==true end
+    r1.OnChange=function(v) SettingsState.KeybindList=v if HotkeysPanel then HotkeysPanel.Visible=v end end
+    SettingSetters["KeybindList"]=function(v) r1.Set(v) SettingsState.KeybindList=v==true if HotkeysPanel then HotkeysPanel.Visible=v==true end end
     local r2=MakeCheckRow(SettingsPanel,"Show notifications",SettingsState.Notifications,74)
     r2.OnChange=function(v) SettingsState.Notifications=v Library.NotificationsEnabled=v end
     SettingSetters["Notifications"]=function(v) r2.Set(v) SettingsState.Notifications=v==true Library.NotificationsEnabled=v==true end
     local r3=MakeCheckRow(SettingsPanel,"Custom cursor",SettingsState.CustomCursor,106)
-    r3.OnChange=function(v) SettingsState.CustomCursor=v SetCustomCursor(v) end
-    SettingSetters["CustomCursor"]=function(v) r3.Set(v) SettingsState.CustomCursor=v==true SetCustomCursor(v==true) end
+    r3.OnChange=function(v) SettingsState.CustomCursor=v if type(SetCustomCursor)=="function" then SetCustomCursor(v) end end
+    SettingSetters["CustomCursor"]=function(v) r3.Set(v) SettingsState.CustomCursor=v==true if type(SetCustomCursor)=="function" then SetCustomCursor(v==true) end end
     local r4=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,138)
     r4.OnChange=function(v) SettingsState.CustomKick=v end
     SettingSetters["CustomKick"]=function(v) r4.Set(v) SettingsState.CustomKick=v==true end
