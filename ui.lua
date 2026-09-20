@@ -13,11 +13,11 @@ local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
 --// THEME ENGINE (module scope; UI hooks assigned inside CreateWindow)
 local Themes={
+    {Name="Midnight Blue",Accent=Color3.fromRGB(130,170,255),Window=Color3.fromRGB(19,23,35),Panel=Color3.fromRGB(14,17,27),Row=Color3.fromRGB(52,64,94),Hi=Color3.fromRGB(66,80,114)},
     {Name="Crimson Night",Accent=Color3.fromRGB(220,70,80),Window=Color3.fromRGB(22,14,16),Panel=Color3.fromRGB(16,10,12),Row=Color3.fromRGB(34,20,24),Hi=Color3.fromRGB(48,28,32)},
     {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(13,20,15),Panel=Color3.fromRGB(9,15,11),Row=Color3.fromRGB(18,32,22),Hi=Color3.fromRGB(26,46,32)},
     {Name="Espresso",Accent=Color3.fromRGB(215,160,95),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(16,12,9),Row=Color3.fromRGB(37,28,20),Hi=Color3.fromRGB(52,40,28)},
     {Name="Gray",Accent=Color3.fromRGB(225,225,225),Window=Color3.fromRGB(24,24,24),Panel=Color3.fromRGB(17,17,17),Row=Color3.fromRGB(36,36,36),Hi=Color3.fromRGB(52,52,52)},
-    {Name="Midnight Blue",Accent=Color3.fromRGB(100,150,255),Window=Color3.fromRGB(12,15,24),Panel=Color3.fromRGB(9,11,18),Row=Color3.fromRGB(18,24,38),Hi=Color3.fromRGB(26,34,54)},
     {Name="Obsidian Purple",Accent=Color3.fromRGB(175,115,255),Window=Color3.fromRGB(17,13,24),Panel=Color3.fromRGB(12,9,17),Row=Color3.fromRGB(26,19,38),Hi=Color3.fromRGB(38,28,54)},
     {Name="PinkEdition",Accent=Color3.fromRGB(255,115,185),Window=Color3.fromRGB(25,14,20),Panel=Color3.fromRGB(18,10,14),Row=Color3.fromRGB(40,22,32),Hi=Color3.fromRGB(56,32,46)},
     {Name="Rust & Bone",Accent=Color3.fromRGB(220,135,65),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,29,20),Hi=Color3.fromRGB(54,41,28)},
@@ -1697,8 +1697,6 @@ end)
             UpdateRightRow()
             UpdateSwitchVisual()
             RegisterElement(H,name,"Toggle")
-            table.insert(HotkeySources,{Label=tostring(name or "Toggle"),Get=function() return currentBind end})
-            RefreshHotkeys()
             RegisterConfig(
                 name,
                 "Toggle",
@@ -2712,7 +2710,7 @@ local decodedOk,data=pcall(function() return HttpService:JSONDecode(contents) en
     end
     task.wait(.15)
     UpdateAutoBtn()
-    UpdateThemeUI()
+    ApplyTheme(CurrentTheme)
     if ConfigDropdown then ConfigDropdown.Refresh(GetConfigFiles()) end
     if PluginDropdown then RefreshPluginDropdown() end
     if AutoLoad then
@@ -2831,7 +2829,7 @@ HotkeysHead.Parent=HotkeysPanel
 HotkeysHead.BackgroundTransparency=1
 HotkeysHead.Size=UDim2.new(1,0,0,26)
 HotkeysHead.Font=Enum.Font.GothamBold
-HotkeysHead.Text="Hotkeys"
+HotkeysHead.Text="Hotkeys :"
 HotkeysHead.TextColor3=Color3.new(1,1,1)
 HotkeysHead.TextSize=12
 local HotkeysIcon=Instance.new("Frame")
@@ -2983,10 +2981,11 @@ RefreshHotkeys=function()
     local n=0
     for _,src in ipairs(HotkeySources) do
         local ok,key=pcall(src.Get)
-        if ok and typeof(key)=="EnumItem" then
+        if ok and (key==nil or typeof(key)=="EnumItem") then
             n+=1
+            local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         end
     end
@@ -2999,14 +2998,14 @@ R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.Bo
 HotkeysPanel.Size=UDim2.new(0,170,0,36+n*26)
 end
 function Library:RegisterHotkey(key,label)
-    if typeof(key)~="EnumItem" then return nil end
+    if key~=nil and typeof(key)~="EnumItem" then return nil end
     local src={Label=tostring(label or "hotkey"),Key=key}
     src.Get=function() return src.Key end
     table.insert(HotkeySources,src)
     RefreshHotkeys()
     return {Set=function(k) if typeof(k)=="EnumItem" then src.Key=k RefreshHotkeys() end end,Remove=function() for i,s in ipairs(HotkeySources) do if s==src then table.remove(HotkeySources,i) break end end RefreshHotkeys() end}
 end
-table.insert(HotkeySources,{Label="ui toggle",Get=function() return UIToggleKey end})
+table.insert(HotkeySources,{Label="gui keybind",Get=function() return UIToggleKey end})
 --// CUSTOM CURSOR (white arrow follower)
 local CursorOn=false
 local CursorGui=Instance.new("ScreenGui")
@@ -3022,7 +3021,7 @@ Arrow.BackgroundTransparency=1
 Arrow.BorderSizePixel=0
 Arrow.Position=UDim2.new(.5,0,.5,0)
 Arrow.Size=UDim2.new(0,32,0,32)
-Arrow.Image="rbxassetid://512397953"
+Arrow.Image="rbxassetid://2794114347"
 Arrow.ZIndex=2
 local ArrowBackup=Instance.new("Frame")
 ArrowBackup.Parent=CursorGui
@@ -3253,5 +3252,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=10
+Library.Version=11
 return Library
