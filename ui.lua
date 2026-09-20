@@ -214,6 +214,19 @@ TabLayout.Padding=UDim.new(0,6)
     PageHeader.TextColor3=Color3.new(1,1,1)
     PageHeader.TextSize=13
     PageHeader.TextXAlignment=Enum.TextXAlignment.Left
+    local PageUnderline=Instance.new("Frame")
+    PageUnderline.Parent=Frame
+    PageUnderline.BackgroundColor3=Color3.new(1,1,1)
+    PageUnderline.BorderSizePixel=0
+    PageUnderline.Position=UDim2.new(.245,0,.10,20)
+    PageUnderline.Size=UDim2.new(0,34,0,2)
+    --// v2.7 forwards (assigned later in CreateWindow scope)
+    local UIToggleKey=Enum.KeyCode.V
+    local HotkeySources={}
+    local RefreshHotkeys=function() end
+    local ToggleSettingsPanel=function() end
+    local ExpandSearch=function() end
+    local CollapseSearch=function() end
     ResetButton.Visible=false
     ResetButton.Parent=Frame
     ResetButton.BackgroundColor3=Color3.fromRGB(30,30,30)
@@ -233,7 +246,7 @@ TabLayout.Padding=UDim.new(0,6)
     ResetStroke.Color=Color3.fromRGB(45,45,45)
     ResetStroke.Transparency=.15
     ResetStroke.Parent=ResetButton
-    --// SEARCH
+    --// SEARCH (icon, expands on hover like v2.7)
     local SearchBox=Instance.new("TextBox")
     local SearchCorner=Instance.new("UICorner")
     local SearchStroke=Instance.new("UIStroke")
@@ -241,16 +254,18 @@ TabLayout.Padding=UDim.new(0,6)
     SearchBox.BackgroundColor3=Color3.fromRGB(24,24,24)
     SearchBox.BorderSizePixel=0
     SearchBox.Position=UDim2.new(.27,0,.03,0)
-    SearchBox.Size=UDim2.new(0,220,0,24)
+    SearchBox.Size=UDim2.new(0,0,0,24)
+    SearchBox.Visible=false
     SearchBox.Font=Enum.Font.GothamSemibold
-    SearchBox.PlaceholderText="Search..."
+    SearchBox.PlaceholderText="Search"
     SearchBox.PlaceholderColor3=Color3.fromRGB(100,100,100)
     SearchBox.Text=""
     SearchBox.TextColor3=Color3.new(1,1,1)
     SearchBox.TextSize=10
     SearchBox.ClearTextOnFocus=false
     SearchBox.TextXAlignment=Enum.TextXAlignment.Left
-    SearchBox.ZIndex=50
+    SearchBox.ZIndex=60
+    SearchBox.ClipsDescendants=true
     SearchCorner.CornerRadius=UDim.new(0,5)
     SearchCorner.Parent=SearchBox
     SearchStroke.Color=Color3.fromRGB(35,35,35)
@@ -260,6 +275,108 @@ TabLayout.Padding=UDim.new(0,6)
     SearchPadding.PaddingLeft=UDim.new(0,8)
     SearchPadding.PaddingRight=UDim.new(0,8)
     SearchPadding.Parent=SearchBox
+    --// SEARCH ICON (magnifier, expands box on hover)
+    local SearchIcon=Instance.new("TextButton")
+    local SearchIconCorner=Instance.new("UICorner")
+    SearchIcon.Parent=Frame
+    SearchIcon.BackgroundColor3=Color3.fromRGB(24,24,24)
+    SearchIcon.BorderSizePixel=0
+    SearchIcon.Position=UDim2.new(.27,0,.03,0)
+    SearchIcon.Size=UDim2.new(0,28,0,24)
+    SearchIcon.Text=""
+    SearchIcon.AutoButtonColor=false
+    SearchIcon.ZIndex=50
+    SearchIconCorner.CornerRadius=UDim.new(0,5)
+    SearchIconCorner.Parent=SearchIcon
+    local MagRing=Instance.new("Frame")
+    MagRing.Parent=SearchIcon
+    MagRing.BackgroundTransparency=1
+    MagRing.AnchorPoint=Vector2.new(.5,.5)
+    MagRing.Position=UDim2.new(.44,0,.44,0)
+    MagRing.Size=UDim2.new(0,10,0,10)
+    local MagRingCorner=Instance.new("UICorner")
+    MagRingCorner.CornerRadius=UDim.new(1,0)
+    MagRingCorner.Parent=MagRing
+    local MagRingStroke=Instance.new("UIStroke")
+    MagRingStroke.Color=Color3.new(1,1,1)
+    MagRingStroke.Thickness=2
+    MagRingStroke.Parent=MagRing
+    local MagHandle=Instance.new("Frame")
+    MagHandle.Parent=SearchIcon
+    MagHandle.BackgroundColor3=Color3.new(1,1,1)
+    MagHandle.BorderSizePixel=0
+    MagHandle.AnchorPoint=Vector2.new(.5,.5)
+    MagHandle.Position=UDim2.new(.66,0,.68,0)
+    MagHandle.Size=UDim2.new(0,2,0,7)
+    MagHandle.Rotation=45
+    local searchOpen=false
+    ExpandSearch=function()
+        if searchOpen then return end
+        searchOpen=true
+        SearchBox.Visible=true
+        SearchBox:TweenSize(UDim2.new(0,220,0,24),"Out","Quad",.18,true)
+    end
+    CollapseSearch=function()
+        if not searchOpen or SearchBox:IsFocused() then return end
+        searchOpen=false
+        SearchBox:TweenSize(UDim2.new(0,0,0,24),"Out","Quad",.15,true)
+        task.delay(.16,function() if not searchOpen then SearchBox.Visible=false end end)
+    end
+    SearchIcon.MouseEnter:Connect(function() ExpandSearch() end)
+    SearchIcon.MouseLeave:Connect(function() task.delay(.15,function() CollapseSearch() end) end)
+    SearchBox.MouseLeave:Connect(function() task.delay(.15,function() CollapseSearch() end) end)
+    SearchBox.FocusLost:Connect(function() CollapseSearch() end)
+    --// GEAR (opens settings panel)
+    local GearBtn=Instance.new("TextButton")
+    local GearCorner=Instance.new("UICorner")
+    GearBtn.Parent=Frame
+    GearBtn.BackgroundColor3=Color3.fromRGB(24,24,24)
+    GearBtn.BorderSizePixel=0
+    GearBtn.Position=UDim2.new(.27,36,.03,0)
+    GearBtn.Size=UDim2.new(0,28,0,24)
+    GearBtn.Text=""
+    GearBtn.AutoButtonColor=false
+    GearBtn.ZIndex=50
+    GearCorner.CornerRadius=UDim.new(0,5)
+    GearCorner.Parent=GearBtn
+    do
+        local cx,cy=.5,.5
+        for _,rot in ipairs({0,45,90,135}) do
+            local Spoke=Instance.new("Frame")
+            Spoke.Parent=GearBtn
+            Spoke.BackgroundColor3=Color3.new(1,1,1)
+            Spoke.BorderSizePixel=0
+            Spoke.AnchorPoint=Vector2.new(.5,.5)
+            Spoke.Position=UDim2.new(cx,0,cy,0)
+            Spoke.Size=UDim2.new(0,2,0,14)
+            Spoke.Rotation=rot
+        end
+        local GearRing=Instance.new("Frame")
+        GearRing.Parent=GearBtn
+        GearRing.BackgroundColor3=Color3.fromRGB(24,24,24)
+        GearRing.BorderSizePixel=0
+        GearRing.AnchorPoint=Vector2.new(.5,.5)
+        GearRing.Position=UDim2.new(cx,0,cy,0)
+        GearRing.Size=UDim2.new(0,10,0,10)
+        local GearRingCorner=Instance.new("UICorner")
+        GearRingCorner.CornerRadius=UDim.new(1,0)
+        GearRingCorner.Parent=GearRing
+        local GearRingStroke=Instance.new("UIStroke")
+        GearRingStroke.Color=Color3.new(1,1,1)
+        GearRingStroke.Thickness=2
+        GearRingStroke.Parent=GearRing
+        local GearDot=Instance.new("Frame")
+        GearDot.Parent=GearBtn
+        GearDot.BackgroundColor3=Color3.new(1,1,1)
+        GearDot.BorderSizePixel=0
+        GearDot.AnchorPoint=Vector2.new(.5,.5)
+        GearDot.Position=UDim2.new(cx,0,cy,0)
+        GearDot.Size=UDim2.new(0,4,0,4)
+        local GearDotCorner=Instance.new("UICorner")
+        GearDotCorner.CornerRadius=UDim.new(1,0)
+        GearDotCorner.Parent=GearDot
+    end
+    GearBtn.MouseButton1Click:Connect(function() ToggleSettingsPanel() end)
     --// CREDITS
     Credits.Visible=false
     Credits.Parent=Frame
@@ -431,20 +548,21 @@ Float.Position=UDim2.new(fp.X.Scale, fp.X.Offset+d.X, fp.Y.Scale, fp.Y.Offset+d.
     end)
     local visible=true
     Float.Visible=false
+    local function SetVisible(v)
+        if v==nil then visible=not visible else visible=v==true end
+        Frame.Visible=visible
+    end
     UIS.InputBegan:Connect(function(i,gp)
         if gp then return end
         if i.KeyCode==Enum.KeyCode.Semicolon then
-            if not Frame.Visible then
-                visible=true
-                Frame.Visible=true
-            end
+            if not Frame.Visible then SetVisible(true) end
+            ExpandSearch()
             SearchBox:CaptureFocus()
             SearchBox.CursorPosition=#SearchBox.Text+1
             return
         end
-        if i.KeyCode==Enum.KeyCode.RightShift then
-            visible=not visible
-            Frame.Visible=visible
+        if i.KeyCode==Enum.KeyCode.RightShift or i.KeyCode==UIToggleKey then
+            SetVisible()
         end
     end)
     --// REGISTRY
@@ -816,6 +934,16 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             B.Text=name or ""
             B.TextColor3=Color3.new(1,1,1)
             B.TextSize=11
+            local Dot=Instance.new("Frame")
+            Dot.Parent=H
+            Dot.BackgroundColor3=Color3.new(1,1,1)
+            Dot.BorderSizePixel=0
+            Dot.AnchorPoint=Vector2.new(.5,.5)
+            Dot.Position=UDim2.new(.93,0,.5,0)
+            Dot.Size=UDim2.new(0,5,0,5)
+            local DotC=Instance.new("UICorner")
+            DotC.CornerRadius=UDim.new(1,0)
+            DotC.Parent=Dot
 B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             RegisterElement(H,name,"Button")
             return H,B
@@ -930,14 +1058,27 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             T.TextSize=10
             T.TextXAlignment=Enum.TextXAlignment.Left
             Bind.Parent=H
-            Bind.BackgroundColor3=Color3.fromRGB(35,35,35)
-            Bind.Position=UDim2.new(.60,0,0,5)
-            Bind.Size=UDim2.new(0,34,0,16)
+            Bind.BackgroundTransparency=1
+            Bind.BorderSizePixel=0
+            Bind.Position=UDim2.new(.72,0,0,4)
+            Bind.Size=UDim2.new(0,18,0,18)
             Bind.Font=Enum.Font.GothamSemibold
-            Bind.TextColor3=Color3.fromRGB(200,200,200)
+            Bind.Text=""
+            Bind.TextTransparency=1
             Bind.TextSize=9
-            Bind.Visible=hasBind or UIS.TouchEnabled
+            Bind.Visible=true
             Bind.AutoButtonColor=false
+            local BindDia=Instance.new("Frame")
+            BindDia.Parent=Bind
+            BindDia.BackgroundTransparency=1
+            BindDia.AnchorPoint=Vector2.new(.5,.5)
+            BindDia.Position=UDim2.new(.5,0,.5,0)
+            BindDia.Size=UDim2.new(0,9,0,9)
+            BindDia.Rotation=45
+            local BindStroke=Instance.new("UIStroke")
+            BindStroke.Color=Color3.new(1,1,1)
+            BindStroke.Thickness=1.5
+            BindStroke.Parent=BindDia
             BindC.CornerRadius=UDim.new(0,4)
             BindC.Parent=Bind
             local ModeButton
@@ -996,31 +1137,41 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
                 (keybind and keybind~=Enum.KeyCode.Unknown)
                 and keybind
                 or nil
-            if UIS.TouchEnabled then
-                Bind.Text="Key"
-            elseif currentBind then
-Bind.Text=currentBind.Name:gsub("MouseButton", "MB")
-            else
-                Bind.Text="Key"
-            end
+            -- diamond icon shows no text; assignments shown in Hotkeys list
             TB.Parent=H
             TB.BackgroundTransparency=1
-            TB.Position=UDim2.new(.82,0,0,0)
-            TB.Size=UDim2.new(0,38,0,26)
+            TB.Position=UDim2.new(.84,0,0,0)
+            TB.Size=UDim2.new(0,34,0,26)
             TB.AutoButtonColor=false
             TF.Parent=TB
-            TF.BackgroundColor3=default and Color3.new(1,1,1) or Color3.fromRGB(70,70,70)
+            TF.BackgroundColor3=Color3.fromRGB(35,35,35)
+            TF.BorderSizePixel=0
             TF.Position=UDim2.new(.5,0,.5,0)
             TF.AnchorPoint=Vector2.new(.5,.5)
-            TF.Size=UDim2.new(0,13,0,13)
+            TF.Size=UDim2.new(0,16,0,16)
             TFC.Parent=TF
-            TFC.CornerRadius=UDim.new(1,0)
-            Ball.Parent=TF
-            Ball.BackgroundColor3=Color3.new(1,1,1)
-            Ball.Position=UDim2.new(0,0,0,0)
-            Ball.Size=UDim2.new(1,0,1,0)
-            BC.CornerRadius=UDim.new(1,0)
-            BC.Parent=Ball
+            TFC.CornerRadius=UDim.new(0,4)
+            local TFStroke=Instance.new("UIStroke")
+            TFStroke.Color=Color3.fromRGB(70,70,70)
+            TFStroke.Parent=TF
+            local Check1=Instance.new("Frame")
+            Check1.Parent=TF
+            Check1.BackgroundColor3=Color3.new(1,1,1)
+            Check1.BorderSizePixel=0
+            Check1.AnchorPoint=Vector2.new(.5,.5)
+            Check1.Position=UDim2.new(.38,0,.56,0)
+            Check1.Size=UDim2.new(0,2,0,6)
+            Check1.Rotation=-40
+            Check1.Visible=default
+            local Check2=Instance.new("Frame")
+            Check2.Parent=TF
+            Check2.BackgroundColor3=Color3.new(1,1,1)
+            Check2.BorderSizePixel=0
+            Check2.AnchorPoint=Vector2.new(.5,.5)
+            Check2.Position=UDim2.new(.62,0,.47,0)
+            Check2.Size=UDim2.new(0,2,0,10)
+            Check2.Rotation=40
+            Check2.Visible=default
             local armed=default
             local active=keybindMode and false or default
             local closePicker
@@ -1029,9 +1180,10 @@ Bind.Text=currentBind.Name:gsub("MouseButton", "MB")
                 local on=(keybindMode or keybindRequiresToggle) and armed or active
                 TF.BackgroundColor3=
                     on
-                    and Color3.new(1,1,1)
-                    or Color3.fromRGB(70,70,70)
-                Ball.BackgroundColor3=Color3.new(1,1,1)
+                    and Color3.fromRGB(50,50,50)
+                    or Color3.fromRGB(35,35,35)
+                Check1.Visible=on
+                Check2.Visible=on
             end
             local function RemoveRightRow()
                 if Row then
@@ -1406,9 +1558,10 @@ SB.Position=UDim2.new(startPos.X.Scale, startPos.X.Offset+d.X, startPos.Y.Scale,
                         SB.TextColor3=Color3.new(1,1,1)
                     end)
                 end)
-            elseif hasBind then
+            else
+                -- diamond is always clickable: sets or rebinds the key
                 local listening=false
-Bind.MouseButton1Click:Connect(function() Bind.Text="..." listening=true end)
+Bind.MouseButton1Click:Connect(function() BindStroke.Color=Color3.fromRGB(120,120,120) listening=true end)
                 UIS.InputBegan:Connect(function(i,gp)
                     if listening then
                         if i.UserInputType==
@@ -1435,6 +1588,8 @@ Bind.MouseButton1Click:Connect(function() Bind.Text="..." listening=true end)
 i.UserInputType.Name:gsub("MouseButton", "MB")
                             end
                             UpdateRightRow()
+                            BindStroke.Color=Color3.new(1,1,1)
+                            RefreshHotkeys()
                             listening=false
                         end
                     elseif not gp and currentBind then
@@ -1492,6 +1647,8 @@ i.UserInputType.Name:gsub("MouseButton", "MB")
             UpdateRightRow()
             UpdateSwitchVisual()
             RegisterElement(H,name,"Toggle")
+            table.insert(HotkeySources,{Label=tostring(name or "Toggle"),Get=function() return currentBind end})
+            RefreshHotkeys()
             RegisterConfig(
                 name,
                 "Toggle",
@@ -1552,13 +1709,6 @@ currentBind.Name:gsub("MouseButton", "MB")
                             end
                         end
                     end
-                    Ball:TweenPosition(
-UDim2.new(armed and .46 or .1, 0, 0, 4),
-                        "Out",
-                        "Linear",
-                        .1,
-                        true
-)
                     pcall(callback,active)
                     UpdateRightRow()
                     UpdateSwitchVisual()
@@ -1737,7 +1887,17 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,220,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
             B.Parent=H B.BackgroundTransparency=1 B.Size=UDim2.new(1,0,0,30) B.Text="" B.AutoButtonColor=false
-            Icon.Parent=B Icon.BackgroundTransparency=1 Icon.Position=UDim2.new(.88,0,.18,0) Icon.Size=UDim2.new(0,24,0,17) Icon.Image="rbxassetid://3944690667"
+            Icon.Visible=false
+            local function MakeHam(y)
+                local Bar=Instance.new("Frame")
+                Bar.Parent=H
+                Bar.BackgroundColor3=Color3.new(1,1,1)
+                Bar.BorderSizePixel=0
+                Bar.Position=UDim2.new(.88,0,0,y)
+                Bar.Size=UDim2.new(0,14,0,2)
+                return Bar
+            end
+            MakeHam(8) MakeHam(12) MakeHam(16)
             Panel.Parent=H Panel.BackgroundColor3=Color3.fromRGB(23,23,23) Panel.Position=UDim2.new(0,0,0,30) Panel.Size=UDim2.new(0,214,0,115) Panel.BorderSizePixel=0 Panel.Visible=false Panel.ZIndex=100 Panel.Active=true
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
             Scroll.Parent=Panel Scroll.BackgroundTransparency=1 Scroll.BorderSizePixel=0 Scroll.Position=UDim2.new(0,4,0,5) Scroll.Size=UDim2.new(1,-8,1,-10) Scroll.ScrollBarThickness=3 Scroll.ScrollBarImageColor3=Color3.fromRGB(70,70,70) Scroll.ZIndex=101
@@ -2484,6 +2644,215 @@ task.defer(function()
     UpdateTogglePanel()
     UpdateWindowLayout()
 end)
+--// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
+Library.NotificationsEnabled=true
+local SettingsState={KeybindList=false,Notifications=true,CustomCursor=false,CustomKick=true}
+Library.Settings=SettingsState
+local SettingSetters={}
+function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
+local function KeyToText(k)
+    if typeof(k)~="EnumItem" then return "?" end
+    local n=tostring(k.Name or "?")
+    if k.EnumType==Enum.UserInputType then n=n:gsub("MouseButton","MB") end
+    return n:lower()
+end
+local function MakeCheckRow(parent,labelText,default,y)
+    local H=Instance.new("Frame") local HC=Instance.new("UICorner") local T=Instance.new("TextLabel")
+    local Box=Instance.new("TextButton") local BoxC=Instance.new("UICorner")
+    H.Parent=parent H.BackgroundColor3=Color3.fromRGB(20,20,20) H.BorderSizePixel=0 H.Position=UDim2.new(0,8,0,y) H.Size=UDim2.new(1,-16,0,26)
+    HC.CornerRadius=UDim.new(0,5) HC.Parent=H
+    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
+    Box.Parent=H Box.BackgroundColor3=Color3.fromRGB(35,35,35) Box.BorderSizePixel=0 Box.Position=UDim2.new(1,-26,0.5,-8) Box.Size=UDim2.new(0,16,0,16) Box.Text="" Box.AutoButtonColor=false
+    BoxC.CornerRadius=UDim.new(0,4) BoxC.Parent=Box
+    local BS=Instance.new("UIStroke") BS.Color=Color3.fromRGB(70,70,70) BS.Parent=Box
+    local C1=Instance.new("Frame") C1.Parent=Box C1.BackgroundColor3=Color3.new(1,1,1) C1.BorderSizePixel=0 C1.AnchorPoint=Vector2.new(.5,.5) C1.Position=UDim2.new(.38,0,.56,0) C1.Size=UDim2.new(0,2,0,6) C1.Rotation=-40 C1.Visible=default
+    local C2=Instance.new("Frame") C2.Parent=Box C2.BackgroundColor3=Color3.new(1,1,1) C2.BorderSizePixel=0 C2.AnchorPoint=Vector2.new(.5,.5) C2.Position=UDim2.new(.62,0,.47,0) C2.Size=UDim2.new(0,2,0,10) C2.Rotation=40 C2.Visible=default
+    local state=default==true
+    local api={}
+    function api.Set(v) state=v==true C1.Visible=state C2.Visible=state end
+    function api.Get() return state end
+    Box.MouseButton1Click:Connect(function() api.Set(not state) if api.OnChange then pcall(api.OnChange,state) end end)
+    return api
+end
+--// SETTINGS PANEL (right of window, gear toggles it)
+local SettingsPanel=Instance.new("Frame")
+local SettingsCorner=Instance.new("UICorner")
+SettingsPanel.Parent=Frame
+SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
+SettingsPanel.BorderSizePixel=0
+SettingsPanel.Position=UDim2.new(1,10,0,40)
+SettingsPanel.Size=UDim2.new(0,210,0,172)
+SettingsPanel.Visible=false
+SettingsPanel.ZIndex=90
+SettingsCorner.CornerRadius=UDim.new(0,6)
+SettingsCorner.Parent=SettingsPanel
+ToggleSettingsPanel=function() SettingsPanel.Visible=not SettingsPanel.Visible end
+do
+    local KeyRow=Instance.new("Frame") local KeyRowC=Instance.new("UICorner") local KeyLabel=Instance.new("TextLabel")
+    local KeyPill=Instance.new("TextButton") local KeyPillC=Instance.new("UICorner")
+    KeyRow.Parent=SettingsPanel KeyRow.BackgroundColor3=Color3.fromRGB(20,20,20) KeyRow.BorderSizePixel=0 KeyRow.Position=UDim2.new(0,8,0,8) KeyRow.Size=UDim2.new(1,-16,0,26)
+    KeyRowC.CornerRadius=UDim.new(0,5) KeyRowC.Parent=KeyRow
+    KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=11 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left
+    KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=11 KeyPill.AutoButtonColor=false
+    KeyPillC.CornerRadius=UDim.new(0,5) KeyPillC.Parent=KeyPill
+    local listening=false
+    KeyPill.MouseButton1Click:Connect(function() listening=true KeyPill.Text="..." end)
+    UIS.InputBegan:Connect(function(i,gp)
+        if not listening then return end
+        if SearchBox:IsFocused() then return end
+        if i.UserInputType==Enum.UserInputType.Keyboard and i.KeyCode~=Enum.KeyCode.Escape then
+            UIToggleKey=i.KeyCode KeyPill.Text=i.KeyCode.Name RefreshHotkeys()
+        end
+        listening=false
+        if KeyPill.Text=="..." then KeyPill.Text=UIToggleKey.Name end
+    end)
+    SettingSetters["UIToggleKey"]=function(v)
+        if typeof(v)=="EnumItem" then UIToggleKey=v KeyPill.Text=v.Name RefreshHotkeys() end
+    end
+end
+do
+    local r1=MakeCheckRow(SettingsPanel,"Keybind list",SettingsState.KeybindList,42)
+    r1.OnChange=function(v) SettingsState.KeybindList=v HotkeysPanel.Visible=v end
+    SettingSetters["KeybindList"]=function(v) r1.Set(v) SettingsState.KeybindList=v==true HotkeysPanel.Visible=v==true end
+    local r2=MakeCheckRow(SettingsPanel,"Show notifications",SettingsState.Notifications,74)
+    r2.OnChange=function(v) SettingsState.Notifications=v Library.NotificationsEnabled=v end
+    SettingSetters["Notifications"]=function(v) r2.Set(v) SettingsState.Notifications=v==true Library.NotificationsEnabled=v==true end
+    local r3=MakeCheckRow(SettingsPanel,"Custom cursor",SettingsState.CustomCursor,106)
+    r3.OnChange=function(v) SettingsState.CustomCursor=v SetCustomCursor(v) end
+    SettingSetters["CustomCursor"]=function(v) r3.Set(v) SettingsState.CustomCursor=v==true SetCustomCursor(v==true) end
+    local r4=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,138)
+    r4.OnChange=function(v) SettingsState.CustomKick=v end
+    SettingSetters["CustomKick"]=function(v) r4.Set(v) SettingsState.CustomKick=v==true end
+end
+--// HOTKEYS LIST PANEL (draggable, left side)
+local HotkeysPanel=Instance.new("Frame")
+local HotkeysCorner=Instance.new("UICorner")
+local HotkeysHead=Instance.new("TextLabel")
+local HotkeyList=Instance.new("Frame")
+local HotkeyLayout=Instance.new("UIListLayout")
+HotkeysPanel.Parent=Gui
+HotkeysPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
+HotkeysPanel.BorderSizePixel=0
+HotkeysPanel.Position=UDim2.new(0,12,0,.35)
+HotkeysPanel.Size=UDim2.new(0,170,0,34)
+HotkeysPanel.Visible=SettingsState.KeybindList
+HotkeysPanel.Active=true
+HotkeysPanel.ZIndex=80
+HotkeysCorner.CornerRadius=UDim.new(0,6)
+HotkeysCorner.Parent=HotkeysPanel
+HotkeysHead.Parent=HotkeysPanel
+HotkeysHead.BackgroundTransparency=1
+HotkeysHead.Size=UDim2.new(1,0,0,26)
+HotkeysHead.Font=Enum.Font.GothamBold
+HotkeysHead.Text="Hotkeys"
+HotkeysHead.TextColor3=Color3.new(1,1,1)
+HotkeysHead.TextSize=12
+HotkeyList.Parent=HotkeysPanel
+HotkeyList.BackgroundTransparency=1
+HotkeyList.Position=UDim2.new(0,8,0,28)
+HotkeyList.Size=UDim2.new(1,-16,1,-32)
+HotkeyLayout.Parent=HotkeyList
+HotkeyLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center
+HotkeyLayout.SortOrder=Enum.SortOrder.LayoutOrder
+HotkeyLayout.Padding=UDim.new(0,4)
+do
+    local hd,hi,hs,hp
+    HotkeysHead.InputBegan:Connect(function(i)
+        if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then
+            hd=true hs=i.Position hp=HotkeysPanel.Position
+i.Changed:Connect(function() if i.UserInputState==Enum.UserInputState.End then hd=false end end)
+        end
+    end)
+HotkeysHead.InputChanged:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseMovement or i.UserInputType==Enum.UserInputType.Touch then hi=i end end)
+    UIS.InputChanged:Connect(function(i)
+        if i==hi and hd then
+            local d=i.Position-hs
+HotkeysPanel.Position=UDim2.new(hp.X.Scale,hp.X.Offset+d.X,hp.Y.Scale,hp.Y.Offset+d.Y)
+        end
+    end)
+end
+RefreshHotkeys=function()
+    for _,ch in ipairs(HotkeyList:GetChildren()) do if ch.Name=="HKRow" then ch:Destroy() end end
+    local n=0
+    for _,src in ipairs(HotkeySources) do
+        local ok,key=pcall(src.Get)
+        if ok and typeof(key)=="EnumItem" then
+            n+=1
+            local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10
+            RC.CornerRadius=UDim.new(0,5) RC.Parent=R
+        end
+    end
+    if n==0 then
+        local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
+        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10
+        RC.CornerRadius=UDim.new(0,5) RC.Parent=R
+        n=1
+    end
+HotkeysPanel.Size=UDim2.new(0,170,0,36+n*26)
+end
+function Library:RegisterHotkey(key,label)
+    if typeof(key)~="EnumItem" then return nil end
+    local src={Label=tostring(label or "hotkey"),Key=key}
+    src.Get=function() return src.Key end
+    table.insert(HotkeySources,src)
+    RefreshHotkeys()
+    return {Set=function(k) if typeof(k)=="EnumItem" then src.Key=k RefreshHotkeys() end end,Remove=function() for i,s in ipairs(HotkeySources) do if s==src then table.remove(HotkeySources,i) break end end RefreshHotkeys() end}
+end
+table.insert(HotkeySources,{Label="ui toggle",Get=function() return UIToggleKey end})
+--// CUSTOM CURSOR (white arrow follower)
+local CursorOn=false
+local CursorGui=Instance.new("ScreenGui")
+CursorGui.Name="winhvh_Cursor"
+CursorGui.ResetOnSpawn=false
+CursorGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
+CursorGui.DisplayOrder=999
+CursorGui.Enabled=false
+CursorGui.Parent=Gui
+local Arrow=Instance.new("Frame")
+Arrow.Parent=CursorGui
+Arrow.BackgroundTransparency=1
+Arrow.Position=UDim2.new(.5,0,.5,0)
+Arrow.Size=UDim2.new(0,22,0,22)
+local function CursorBar(w,h,px,py,rot)
+    local B=Instance.new("Frame")
+    B.Parent=Arrow B.BackgroundColor3=Color3.new(1,1,1) B.BorderSizePixel=0 B.AnchorPoint=Vector2.new(.5,.5) B.Position=UDim2.new(0,px,0,py) B.Size=UDim2.new(0,w,0,h) B.Rotation=rot
+    local S=Instance.new("UIStroke") S.Color=Color3.fromRGB(0,0,0) S.Thickness=1 S.Parent=B
+    return B
+end
+CursorBar(3,17,11,10,45)
+CursorBar(3,8,5,8,12)
+CursorBar(3,8,9,4,78)
+local function SetCustomCursor(on)
+    CursorOn=on==true
+    CursorGui.Enabled=CursorOn
+    pcall(function() UIS.MouseIconEnabled=not CursorOn end)
+end
+UIS.InputChanged:Connect(function(i)
+    if CursorOn and i.UserInputType==Enum.UserInputType.MouseMovement then
+Arrow.Position=UDim2.new(0,i.Position.X-5,0,i.Position.Y-3)
+    end
+end)
+--// NOTIFY TOAST (gated by Show notifications)
+function Library:Notify(text,dur)
+    if not Library.NotificationsEnabled then return end
+    dur=tonumber(dur) or 3
+    local T=Instance.new("Frame") local TC=Instance.new("UICorner") local L=Instance.new("TextLabel")
+    T.Parent=Gui T.BackgroundColor3=Color3.fromRGB(10,10,10) T.BorderSizePixel=0 T.AnchorPoint=Vector2.new(1,1) T.Position=UDim2.new(1,-14,1,-14) T.Size=UDim2.new(0,220,0,30) T.ZIndex=300
+    TC.CornerRadius=UDim.new(0,6) TC.Parent=T
+    L.Parent=T L.BackgroundTransparency=1 L.Size=UDim2.new(1,-16,1,0) L.Position=UDim2.new(0,8,0,0) L.Font=Enum.Font.GothamSemibold L.Text=tostring(text or "") L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.ZIndex=301
+    T.BackgroundTransparency=1 L.TextTransparency=1
+TweenService:Create(T,TweenInfo.new(.25),{BackgroundTransparency=0}):Play()
+TweenService:Create(L,TweenInfo.new(.25),{TextTransparency=0}):Play()
+    task.delay(dur,function()
+        if not T.Parent then return end
+TweenService:Create(T,TweenInfo.new(.3),{BackgroundTransparency=1}):Play()
+TweenService:Create(L,TweenInfo.new(.3),{TextTransparency=1}):Play()
+        task.wait(.32)
+        pcall(function() T:Destroy() end)
+    end)
+end
+RefreshHotkeys()
 return PageYep
 end
 --// XK5NG INTRO: info card first, then character viewport slides in
