@@ -11,8 +11,8 @@ local UIS=game:GetService("UserInputService")
 local Players=game:GetService("Players")
 local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
-local ConfigFolder="Skido"
-local PluginFolder=ConfigFolder.."/skido_plugin"
+local ConfigFolder="winhvh"
+local PluginFolder=ConfigFolder.."/winhvh_plugin"
 local function HasFS()
     return type(isfile)=="function"
     and type(readfile)=="function"
@@ -177,7 +177,7 @@ TabLayout.Padding=UDim.new(0,6)
     Folder.Parent=Pages
     Folder.Name="PageFolder"
     local CenterDivider=Instance.new("Frame")
-    CenterDivider.Name="XK5NG_Divider"
+    CenterDivider.Name="winhvh_Divider"
     CenterDivider.Parent=Pages
     CenterDivider.BackgroundColor3=Color3.fromRGB(45,45,45)
     CenterDivider.BorderSizePixel=0
@@ -189,7 +189,7 @@ TabLayout.Padding=UDim.new(0,6)
     Title.Position=UDim2.new(.025,0,.015,0)
     Title.Size=UDim2.new(0,180,0,20)
     Title.Font=Enum.Font.GothamBold
-    Title.Text=windowname or "XKSNG R-PT2-V2.5"
+    Title.Text=windowname or "winhvh"
     Title.TextColor3=Color3.fromRGB(200,40,40)
     Title.TextSize=13
     Title.TextXAlignment=Enum.TextXAlignment.Left
@@ -199,13 +199,13 @@ TabLayout.Padding=UDim.new(0,6)
     Subtitle.Position=UDim2.new(.025,0,.06,0)
     Subtitle.Size=UDim2.new(0,180,0,14)
     Subtitle.Font=Enum.Font.GothamSemibold
-    Subtitle.Text=windowinfo or "メイン"
+    Subtitle.Text=windowinfo or "da hood"
     Subtitle.TextColor3=Color3.fromRGB(130,130,130)
     Subtitle.TextSize=10
     Subtitle.TextXAlignment=Enum.TextXAlignment.Left
     local PageHeader=Instance.new("TextLabel")
     PageHeader.Parent=Frame
-    PageHeader.Name="XK5NG_PageHeader"
+    PageHeader.Name="winhvh_PageHeader"
     PageHeader.BackgroundTransparency=1
     PageHeader.Position=UDim2.new(.245,0,.10,0)
     PageHeader.Size=UDim2.new(0,200,0,20)
@@ -403,7 +403,7 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     Float.Position=UDim2.new(.05,0,.2,0)
     Float.Size=UDim2.new(0,65,0,35)
     Float.Font=Enum.Font.GothamBold
-    Float.Text="Skido"
+    Float.Text="winhvh"
     Float.TextColor3=Color3.fromRGB(200,50,50)
     Float.TextSize=12
     Float.Visible=false
@@ -756,7 +756,7 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
                 if p:IsA("ScrollingFrame") then p.Visible=false end
             end
             Home.Visible=true
-            local header=Frame:FindFirstChild("XK5NG_PageHeader")
+            local header=Frame:FindFirstChild("winhvh_PageHeader")
             if header then header.Text=pageName end
             for _,t in ipairs(Tabs:GetChildren()) do
                 if t:IsA("GuiButton") then
@@ -2174,7 +2174,7 @@ pcall(function() writefile(ConfigFolder.."/settings.json", HttpService:JSONEncod
     end
     ResetButton.MouseButton1Click:Connect(ResetAll)
     --// PLUGIN SECTION
-ConfigPage:addLabel("Plugins", "Load Lua plugins from Skido/skido_plugin")
+ConfigPage:addLabel("Plugins", "Load Lua plugins from winhvh/winhvh_plugin")
 local PluginDropdown
 local PluginStatus
 local function RefreshPluginDropdown()
@@ -2489,10 +2489,10 @@ end
 --// XK5NG INTRO: info card first, then character viewport slides in
 function Library:ShowIntro(lines, titleText, holdTime)
     local infoLines=lines or {
-        "discord.gg/stando",
+        "winhvh",
         "For mobile user or xeno user",
         "Dont use the flame mode for ragebot",
-        "XKSNG GUI R-PT2-V2.5",
+        "winhvh",
         "Loaded",
     }
     if type(infoLines)=="string" then
@@ -2500,12 +2500,12 @@ function Library:ShowIntro(lines, titleText, holdTime)
         for line in tostring(infoLines):gmatch("[^\n]+") do table.insert(split, line) end
         infoLines=split
     end
-    titleText=titleText or "XKSNG GUI R-PT2-V2.5"
+    titleText=titleText or "winhvh"
     holdTime=tonumber(holdTime) or 6
     local parent=game.CoreGui
     local ok,plrGui=pcall(function() return Players.LocalPlayer:WaitForChild("PlayerGui", 5) end)
     local IntroGui=Instance.new("ScreenGui")
-    IntroGui.Name="XK5NG_Intro"
+    IntroGui.Name="winhvh_Intro"
     IntroGui.ResetOnSpawn=false
     IntroGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
     pcall(function() IntroGui.Parent=parent end)
@@ -2517,8 +2517,8 @@ function Library:ShowIntro(lines, titleText, holdTime)
     Card.Parent=IntroGui
     Card.BackgroundColor3=Color3.fromRGB(8,8,8)
     Card.BorderSizePixel=0
-    Card.AnchorPoint=Vector2.new(.5,0)
-    Card.Position=UDim2.new(.5,0,-.4,0)
+    Card.AnchorPoint=Vector2.new(0,0)
+    Card.Position=UDim2.new(0,12,-.4,0)
     Card.Size=UDim2.new(0,300,0,30+(#infoLines*17))
     CardCorner.CornerRadius=UDim.new(0,6)
     CardCorner.Parent=Card
@@ -2551,8 +2551,8 @@ function Library:ShowIntro(lines, titleText, holdTime)
     CharBox.Parent=IntroGui
     CharBox.BackgroundColor3=Color3.fromRGB(200,200,200)
     CharBox.BorderSizePixel=0
-    CharBox.AnchorPoint=Vector2.new(.5,0)
-    CharBox.Position=UDim2.new(.5,0,1.2,0)
+    CharBox.AnchorPoint=Vector2.new(0,0)
+    CharBox.Position=UDim2.new(0,12,1.2,0)
     CharBox.Size=UDim2.new(0,300,0,260)
     CharCorner.CornerRadius=UDim.new(0,6)
     CharCorner.Parent=CharBox
@@ -2622,20 +2622,20 @@ function Library:ShowIntro(lines, titleText, holdTime)
             F.TextSize=60
         end
     end)
-    --// Animation: notif first, then character next
-    TweenService:Create(Card, TweenInfo.new(.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(.5,0,.06,0)}):Play()
+    --// Animation: notif first (left side), then character next
+    TweenService:Create(Card, TweenInfo.new(.45, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(0,12,.06,0)}):Play()
     for i,L in ipairs(labels) do
         task.delay(.25+i*.18, function()
             if L.Parent then TweenService:Create(L, TweenInfo.new(.3), {TextTransparency=0}):Play() end
         end)
     end
     task.delay(.4+(#labels*.18), function()
-        if CharBox.Parent then TweenService:Create(CharBox, TweenInfo.new(.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(.5,0,.06+Card.AbsoluteSize.Y/IntroGui.AbsoluteSize.Y+.02,0)}):Play() end
+        if CharBox.Parent then TweenService:Create(CharBox, TweenInfo.new(.55, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position=UDim2.new(0,12,.06+Card.AbsoluteSize.Y/math.max(1,IntroGui.AbsoluteSize.Y)+.02,0)}):Play() end
     end)
     task.delay(holdTime, function()
         if not IntroGui.Parent then return end
-        local out1=TweenService:Create(Card, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(.5,0,-.4,0)})
-        local out2=TweenService:Create(CharBox, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(.5,0,1.2,0)})
+        local out1=TweenService:Create(Card, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(0,12,-.5,0)})
+        local out2=TweenService:Create(CharBox, TweenInfo.new(.4, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position=UDim2.new(0,12,1.2,0)})
         out1:Play() out2:Play()
         out2.Completed:Wait()
         pcall(function() IntroGui:Destroy() end)
