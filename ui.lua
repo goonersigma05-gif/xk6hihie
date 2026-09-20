@@ -1,3 +1,4 @@
+-- yas
 local function DestroyYep()
     for i=1,69 do
         local g=game.CoreGui:FindFirstChild("fu8rj82n")
