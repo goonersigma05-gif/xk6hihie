@@ -190,7 +190,7 @@ TabLayout.Padding=UDim.new(0,6)
     Title.Size=UDim2.new(0,180,0,20)
     Title.Font=Enum.Font.GothamBold
     Title.Text=windowname or "winhvh"
-    Title.TextColor3=Color3.fromRGB(200,40,40)
+    Title.TextColor3=Color3.new(1,1,1)
     Title.TextSize=13
     Title.TextXAlignment=Enum.TextXAlignment.Left
     local Subtitle=Instance.new("TextLabel")
@@ -282,7 +282,7 @@ TabLayout.Padding=UDim.new(0,6)
     CreditText.TextColor3=Color3.new(1,1,1)
     CreditText.TextSize=9
     CreditText.TextTransparency=1
-CreditIcon.MouseEnter:Connect(function() CreditText.TextTransparency=0 CreditIcon.ImageColor3=Color3.fromRGB(200,50,50) end)
+CreditIcon.MouseEnter:Connect(function() CreditText.TextTransparency=0 CreditIcon.ImageColor3=Color3.new(1,1,1) end)
 CreditIcon.MouseLeave:Connect(function() CreditText.TextTransparency=1 CreditIcon.ImageColor3=Color3.new(1,1,1) end)
     --// MAIN DRAG
     local dragging=false
@@ -388,7 +388,7 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     Min.Size=UDim2.new(0,28,0,22)
     Min.Font=Enum.Font.GothamBold
     Min.Text="X"
-    Min.TextColor3=Color3.fromRGB(200,60,60)
+    Min.TextColor3=Color3.new(1,1,1)
     Min.TextSize=14
     Min.ZIndex=50
     MinCorner.CornerRadius=UDim.new(0,5)
@@ -404,7 +404,7 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     Float.Size=UDim2.new(0,65,0,35)
     Float.Font=Enum.Font.GothamBold
     Float.Text="winhvh"
-    Float.TextColor3=Color3.fromRGB(200,50,50)
+    Float.TextColor3=Color3.new(1,1,1)
     Float.TextSize=12
     Float.Visible=false
     Float.Active=true
@@ -530,7 +530,7 @@ end
     ToggleTitle.Size=UDim2.new(1,-24,0,22)
     ToggleTitle.Font=Enum.Font.GothamSemibold
     ToggleTitle.Text="Active Toggles"
-    ToggleTitle.TextColor3=Color3.fromRGB(200,50,50)
+    ToggleTitle.TextColor3=Color3.new(1,1,1)
     ToggleTitle.TextSize=12
     ToggleTitle.TextXAlignment=Enum.TextXAlignment.Left
     ToggleTitle.ZIndex=201
@@ -663,7 +663,7 @@ page.CanvasPosition=Vector2.new(0, math.clamp(y,0,maxY))
                     HighlightedObject=data.Object
                     HighlightedColor=data.Object.BackgroundColor3
                     data.Object.BackgroundColor3=
-                        Color3.fromRGB(80,30,30)
+                        Color3.new(1,1,1)
                     task.delay(.55,function()
                         if ht~=HighlightToken then return end
                         if HighlightedObject==data.Object
@@ -1089,7 +1089,7 @@ and currentBind.Name:gsub("MouseButton", "MB")
                         ..stateText
                     Row.TextColor3=
                         active
-and Color3.fromRGB(200, 50, 50)
+and Color3.new(1,1,1)
 or Color3.fromRGB(170, 170, 170)
                 end
             end
@@ -1653,7 +1653,7 @@ UDim2.new(armed and .46 or .1, 0, 0, 4),
             BC.CornerRadius=UDim.new(0,4)
             BC.Parent=B
             Trail.Parent=B
-            Trail.BackgroundColor3=Color3.fromRGB(200,50,50)
+            Trail.BackgroundColor3=Color3.new(1,1,1)
             Trail.Size=UDim2.new(0,1,1,0)
             Trail.ZIndex=2
             TC.CornerRadius=UDim.new(0,4)
@@ -1747,7 +1747,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local function close() open=false Panel.Visible=false H.Size=UDim2.new(0,214,0,26) Icon.ImageColor3=Color3.new(1,1,1) task.defer(UpdateCanvas) end
             local function visual(btn,v)
                 local yes=multi and selections[v] or selected==v
-                btn.BackgroundColor3=yes and Color3.fromRGB(200,50,50) or Color3.fromRGB(15,15,15)
+                btn.BackgroundColor3=yes and Color3.new(1,1,1) or Color3.fromRGB(15,15,15)
                 btn.TextColor3=yes and Color3.fromRGB(10,10,10) or Color3.new(1,1,1)
             end
             local function get()
@@ -1766,7 +1766,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                     for _,x in ipairs(values) do if tostring(x)==tostring(v) then selected=x T.Text=tostring(x) for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then visual(ch,x) end end if fire then pcall(callback,x) end return end end
                 end
             end
-            B.MouseButton1Click:Connect(function() open=not open Panel.Visible=open H.Size=UDim2.new(0,214,0,open and 145 or 26) Icon.ImageColor3=open and Color3.fromRGB(200,60,60) or Color3.new(1,1,1) task.defer(UpdateCanvas) end)
+            B.MouseButton1Click:Connect(function() open=not open Panel.Visible=open H.Size=UDim2.new(0,214,0,open and 145 or 26) Icon.ImageColor3=open and Color3.new(1,1,1) or Color3.new(1,1,1) task.defer(UpdateCanvas) end)
             local function build(valuesList)
                 values={} for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then ch:Destroy() end end
                 for _,v in ipairs(valuesList or {}) do
@@ -1887,7 +1887,7 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
                     .." config"
                     ..(#files==1 and "" or "s")
                 ConfigStatus.TextColor3=
-                    Color3.fromRGB(200,50,50)
+                    Color3.new(1,1,1)
             end
         end
 )
@@ -1926,7 +1926,7 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
         ConfigStatus.Text=text
         ConfigStatus.TextColor3=
             good
-            and Color3.fromRGB(200,50,50)
+            and Color3.new(1,1,1)
             or Color3.fromRGB(255,120,120)
     end
     local function SaveConfig(name)
@@ -2191,7 +2191,7 @@ local function RefreshPluginDropdown()
                 .." plugin"
                 ..(#files==1 and "" or "s")
             PluginStatus.TextColor3=
-                Color3.fromRGB(200,50,50)
+                Color3.new(1,1,1)
         end
     end
 end
@@ -2408,7 +2408,7 @@ table.insert(errors, requestedName..": "..tostring(page))
                 ..pluginName
 .." (" ..createdTabs .." tab" ..(createdTabs==1 and "" or "s") ..")"
         end
-        PluginStatus.TextColor3=Color3.fromRGB(200,50,50)
+        PluginStatus.TextColor3=Color3.new(1,1,1)
     end
     return true
 end
