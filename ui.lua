@@ -132,27 +132,27 @@ function Library:CreateWindow(windowname,windowinfo)
     Gui.ResetOnSpawn=false
     Gui.ZIndexBehavior=Enum.ZIndexBehavior.Global
     Frame.Parent=Gui
-    Frame.BackgroundColor3=Color3.fromRGB(20,20,20)
+    Frame.BackgroundColor3=Color3.fromRGB(18,18,18)
     Frame.BorderSizePixel=0
     Frame.Position=UDim2.new(.27,0,.29,0)
-    Frame.Size=UDim2.new(0,455,0,300)
+    Frame.Size=UDim2.new(0,620,0,400)
     Frame.Active=true
     Scale.Scale=1.1
     Scale.Parent=Frame
     Corner.CornerRadius=UDim.new(0,7)
     Corner.Parent=Frame
     Dash.Parent=Frame
-    Dash.BackgroundColor3=Color3.fromRGB(15,15,15)
+    Dash.BackgroundColor3=Color3.fromRGB(13,13,13)
     Dash.BorderSizePixel=0
     Dash.Position=UDim2.new(.018,0,.168,0)
-    Dash.Size=UDim2.new(0,115,0,238)
+    Dash.Size=UDim2.new(0,130,0,318)
     DashCorner.CornerRadius=UDim.new(0,6)
     DashCorner.Parent=Dash
     Tabs.Parent=Dash
 Tabs.BackgroundTransparency=1
 Tabs.BorderSizePixel=0
 Tabs.Position=UDim2.new(.03,0,.035,0)
-Tabs.Size=UDim2.new(0,108,1,-18)
+Tabs.Size=UDim2.new(0,122,1,-18)
 Tabs.CanvasSize=UDim2.new(0,0,0,0)
 Tabs.ScrollBarThickness=3
 Tabs.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
@@ -167,23 +167,45 @@ TabLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center
 TabLayout.SortOrder=Enum.SortOrder.LayoutOrder
 TabLayout.Padding=UDim.new(0,6)
     Pages.Parent=Frame
-    Pages.BackgroundColor3=Color3.fromRGB(15,15,15)
+    Pages.BackgroundColor3=Color3.fromRGB(13,13,13)
     Pages.BorderSizePixel=0
-    Pages.Position=UDim2.new(.277,0,.168,0)
-    Pages.Size=UDim2.new(0,319,0,238)
+    Pages.Position=UDim2.new(.245,0,.168,0)
+    Pages.Size=UDim2.new(0,456,0,318)
     PagesCorner.CornerRadius=UDim.new(0,6)
     PagesCorner.Parent=Pages
     Folder.Parent=Pages
     Folder.Name="PageFolder"
     Title.Parent=Frame
     Title.BackgroundTransparency=1
-    Title.Position=UDim2.new(.043,0,.028,0)
-    Title.Size=UDim2.new(0,112,0,33)
-    Title.Font=Enum.Font.GothamSemibold
-    Title.Text=windowname or "UI"
-    Title.TextColor3=Color3.new(1,1,1)
-    Title.TextSize=14
+    Title.Position=UDim2.new(.025,0,.015,0)
+    Title.Size=UDim2.new(0,180,0,20)
+    Title.Font=Enum.Font.GothamBold
+    Title.Text=windowname or "XKSNG R-PT2-V2.5"
+    Title.TextColor3=Color3.fromRGB(200,40,40)
+    Title.TextSize=13
     Title.TextXAlignment=Enum.TextXAlignment.Left
+    local Subtitle=Instance.new("TextLabel")
+    Subtitle.Parent=Frame
+    Subtitle.BackgroundTransparency=1
+    Subtitle.Position=UDim2.new(.025,0,.06,0)
+    Subtitle.Size=UDim2.new(0,180,0,14)
+    Subtitle.Font=Enum.Font.GothamSemibold
+    Subtitle.Text=windowinfo or "メイン"
+    Subtitle.TextColor3=Color3.fromRGB(130,130,130)
+    Subtitle.TextSize=10
+    Subtitle.TextXAlignment=Enum.TextXAlignment.Left
+    local PageHeader=Instance.new("TextLabel")
+    PageHeader.Parent=Frame
+    PageHeader.Name="XK5NG_PageHeader"
+    PageHeader.BackgroundTransparency=1
+    PageHeader.Position=UDim2.new(.245,0,.10,0)
+    PageHeader.Size=UDim2.new(0,200,0,20)
+    PageHeader.Font=Enum.Font.GothamBold
+    PageHeader.Text="Main"
+    PageHeader.TextColor3=Color3.new(1,1,1)
+    PageHeader.TextSize=13
+    PageHeader.TextXAlignment=Enum.TextXAlignment.Left
+    ResetButton.Visible=false
     ResetButton.Parent=Frame
     ResetButton.BackgroundColor3=Color3.fromRGB(30,30,30)
     ResetButton.BorderSizePixel=0
@@ -207,10 +229,10 @@ TabLayout.Padding=UDim.new(0,6)
     local SearchCorner=Instance.new("UICorner")
     local SearchStroke=Instance.new("UIStroke")
     SearchBox.Parent=Frame
-    SearchBox.BackgroundColor3=Color3.fromRGB(15,15,15)
+    SearchBox.BackgroundColor3=Color3.fromRGB(24,24,24)
     SearchBox.BorderSizePixel=0
-    SearchBox.Position=UDim2.new(.40,0,.045,0)
-    SearchBox.Size=UDim2.new(0,150,0,24)
+    SearchBox.Position=UDim2.new(.27,0,.03,0)
+    SearchBox.Size=UDim2.new(0,220,0,24)
     SearchBox.Font=Enum.Font.GothamSemibold
     SearchBox.PlaceholderText="Search..."
     SearchBox.PlaceholderColor3=Color3.fromRGB(100,100,100)
@@ -230,6 +252,7 @@ TabLayout.Padding=UDim.new(0,6)
     SearchPadding.PaddingRight=UDim.new(0,8)
     SearchPadding.Parent=SearchBox
     --// CREDITS
+    Credits.Visible=false
     Credits.Parent=Frame
     Credits.BackgroundTransparency=1
     Credits.Position=UDim2.new(.885,0,.05,0)
@@ -250,7 +273,7 @@ TabLayout.Padding=UDim.new(0,6)
     CreditText.TextColor3=Color3.new(1,1,1)
     CreditText.TextSize=9
     CreditText.TextTransparency=1
-CreditIcon.MouseEnter:Connect(function() CreditText.TextTransparency=0 CreditIcon.ImageColor3=Color3.fromRGB(137,246,255) end)
+CreditIcon.MouseEnter:Connect(function() CreditText.TextTransparency=0 CreditIcon.ImageColor3=Color3.fromRGB(200,50,50) end)
 CreditIcon.MouseLeave:Connect(function() CreditText.TextTransparency=1 CreditIcon.ImageColor3=Color3.new(1,1,1) end)
     --// MAIN DRAG
     local dragging=false
@@ -319,10 +342,10 @@ MakeHandle("ResizeBottomRight", Vector2.new(1,1), UDim2.new(1,0,1,0))
         UIS.InputChanged:Connect(function(i)
             if not resizing or i~=resizeInput then return end
             local d=i.Position-resizeStart
-            local minX=455
-            local minY=300
-            local maxX=900
-            local maxY=650
+            local minX=620
+            local minY=400
+            local maxX=1000
+            local maxY=700
             local width=resizeStartSize.X
             local height=resizeStartSize.Y
             local pos=resizeStartPos
@@ -350,16 +373,18 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     local Min=Instance.new("TextButton")
     local MinCorner=Instance.new("UICorner")
     Min.Parent=Frame
-    Min.BackgroundColor3=Color3.fromRGB(30,30,30)
-    Min.Position=UDim2.new(.78,0,.05,0)
-    Min.Size=UDim2.new(0,30,0,22)
+    Min.BackgroundTransparency=1
+    Min.BackgroundColor3=Color3.fromRGB(18,18,18)
+    Min.Position=UDim2.new(.94,0,.03,0)
+    Min.Size=UDim2.new(0,28,0,22)
     Min.Font=Enum.Font.GothamBold
-    Min.Text="-"
-    Min.TextColor3=Color3.new(1,1,1)
+    Min.Text="X"
+    Min.TextColor3=Color3.fromRGB(200,60,60)
     Min.TextSize=14
     Min.ZIndex=50
     MinCorner.CornerRadius=UDim.new(0,5)
     MinCorner.Parent=Min
+    Min.MouseButton1Click:Connect(function() Gui:Destroy() end)
     --// FLOAT
     local Float=Instance.new("TextButton")
     local FloatCorner=Instance.new("UICorner")
@@ -370,7 +395,7 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     Float.Size=UDim2.new(0,65,0,35)
     Float.Font=Enum.Font.GothamBold
     Float.Text="Skido"
-    Float.TextColor3=Color3.fromRGB(137,246,255)
+    Float.TextColor3=Color3.fromRGB(200,50,50)
     Float.TextSize=12
     Float.Visible=false
     Float.Active=true
@@ -396,15 +421,13 @@ Float.Position=UDim2.new(fp.X.Scale, fp.X.Offset+d.X, fp.Y.Scale, fp.Y.Offset+d.
         end
     end)
     local visible=true
-Min.MouseButton1Click:Connect(function() visible=false Frame.Visible=false Float.Visible=true end)
-Float.MouseButton1Click:Connect(function() if not fd then visible=true Frame.Visible=true Float.Visible=false end end)
+    Float.Visible=false
     UIS.InputBegan:Connect(function(i,gp)
         if gp then return end
         if i.KeyCode==Enum.KeyCode.Semicolon then
             if not Frame.Visible then
                 visible=true
                 Frame.Visible=true
-                Float.Visible=false
             end
             SearchBox:CaptureFocus()
             SearchBox.CursorPosition=#SearchBox.Text+1
@@ -413,7 +436,6 @@ Float.MouseButton1Click:Connect(function() if not fd then visible=true Frame.Vis
         if i.KeyCode==Enum.KeyCode.RightShift then
             visible=not visible
             Frame.Visible=visible
-            Float.Visible=false
         end
     end)
     --// REGISTRY
@@ -442,12 +464,12 @@ task.delay(.06,function() UIRefreshQueued=false pcall(fn) end)
     --// WINDOW LAYOUT
 --// Tabs are scrollable instead of making the window taller.
 local function UpdateWindowLayout()
-    -- Keep the normal window size.
-    local contentHeight=238
-Frame.Size=UDim2.new(0, 455, 0, contentHeight+62)
-Dash.Size=UDim2.new(0, 115, 0, contentHeight)
-Tabs.Size=UDim2.new(0, 108, 0, contentHeight-9)
-Pages.Size=UDim2.new(0, 319, 0, contentHeight)
+    -- XK5NG layout: wider window, fixed size.
+    local contentHeight=318
+Frame.Size=UDim2.new(0, 620, 0, contentHeight+82)
+Dash.Size=UDim2.new(0, 130, 0, contentHeight)
+Tabs.Size=UDim2.new(0, 122, 0, contentHeight-9)
+Pages.Size=UDim2.new(0, 456, 0, contentHeight)
     --// Update page sizes
     for _,page in ipairs(Folder:GetChildren()) do
         if page:IsA("ScrollingFrame") then
@@ -459,7 +481,7 @@ page.Size=UDim2.new(1, -3, 0, contentHeight-13)
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") then
                 local layout=
-page:FindFirstChildOfClass("UIListLayout")
+page:FindFirstChildOfClass("UIGridLayout")
                 if layout then
                     page.CanvasSize=UDim2.new(
                         0,
@@ -486,7 +508,7 @@ end
     TogglePanel.Position=UDim2.new(0,12,0,0.5)
     TogglePanel.Size=UDim2.new(0,210,0,45)
     TogglePanel.Active=true
-    TogglePanel.Visible=true
+    TogglePanel.Visible=false
     TogglePanel.ZIndex=200
     ToggleCorner.CornerRadius=UDim.new(0,7)
     ToggleCorner.Parent=TogglePanel
@@ -499,7 +521,7 @@ end
     ToggleTitle.Size=UDim2.new(1,-24,0,22)
     ToggleTitle.Font=Enum.Font.GothamSemibold
     ToggleTitle.Text="Active Toggles"
-    ToggleTitle.TextColor3=Color3.fromRGB(137,246,255)
+    ToggleTitle.TextColor3=Color3.fromRGB(200,50,50)
     ToggleTitle.TextSize=12
     ToggleTitle.TextXAlignment=Enum.TextXAlignment.Left
     ToggleTitle.ZIndex=201
@@ -632,7 +654,7 @@ page.CanvasPosition=Vector2.new(0, math.clamp(y,0,maxY))
                     HighlightedObject=data.Object
                     HighlightedColor=data.Object.BackgroundColor3
                     data.Object.BackgroundColor3=
-                        Color3.fromRGB(35,70,75)
+                        Color3.fromRGB(80,30,30)
                     task.delay(.55,function()
                         if ht~=HighlightToken then return end
                         if HighlightedObject==data.Object
@@ -664,27 +686,28 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         local Tab=Instance.new("TextButton")
         local TC=Instance.new("UICorner")
         local Home=Instance.new("ScrollingFrame")
-        local Layout=Instance.new("UIListLayout")
+        local Layout=Instance.new("UIGridLayout")
         Tab.Name="Tab"
         Tab.Parent=Tabs
-        Tab.BackgroundColor3=Color3.fromRGB(15,15,15)
+        Tab.BackgroundColor3=visible and Color3.fromRGB(28,28,28) or Color3.fromRGB(13,13,13)
         Tab.BorderSizePixel=0
-        Tab.Size=UDim2.new(0,108,0,27)
+        Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
         Tab.Font=Enum.Font.GothamSemibold
-        Tab.Text=pageName
-        Tab.TextColor3=Color3.new(1,1,1)
+        Tab.Text="  "..pageName
+        Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
         Tab.TextSize=11
-        Tab.TextTransparency=visible and 0 or .3
-        TC.CornerRadius=UDim.new(0,7)
+        Tab.TextTransparency=0
+        Tab.TextXAlignment=Enum.TextXAlignment.Left
+        TC.CornerRadius=UDim.new(0,5)
         TC.Parent=Tab
         Home.Name=pageName
         Home.Parent=Folder
         Home.Active=true
         Home.BackgroundTransparency=1
         Home.BorderSizePixel=0
-        Home.Position=UDim2.new(0,0,.03,0)
-        Home.Size=UDim2.new(1,-3,0,225)
+        Home.Position=UDim2.new(0,6,.06,0)
+        Home.Size=UDim2.new(1,-12,0,295)
         Home.ScrollBarThickness=4
         Home.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
         Home.CanvasSize=UDim2.new(0,0,0,0)
@@ -693,9 +716,13 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Home.ClipsDescendants=true
         Home.Visible=visible==true
         Layout.Parent=Home
-        Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center
+        Layout.FillDirectionMaxCells=2
+        Layout.FillDirection=Enum.FillDirection.Horizontal
+        Layout.HorizontalAlignment=Enum.HorizontalAlignment.Left
+        Layout.VerticalAlignment=Enum.VerticalAlignment.Top
         Layout.SortOrder=Enum.SortOrder.LayoutOrder
-        Layout.Padding=UDim.new(0,elementspacing or 6)
+        Layout.CellSize=UDim2.new(0,214,0,26)
+        Layout.CellPadding=UDim2.new(0,6,0,5)
         local function UpdateCanvas()
             local h=Layout.AbsoluteContentSize.Y+12
             Home.CanvasSize=UDim2.new(
@@ -720,21 +747,26 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
                 if p:IsA("ScrollingFrame") then p.Visible=false end
             end
             Home.Visible=true
+            local header=Frame:FindFirstChild("XK5NG_PageHeader")
+            if header then header.Text=pageName end
             for _,t in ipairs(Tabs:GetChildren()) do
                 if t:IsA("GuiButton") then
-                    t.TextTransparency=
-                        t==Tab and 0 or .3
+                    local selected=t==Tab
                     t.BackgroundColor3=
-                        t==Tab
-                        and Color3.fromRGB(25,25,25)
-                        or Color3.fromRGB(15,15,15)
+                        selected
+                        and Color3.fromRGB(28,28,28)
+                        or Color3.fromRGB(13,13,13)
+                    t.TextColor3=
+                        selected
+                        and Color3.new(1,1,1)
+                        or Color3.fromRGB(140,140,140)
                 end
             end
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() if Tab.TextTransparency==0 then Tab.BackgroundColor3= Color3.fromRGB(10,10,10) end end)
-Tab.MouseLeave:Connect(function() Tab.BackgroundColor3= Tab.TextTransparency==0 and Color3.fromRGB(25,25,25) or Color3.fromRGB(15,15,15) end)
+Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=Color3.fromRGB(28,28,28) then Tab.BackgroundColor3=Color3.fromRGB(20,20,20) end end)
+Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and Color3.fromRGB(28,28,28) or Color3.fromRGB(13,13,13) end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
@@ -749,7 +781,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3= Tab.TextTransparency==0 
             local C=Instance.new("UICorner")
             local T=Instance.new("TextLabel")
             local I=Instance.new("TextLabel")
-            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(17,17,17) H.BorderSizePixel=0 H.Size=UDim2.new(0,304,0,30)
+            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Size=UDim2.new(1,0,0,17) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11
             I.Parent=H I.BackgroundTransparency=1 I.Position=UDim2.new(0,0,.55,0) I.Size=UDim2.new(1,0,0,11) I.Font=Enum.Font.GothamSemibold I.Text=info or "" I.TextColor3=Color3.new(1,1,1) I.TextTransparency=.3 I.TextSize=9
@@ -762,9 +794,9 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3= Tab.TextTransparency==0 
             local B=Instance.new("TextButton")
             local C=Instance.new("UICorner")
             H.Parent=Home
-            H.BackgroundColor3=Color3.fromRGB(17,17,17)
+            H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
-            H.Size=UDim2.new(0,304,0,30)
+            H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
             B.Parent=H
@@ -873,20 +905,20 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             local Bind=Instance.new("TextButton")
             local BindC=Instance.new("UICorner")
             H.Parent=Home
-            H.BackgroundColor3=Color3.fromRGB(17,17,17)
+            H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
-            H.Size=UDim2.new(0,304,0,30)
+            H.Size=UDim2.new(0,214,0,26)
             H.ClipsDescendants=false
             HC.CornerRadius=UDim.new(0,5)
             HC.Parent=H
             T.Parent=H
             T.BackgroundTransparency=1
-            T.Position=UDim2.new(.024,0,0,0)
-            T.Size=UDim2.new(0,145,0,30)
+            T.Position=UDim2.new(.04,0,0,0)
+            T.Size=UDim2.new(0,150,0,26)
             T.Font=Enum.Font.GothamSemibold
             T.Text=name or ""
             T.TextColor3=Color3.fromRGB(235,235,235)
-            T.TextSize=11
+            T.TextSize=10
             T.TextXAlignment=Enum.TextXAlignment.Left
             Bind.Parent=H
             Bind.BackgroundColor3=Color3.fromRGB(25,25,25)
@@ -966,22 +998,20 @@ Bind.Text=currentBind.Name:gsub("MouseButton", "MB")
             end
             TB.Parent=H
             TB.BackgroundTransparency=1
-            TB.Position=UDim2.new(.8,0,0,0)
-            TB.Size=UDim2.new(0,60,0,30)
+            TB.Position=UDim2.new(.82,0,0,0)
+            TB.Size=UDim2.new(0,38,0,26)
             TB.AutoButtonColor=false
             TF.Parent=TB
-            TF.BackgroundColor3=Color3.fromRGB(45,45,45)
-            TF.Position=UDim2.new(.28,0,0,5)
-            TF.Size=UDim2.new(0,35,0,20)
+            TF.BackgroundColor3=default and Color3.new(1,1,1) or Color3.fromRGB(70,70,70)
+            TF.Position=UDim2.new(.5,0,.5,0)
+            TF.AnchorPoint=Vector2.new(.5,.5)
+            TF.Size=UDim2.new(0,13,0,13)
             TFC.Parent=TF
-            TFC.CornerRadius=UDim.new(0,10)
+            TFC.CornerRadius=UDim.new(1,0)
             Ball.Parent=TF
             Ball.BackgroundColor3=Color3.new(1,1,1)
-            Ball.Position=
-                default
-                and UDim2.new(.46,0,0,4)
-                or UDim2.new(.1,0,0,4)
-            Ball.Size=UDim2.new(0,14,0,12)
+            Ball.Position=UDim2.new(0,0,0,0)
+            Ball.Size=UDim2.new(1,0,1,0)
             BC.CornerRadius=UDim.new(1,0)
             BC.Parent=Ball
             local armed=default
@@ -992,19 +1022,9 @@ Bind.Text=currentBind.Name:gsub("MouseButton", "MB")
                 local on=(keybindMode or keybindRequiresToggle) and armed or active
                 TF.BackgroundColor3=
                     on
-                    and Color3.fromRGB(55,115,120)
-                    or Color3.fromRGB(45,45,45)
-                Ball.BackgroundColor3=
-                    on
-                    and Color3.fromRGB(245,255,255)
-                    or Color3.fromRGB(175,175,175)
-                Ball:TweenPosition(
-UDim2.new(on and .46 or .1, 0, 0, 4),
-                    "Out",
-                    "Linear",
-                    .1,
-                    true
-)
+                    and Color3.new(1,1,1)
+                    or Color3.fromRGB(70,70,70)
+                Ball.BackgroundColor3=Color3.new(1,1,1)
             end
             local function RemoveRightRow()
                 if Row then
@@ -1062,7 +1082,7 @@ and currentBind.Name:gsub("MouseButton", "MB")
                         ..stateText
                     Row.TextColor3=
                         active
-and Color3.fromRGB(137, 246, 255)
+and Color3.fromRGB(200, 50, 50)
 or Color3.fromRGB(170, 170, 170)
                 end
             end
@@ -1081,13 +1101,6 @@ or Color3.fromRGB(170, 170, 170)
                     active=false
                     if callCallback~=false then pcall(callback,false) end
                 end
-                Ball:TweenPosition(
-UDim2.new(armed and .46 or .1, 0, 0, 4),
-                    "Out",
-                    "Linear",
-                    .1,
-                    true
-)
                 if not armed and closePicker then closePicker() end
                 UpdateRightRow()
                 UpdateSwitchVisual()
@@ -1098,13 +1111,6 @@ UDim2.new(armed and .46 or .1, 0, 0, 4),
                 task.defer(UpdateCanvas)
             end
             local function UpdateNormal()
-                Ball:TweenPosition(
-UDim2.new(active and .46 or .1, 0, 0, 4),
-                    "Out",
-                    "Linear",
-                    .1,
-                    true
-)
                 if not active and closePicker then closePicker() end
                 UpdateRightRow()
                 UpdateSwitchVisual()
@@ -1129,9 +1135,9 @@ UDim2.new(active and .46 or .1, 0, 0, 4),
                 if active then SetActive(false,true) else UpdateRightRow() UpdateSwitchVisual() end
             end
             if ModeButton then
-                ModeButton.MouseButton1Click:Connect(function() modeOpen=not modeOpen ModeMenu.Visible=modeOpen H.Size=UDim2.new(0,304,0,modeOpen and 78 or 30) task.defer(UpdateCanvas) end)
-                ToggleChoice.MouseButton1Click:Connect(function() SetMode("Toggle") H.Size=UDim2.new(0,304,0,30) task.defer(UpdateCanvas) end)
-                HoldChoice.MouseButton1Click:Connect(function() SetMode("Hold") H.Size=UDim2.new(0,304,0,30) task.defer(UpdateCanvas) end)
+                ModeButton.MouseButton1Click:Connect(function() modeOpen=not modeOpen ModeMenu.Visible=modeOpen H.Size=UDim2.new(0,214,0,modeOpen and 74 or 26) task.defer(UpdateCanvas) end)
+                ToggleChoice.MouseButton1Click:Connect(function() SetMode("Toggle") H.Size=UDim2.new(0,214,0,26) task.defer(UpdateCanvas) end)
+                HoldChoice.MouseButton1Click:Connect(function() SetMode("Hold") H.Size=UDim2.new(0,214,0,26) task.defer(UpdateCanvas) end)
             end
             local mainPress=false
             TB.InputBegan:Connect(function(i)
@@ -1210,7 +1216,7 @@ UDim2.new(active and .46 or .1, 0, 0, 4),
                 closePicker=function()
                     open=false
                     Panel.Visible=false
-                    H.Size=UDim2.new(0,304,0,30)
+                    H.Size=UDim2.new(0,214,0,26)
                     task.defer(UpdateCanvas)
                 end
                 local function PositionPicker()
@@ -1233,7 +1239,7 @@ UDim2.new(active and .46 or .1, 0, 0, 4),
                         Panel.Visible=false
                     end
                     CB.BackgroundColor3=color
-                    H.Size=UDim2.new(0,304,0,30)
+                    H.Size=UDim2.new(0,214,0,26)
                     task.defer(UpdateCanvas)
                 end)
                 local colorDrag=false
@@ -1603,9 +1609,9 @@ UDim2.new(armed and .46 or .1, 0, 0, 4),
             local KC=Instance.new("UICorner")
             local Num=Instance.new("TextBox")
             H.Parent=Home
-            H.BackgroundColor3=Color3.fromRGB(17,17,17)
+            H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
-            H.Size=UDim2.new(0,304,0,30)
+            H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
             T.Parent=H
@@ -1640,7 +1646,7 @@ UDim2.new(armed and .46 or .1, 0, 0, 4),
             BC.CornerRadius=UDim.new(0,4)
             BC.Parent=B
             Trail.Parent=B
-            Trail.BackgroundColor3=Color3.fromRGB(137,246,255)
+            Trail.BackgroundColor3=Color3.fromRGB(200,50,50)
             Trail.Size=UDim2.new(0,1,1,0)
             Trail.ZIndex=2
             TC.CornerRadius=UDim.new(0,4)
@@ -1703,7 +1709,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             if o then name=o.Text or name default=o.Default or "" callback=o.Callback end
             callback=callback or function() end
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextBox") local BC=Instance.new("UICorner")
-            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(17,17,17) H.BorderSizePixel=0 H.Size=UDim2.new(0,304,0,30)
+            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,210,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.735,0,0,5) B.Size=UDim2.new(0,75,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.PlaceholderText=(o and o.Placeholder) or ""
@@ -1720,21 +1726,21 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             list=list or {} callback=callback or function() end
             local multi=o and o.MultiSelect==true or false
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local Icon=Instance.new("ImageLabel") local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Scroll=Instance.new("ScrollingFrame") local Layout=Instance.new("UIListLayout")
-            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(17,17,17) H.BorderSizePixel=0 H.Size=UDim2.new(0,304,0,30) H.ClipsDescendants=false
+            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false
             C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,220,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
             B.Parent=H B.BackgroundTransparency=1 B.Size=UDim2.new(1,0,0,30) B.Text="" B.AutoButtonColor=false
             Icon.Parent=B Icon.BackgroundTransparency=1 Icon.Position=UDim2.new(.88,0,.18,0) Icon.Size=UDim2.new(0,24,0,17) Icon.Image="rbxassetid://3944690667"
-            Panel.Parent=H Panel.BackgroundColor3=Color3.fromRGB(17,17,17) Panel.Position=UDim2.new(0,0,0,34) Panel.Size=UDim2.new(0,304,0,115) Panel.BorderSizePixel=0 Panel.Visible=false Panel.ZIndex=100 Panel.Active=true
+            Panel.Parent=H Panel.BackgroundColor3=Color3.fromRGB(23,23,23) Panel.Position=UDim2.new(0,0,0,30) Panel.Size=UDim2.new(0,214,0,115) Panel.BorderSizePixel=0 Panel.Visible=false Panel.ZIndex=100 Panel.Active=true
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
             Scroll.Parent=Panel Scroll.BackgroundTransparency=1 Scroll.BorderSizePixel=0 Scroll.Position=UDim2.new(0,4,0,5) Scroll.Size=UDim2.new(1,-8,1,-10) Scroll.ScrollBarThickness=3 Scroll.ScrollBarImageColor3=Color3.fromRGB(70,70,70) Scroll.ZIndex=101
             Layout.Parent=Scroll Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center Layout.SortOrder=Enum.SortOrder.LayoutOrder Layout.Padding=UDim.new(0,5)
             local open=false local selected=nil local values={} local selections={}
             local function canvas() Scroll.CanvasSize=UDim2.new(0,0,0,Layout.AbsoluteContentSize.Y+8) end
-            local function close() open=false Panel.Visible=false H.Size=UDim2.new(0,304,0,30) Icon.ImageColor3=Color3.new(1,1,1) task.defer(UpdateCanvas) end
+            local function close() open=false Panel.Visible=false H.Size=UDim2.new(0,214,0,26) Icon.ImageColor3=Color3.new(1,1,1) task.defer(UpdateCanvas) end
             local function visual(btn,v)
                 local yes=multi and selections[v] or selected==v
-                btn.BackgroundColor3=yes and Color3.fromRGB(137,246,255) or Color3.fromRGB(15,15,15)
+                btn.BackgroundColor3=yes and Color3.fromRGB(200,50,50) or Color3.fromRGB(15,15,15)
                 btn.TextColor3=yes and Color3.fromRGB(10,10,10) or Color3.new(1,1,1)
             end
             local function get()
@@ -1753,7 +1759,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                     for _,x in ipairs(values) do if tostring(x)==tostring(v) then selected=x T.Text=tostring(x) for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then visual(ch,x) end end if fire then pcall(callback,x) end return end end
                 end
             end
-            B.MouseButton1Click:Connect(function() open=not open Panel.Visible=open H.Size=UDim2.new(0,304,0,open and 149 or 30) Icon.ImageColor3=open and Color3.fromRGB(137,246,255) or Color3.new(1,1,1) task.defer(UpdateCanvas) end)
+            B.MouseButton1Click:Connect(function() open=not open Panel.Visible=open H.Size=UDim2.new(0,214,0,open and 145 or 26) Icon.ImageColor3=open and Color3.fromRGB(200,60,60) or Color3.new(1,1,1) task.defer(UpdateCanvas) end)
             local function build(valuesList)
                 values={} for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then ch:Destroy() end end
                 for _,v in ipairs(valuesList or {}) do
@@ -1781,7 +1787,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             if o then name=o.Text or name default=o.Default callback=o.Callback end
             callback=callback or function() end
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton")
-            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(17,17,17) H.BorderSizePixel=0 H.Size=UDim2.new(0,304,0,30) C.CornerRadius=UDim.new(0,5) C.Parent=H
+            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,200,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,85,0,20) B.Font=Enum.Font.GothamSemibold B.Text=default and tostring(default.Name or default) or "None" B.TextColor3=Color3.new(1,1,1) B.TextSize=9
             local value=default local listening=false
@@ -1796,7 +1802,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             callback=callback or function() end
             default=typeof(default)=="Color3" and default or Color3.new(1,1,1)
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local BC=Instance.new("UICorner")
-            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(17,17,17) H.BorderSizePixel=0 H.Size=UDim2.new(0,304,0,30) H.ClipsDescendants=false C.CornerRadius=UDim.new(0,5) C.Parent=H
+            H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,230,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
             B.Parent=H B.BackgroundColor3=default B.Position=UDim2.new(.82,0,0,5) B.Size=UDim2.new(0,45,0,20) B.Text="" B.AutoButtonColor=false B.ZIndex=50 BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("ImageButton") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
@@ -1874,7 +1880,7 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
                     .." config"
                     ..(#files==1 and "" or "s")
                 ConfigStatus.TextColor3=
-                    Color3.fromRGB(137,246,255)
+                    Color3.fromRGB(200,50,50)
             end
         end
 )
@@ -1892,9 +1898,9 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
         local C=Instance.new("UICorner")
         local T=Instance.new("TextLabel")
         H.Parent=ConfigPage.__Page
-        H.BackgroundColor3=Color3.fromRGB(17,17,17)
+        H.BackgroundColor3=Color3.fromRGB(23,23,23)
         H.BorderSizePixel=0
-        H.Size=UDim2.new(0,304,0,30)
+        H.Size=UDim2.new(0,214,0,26)
         C.CornerRadius=UDim.new(0,5)
         C.Parent=H
         T.Parent=H
@@ -1913,7 +1919,7 @@ ConfigPage:addLabel("Configs", "Save, load and manage your configurations")
         ConfigStatus.Text=text
         ConfigStatus.TextColor3=
             good
-            and Color3.fromRGB(137,246,255)
+            and Color3.fromRGB(200,50,50)
             or Color3.fromRGB(255,120,120)
     end
     local function SaveConfig(name)
@@ -2178,7 +2184,7 @@ local function RefreshPluginDropdown()
                 .." plugin"
                 ..(#files==1 and "" or "s")
             PluginStatus.TextColor3=
-                Color3.fromRGB(137,246,255)
+                Color3.fromRGB(200,50,50)
         end
     end
 end
@@ -2195,9 +2201,9 @@ do
     local C=Instance.new("UICorner")
     local T=Instance.new("TextLabel")
     H.Parent=ConfigPage.__Page
-    H.BackgroundColor3=Color3.fromRGB(17,17,17)
+    H.BackgroundColor3=Color3.fromRGB(23,23,23)
     H.BorderSizePixel=0
-    H.Size=UDim2.new(0,304,0,30)
+    H.Size=UDim2.new(0,214,0,26)
     C.CornerRadius=UDim.new(0,5)
     C.Parent=H
     T.Parent=H
@@ -2395,7 +2401,7 @@ table.insert(errors, requestedName..": "..tostring(page))
                 ..pluginName
 .." (" ..createdTabs .." tab" ..(createdTabs==1 and "" or "s") ..")"
         end
-        PluginStatus.TextColor3=Color3.fromRGB(137,246,255)
+        PluginStatus.TextColor3=Color3.fromRGB(200,50,50)
     end
     return true
 end
