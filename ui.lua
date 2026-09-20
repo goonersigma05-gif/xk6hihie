@@ -2951,6 +2951,13 @@ TweenService:Create(L,TweenInfo.new(.3),{TextTransparency=1}):Play()
     end)
 end
 RefreshHotkeys()
+task.delay(3,function()
+    local rows=0
+    for _,ch in ipairs(HotkeyList:GetChildren()) do if ch.Name=="HKRow" then rows+=1 end end
+    local par="?"
+    pcall(function() par=CursorGui.Parent and CursorGui.Parent.Name or "nilparent" end)
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." cursorOn="..tostring(CursorOn).." cursorGui="..tostring(CursorGui.Enabled).." cursorParent="..tostring(par))
+end)
 return PageYep
 end
 --// XK5NG INTRO: info card first, then character viewport slides in
@@ -3109,5 +3116,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=5
+Library.Version=6
 return Library
