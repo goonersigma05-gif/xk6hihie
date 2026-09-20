@@ -21,8 +21,15 @@ local Themes={
     {Name="Obsidian Purple",Accent=Color3.fromRGB(175,115,255),Window=Color3.fromRGB(17,13,24),Panel=Color3.fromRGB(12,9,17),Row=Color3.fromRGB(26,19,38),Hi=Color3.fromRGB(38,28,54)},
     {Name="PinkEdition",Accent=Color3.fromRGB(255,115,185),Window=Color3.fromRGB(25,14,20),Panel=Color3.fromRGB(18,10,14),Row=Color3.fromRGB(40,22,32),Hi=Color3.fromRGB(56,32,46)},
     {Name="Rust & Bone",Accent=Color3.fromRGB(220,135,65),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,29,20),Hi=Color3.fromRGB(54,41,28)},
+    {Name="Blood Moon",Accent=Color3.fromRGB(255,45,45),Window=Color3.fromRGB(16,10,10),Panel=Color3.fromRGB(11,7,7),Row=Color3.fromRGB(30,16,16),Hi=Color3.fromRGB(44,22,22)},
+    {Name="Arctic Frost",Accent=Color3.fromRGB(150,220,255),Window=Color3.fromRGB(14,18,24),Panel=Color3.fromRGB(10,13,18),Row=Color3.fromRGB(22,30,40),Hi=Color3.fromRGB(32,44,58)},
+    {Name="Toxic",Accent=Color3.fromRGB(140,255,70),Window=Color3.fromRGB(12,18,10),Panel=Color3.fromRGB(9,13,8),Row=Color3.fromRGB(20,30,16),Hi=Color3.fromRGB(30,44,24)},
+    {Name="Sunset",Accent=Color3.fromRGB(255,140,60),Window=Color3.fromRGB(24,15,12),Panel=Color3.fromRGB(17,11,9),Row=Color3.fromRGB(40,24,18),Hi=Color3.fromRGB(58,34,26)},
+    {Name="Lavender",Accent=Color3.fromRGB(200,170,255),Window=Color3.fromRGB(19,16,25),Panel=Color3.fromRGB(14,12,19),Row=Color3.fromRGB(30,26,42),Hi=Color3.fromRGB(44,38,60)},
+    {Name="Gold Rush",Accent=Color3.fromRGB(255,205,70),Window=Color3.fromRGB(22,18,12),Panel=Color3.fromRGB(16,13,9),Row=Color3.fromRGB(38,30,18),Hi=Color3.fromRGB(55,43,26)},
 }
 local CurrentTheme=Themes[1]
+local AllTabRefs={}
 local ThemeRegistry={}
 local function RegTheme(obj,role) if obj then table.insert(ThemeRegistry,{o=obj,r=role}) end return obj end
 local UpdateThemeUI=function() end
@@ -45,6 +52,14 @@ local function ApplyTheme(t)
     end
     pcall(UpdateThemeUI)
     pcall(SaveSettingsFn)
+    for _,t in ipairs(AllTabRefs) do
+        pcall(function()
+            if t and t.Parent and t:IsA("GuiButton") then
+                local sel=t.TextColor3==Color3.new(1,1,1)
+                t.BackgroundColor3=sel and CurrentTheme.Hi or CurrentTheme.Panel
+            end
+        end)
+    end
 end
 local function FindTheme(name)
     for _,t in ipairs(Themes) do if t.Name:lower()==tostring(name or ""):lower() then return t end end
@@ -911,6 +926,7 @@ Layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(UpdateCanvas)
 Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
         task.defer(UpdateCanvas)
         PageTabs[pageName]=Tab
+        table.insert(AllTabRefs,Tab)
         if pageName~="Config" then
             PluginTabOrder+=1
             Tab.LayoutOrder=PluginTabOrder
@@ -2213,21 +2229,18 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     local ThemeRows={}
     for _,t in ipairs(Themes) do
         local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-        local Dot=Instance.new("Frame") local DotC=Instance.new("UICorner")
         local L=Instance.new("TextLabel")
         R.Parent=ThemeList R.BackgroundColor3=Color3.fromRGB(20,20,20) R.BorderSizePixel=0 R.Size=UDim2.new(1,-4,0,24) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="" R.ZIndex=91
         RC.CornerRadius=UDim.new(0,5) RC.Parent=R
-        RegTheme(R,"Row")
-        Dot.Parent=R Dot.BackgroundColor3=t.Accent Dot.BorderSizePixel=0 Dot.AnchorPoint=Vector2.new(.5,.5) Dot.Position=UDim2.new(0,14,0.5,0) Dot.Size=UDim2.new(0,10,0,10) Dot.ZIndex=92
-        DotC.CornerRadius=UDim.new(1,0) DotC.Parent=Dot
-        L.Parent=R L.BackgroundTransparency=1 L.Position=UDim2.new(0,28,0,0) L.Size=UDim2.new(1,-32,1,0) L.Font=Enum.Font.GothamSemibold L.Text=t.Name L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.ZIndex=92
-        table.insert(ThemeRows,{Row=R,Dot=Dot,Theme=t})
+        L.Parent=R L.BackgroundTransparency=1 L.Position=UDim2.new(0,10,0,0) L.Size=UDim2.new(1,-20,1,0) L.Font=Enum.Font.GothamSemibold L.Text=t.Name L.TextColor3=Color3.fromRGB(150,150,150) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.ZIndex=92
+        table.insert(ThemeRows,{Row=R,Label=L,Theme=t})
         R.MouseButton1Click:Connect(function() ApplyTheme(t) end)
     end
     local function RefreshThemeList()
         for _,e in ipairs(ThemeRows) do
             local sel=e.Theme==CurrentTheme
-            e.Dot.BackgroundColor3=sel and Color3.new(1,1,1) or e.Theme.Accent
+            e.Row.BackgroundColor3=sel and CurrentTheme.Hi or Color3.fromRGB(20,20,20)
+            e.Label.TextColor3=sel and Color3.new(1,1,1) or Color3.fromRGB(150,150,150)
         end
     end
     RefreshThemeList()
@@ -2804,7 +2817,7 @@ local HotkeysHead=Instance.new("TextLabel")
 local HotkeyList=Instance.new("Frame")
 local HotkeyLayout=Instance.new("UIListLayout")
 HotkeysPanel.Parent=Gui
-HotkeysPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
+HotkeysPanel.BackgroundColor3=Color3.fromRGB(12,12,12)
 HotkeysPanel.BorderSizePixel=0
 HotkeysPanel.Position=UDim2.new(0,12,0,.35)
 HotkeysPanel.Size=UDim2.new(0,170,0,34)
@@ -2821,6 +2834,18 @@ HotkeysHead.Font=Enum.Font.GothamBold
 HotkeysHead.Text="Hotkeys"
 HotkeysHead.TextColor3=Color3.new(1,1,1)
 HotkeysHead.TextSize=12
+local HotkeysIcon=Instance.new("Frame")
+HotkeysIcon.Parent=HotkeysPanel
+HotkeysIcon.BackgroundTransparency=1
+HotkeysIcon.AnchorPoint=Vector2.new(.5,.5)
+HotkeysIcon.Position=UDim2.new(0,22,0,13)
+HotkeysIcon.Size=UDim2.new(0,9,0,9)
+HotkeysIcon.Rotation=45
+HotkeysIcon.ZIndex=81
+local HotkeysIconStroke=Instance.new("UIStroke")
+HotkeysIconStroke.Color=Color3.new(1,1,1)
+HotkeysIconStroke.Thickness=1.5
+HotkeysIconStroke.Parent=HotkeysIcon
 HotkeyList.Parent=HotkeysPanel
 HotkeyList.BackgroundTransparency=1
 HotkeyList.Position=UDim2.new(0,8,0,28)
@@ -2961,14 +2986,13 @@ RefreshHotkeys=function()
         if ok and typeof(key)=="EnumItem" then
             n+=1
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "")             R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
-            RegTheme(R,"Row")
+R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..KeyToText(key).."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         end
     end
     if n==0 then
         local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(8,8,8) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10 R.ZIndex=81
+        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10 R.ZIndex=81
         RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         n=1
     end
@@ -3000,6 +3024,30 @@ Arrow.Position=UDim2.new(.5,0,.5,0)
 Arrow.Size=UDim2.new(0,32,0,32)
 Arrow.Image="rbxassetid://512397953"
 Arrow.ZIndex=2
+local ArrowBackup=Instance.new("Frame")
+ArrowBackup.Parent=CursorGui
+ArrowBackup.BackgroundTransparency=1
+ArrowBackup.Position=UDim2.new(.5,0,.5,0)
+ArrowBackup.Size=UDim2.new(0,22,0,22)
+ArrowBackup.Visible=false
+do
+    local function BackupBar(w,h,px,py,rot)
+        local B=Instance.new("Frame")
+        B.Parent=ArrowBackup B.BackgroundColor3=Color3.new(1,1,1) B.BorderSizePixel=0 B.AnchorPoint=Vector2.new(.5,.5) B.Position=UDim2.new(0,px,0,py) B.Size=UDim2.new(0,w,0,h) B.Rotation=rot
+        local S=Instance.new("UIStroke") S.Color=Color3.fromRGB(0,0,0) S.Thickness=1 S.Parent=B
+    end
+    BackupBar(3,17,11,10,45)
+    BackupBar(3,8,5,8,12)
+    BackupBar(3,8,9,4,78)
+end
+task.delay(3,function()
+    local loaded=false
+    pcall(function() loaded=Arrow.IsLoaded end)
+    if not loaded and ArrowBackup.Parent then
+        Arrow.Visible=false
+        ArrowBackup.Visible=true
+    end
+end)
 local function SetCustomCursor(on)
     CursorOn=on==true
     CursorGui.Enabled=CursorOn
@@ -3013,6 +3061,7 @@ end)
 UIS.InputChanged:Connect(function(i)
     if CursorOn and i.UserInputType==Enum.UserInputType.MouseMovement then
 Arrow.Position=UDim2.new(0,i.Position.X-4,0,i.Position.Y-2)
+ArrowBackup.Position=UDim2.new(0,i.Position.X-5,0,i.Position.Y-3)
     end
 end)
 if SettingsState.CustomCursor then SetCustomCursor(true) end
@@ -3204,5 +3253,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=9
+Library.Version=10
 return Library
