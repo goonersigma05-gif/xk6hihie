@@ -13,6 +13,7 @@ local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
 --// THEME ENGINE (module scope; UI hooks assigned inside CreateWindow)
 local Themes={
+    {Name="Onyx",Accent=Color3.new(1,1,1),Window=Color3.fromRGB(18,18,18),Panel=Color3.fromRGB(13,13,13),Row=Color3.fromRGB(23,23,23),Hi=Color3.fromRGB(28,28,28)},
     {Name="Midnight Blue",Accent=Color3.fromRGB(130,170,255),Window=Color3.fromRGB(19,23,35),Panel=Color3.fromRGB(14,17,27),Row=Color3.fromRGB(52,64,94),Hi=Color3.fromRGB(66,80,114)},
     {Name="Crimson Night",Accent=Color3.fromRGB(220,70,80),Window=Color3.fromRGB(22,14,16),Panel=Color3.fromRGB(16,10,12),Row=Color3.fromRGB(34,20,24),Hi=Color3.fromRGB(48,28,32)},
     {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(13,20,15),Panel=Color3.fromRGB(9,15,11),Row=Color3.fromRGB(18,32,22),Hi=Color3.fromRGB(26,46,32)},
@@ -884,11 +885,11 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
         Tab.Font=Enum.Font.GothamSemibold
-        Tab.Text="  "..pageName
+        Tab.Text=pageName
         Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
         Tab.TextSize=11
         Tab.TextTransparency=0
-        Tab.TextXAlignment=Enum.TextXAlignment.Left
+        Tab.TextXAlignment=Enum.TextXAlignment.Center
         TC.CornerRadius=UDim.new(0,5)
         TC.Parent=Tab
         Home.Name=pageName
@@ -1832,7 +1833,8 @@ currentBind.Name:gsub("MouseButton", "MB")
             T.TextTruncate=Enum.TextTruncate.AtEnd
             T.ClipsDescendants=true
             Num.Parent=H
-            Num.BackgroundTransparency=1
+            Num.BackgroundColor3=Color3.fromRGB(10,10,10)
+            Num.BorderSizePixel=0
             Num.Position=UDim2.new(.84,0,0,2)
             Num.Size=UDim2.new(0,42,0,13)
             Num.Font=Enum.Font.GothamSemibold
@@ -1843,6 +1845,9 @@ currentBind.Name:gsub("MouseButton", "MB")
             Num.ZIndex=5
             Num.TextXAlignment=Enum.TextXAlignment.Right
             Num.ClearTextOnFocus=false
+            local NumC=Instance.new("UICorner")
+            NumC.CornerRadius=UDim.new(0,4)
+            NumC.Parent=Num
             B.Parent=H
             B.BackgroundColor3=Color3.fromRGB(5,5,5)
             B.BorderSizePixel=0
@@ -2826,20 +2831,25 @@ RegTheme(HotkeysPanel,"Panel")
 HotkeysCorner.CornerRadius=UDim.new(0,6)
 HotkeysCorner.Parent=HotkeysPanel
 HotkeysHead.Parent=HotkeysPanel
-HotkeysHead.BackgroundTransparency=1
-HotkeysHead.Size=UDim2.new(1,0,0,26)
+HotkeysHead.BackgroundColor3=Color3.fromRGB(0,0,0)
+HotkeysHead.BorderSizePixel=0
+HotkeysHead.Size=UDim2.new(1,-16,0,24)
+HotkeysHead.Position=UDim2.new(0,8,0,4)
 HotkeysHead.Font=Enum.Font.GothamBold
 HotkeysHead.Text="Hotkeys :"
 HotkeysHead.TextColor3=Color3.new(1,1,1)
 HotkeysHead.TextSize=12
+local HotkeysHeadCorner=Instance.new("UICorner")
+HotkeysHeadCorner.CornerRadius=UDim.new(0,5)
+HotkeysHeadCorner.Parent=HotkeysHead
 local HotkeysIcon=Instance.new("Frame")
 HotkeysIcon.Parent=HotkeysPanel
 HotkeysIcon.BackgroundTransparency=1
 HotkeysIcon.AnchorPoint=Vector2.new(.5,.5)
-HotkeysIcon.Position=UDim2.new(0,22,0,13)
+HotkeysIcon.Position=UDim2.new(0,24,0,16)
 HotkeysIcon.Size=UDim2.new(0,9,0,9)
 HotkeysIcon.Rotation=45
-HotkeysIcon.ZIndex=81
+HotkeysIcon.ZIndex=82
 local HotkeysIconStroke=Instance.new("UIStroke")
 HotkeysIconStroke.Color=Color3.new(1,1,1)
 HotkeysIconStroke.Thickness=1.5
@@ -2985,8 +2995,9 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
+            RegTheme(R,"Row")
         end
     end
     if n==0 then
@@ -3252,5 +3263,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=11
+Library.Version=12
 return Library
