@@ -2956,7 +2956,10 @@ task.delay(3,function()
     for _,ch in ipairs(HotkeyList:GetChildren()) do if ch.Name=="HKRow" then rows+=1 end end
     local par="?"
     pcall(function() par=CursorGui.Parent and CursorGui.Parent.Name or "nilparent" end)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." cursorOn="..tostring(CursorOn).." cursorGui="..tostring(CursorGui.Enabled).." cursorParent="..tostring(par))
+    local sk={}
+    pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
+    table.sort(sk)
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." cursorOn="..tostring(CursorOn).." cursorGui="..tostring(CursorGui.Enabled).." cursorParent="..tostring(par).." setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3116,5 +3119,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=6
+Library.Version=7
 return Library
