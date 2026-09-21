@@ -1061,6 +1061,16 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             }
             G2.Parent=Ov2
         end
+        --// SPACER (invisible grid cell for layout)
+        function Elements:addSpacer()
+            local S=Instance.new("Frame")
+            S.Parent=Home
+            S.BackgroundTransparency=1
+            S.BorderSizePixel=0
+            S.Size=UDim2.new(0,214,0,26)
+            S.Active=false
+            return S
+        end
         --// LABEL
         function Elements:addLabel(name,info)
             local o=type(name)=="table" and name or nil
@@ -2172,6 +2182,7 @@ UIS.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseB
         task.defer(UpdateCanvas)
         UpdateWindowLayout()
         Elements.AddLabel=Elements.addLabel
+        Elements.AddSpacer=Elements.addSpacer
         Elements.AddButton=Elements.addButton
         Elements.AddToggle=Elements.addToggle
         Elements.AddSlider=Elements.addSlider
@@ -3360,5 +3371,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=35
+Library.Version=36
 return Library
