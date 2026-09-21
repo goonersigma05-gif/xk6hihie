@@ -378,6 +378,7 @@ TabLayout.Padding=UDim.new(0,6)
     SearchImg.Position=UDim2.new(.5,0,.5,0)
     SearchImg.Size=UDim2.new(0,16,0,16)
     SearchImg.Image="rbxassetid://11496279127"
+    SearchImg.ScaleType=Enum.ScaleType.Fit
     SearchImg.ZIndex=52
     task.delay(3,function()
         local ok,loaded=pcall(function() return SearchImg.IsLoaded end)
@@ -462,6 +463,7 @@ TabLayout.Padding=UDim.new(0,6)
     GearImg.Position=UDim2.new(.5,0,.5,0)
     GearImg.Size=UDim2.new(0,16,0,16)
     GearImg.Image="rbxassetid://9405931596"
+    GearImg.ScaleType=Enum.ScaleType.Fit
     GearImg.ZIndex=52
     task.delay(3,function()
         local ok,loaded=pcall(function() return GearImg.IsLoaded end)
@@ -3227,5 +3229,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=18
+Library.Version=19
 return Library
