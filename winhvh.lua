@@ -702,11 +702,9 @@ Dash.Size=UDim2.new(0, 130, 0, contentHeight)
 Tabs.Size=UDim2.new(0, 122, 0, contentHeight-9)
 Pages.Size=UDim2.new(0, 456, 0, contentHeight)
     --// Update page sizes
-    local homeW2=Pages.AbsoluteSize.X
-    if homeW2<50 then homeW2=456 end
     for _,page in ipairs(Folder:GetChildren()) do
         if page:IsA("ScrollingFrame") then
-page.Size=UDim2.new(0, homeW2-12, 0, contentHeight-13)
+page.Size=UDim2.new(1, -3, 0, contentHeight-13)
         end
     end
     --// Update page canvases
@@ -940,9 +938,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Home.BackgroundTransparency=1
         Home.BorderSizePixel=0
         Home.Position=UDim2.new(0,6,.06,0)
-        local homeW0=Pages.AbsoluteSize.X
-        if homeW0<50 then homeW0=456 end
-        Home.Size=UDim2.new(0,homeW0-12,0,295)
+        Home.Size=UDim2.new(1,-12,0,295)
         Home.ScrollBarThickness=2
         Home.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
         Home.CanvasSize=UDim2.new(0,0,0,0)
@@ -957,7 +953,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Layout.VerticalAlignment=Enum.VerticalAlignment.Top
         Layout.SortOrder=Enum.SortOrder.LayoutOrder
         Layout.CellSize=UDim2.new(0,214,0,26)
-        Layout.CellPadding=UDim2.new(0,6,0,3)
+        Layout.CellPadding=UDim2.new(0,6,0,5)
         local function UpdateCanvas()
             local h=Layout.AbsoluteContentSize.Y+12
             Home.CanvasSize=UDim2.new(
@@ -1071,7 +1067,6 @@ Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Cen
         --// SPACER (invisible grid cell for layout)
         function Elements:addSpacer()
             local S=Instance.new("Frame")
-            S.Name="SPACER"
             S.Parent=Home
             S.BackgroundTransparency=1
             S.BorderSizePixel=0
@@ -1324,8 +1319,6 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             -- diamond icon shows no text; assignments shown in Hotkeys list
             TB.Parent=H
             TB.BackgroundTransparency=1
-            TB.Text=""
-            TB.TextTransparency=1
             TB.Position=UDim2.new(.84,0,0,0)
             TB.Size=UDim2.new(0,34,0,26)
             TB.AutoButtonColor=false
@@ -1934,7 +1927,6 @@ currentBind.Name:gsub("MouseButton", "MB")
                 for _,c in ipairs(Home:GetChildren()) do if c:IsA("Frame") then fc+=1 end end
                 if fc%2==1 then
                     local SP=Instance.new("Frame")
-                    SP.Name="SPACER"
                     SP.Parent=Home SP.BackgroundTransparency=1 SP.BorderSizePixel=0 SP.Size=UDim2.new(0,214,0,26) SP.Active=false
                 end
             end
@@ -1945,7 +1937,6 @@ currentBind.Name:gsub("MouseButton", "MB")
             H.ClipsDescendants=true
             do
                 local SP2=Instance.new("Frame")
-                SP2.Name="SPACER"
                 SP2.Parent=Home SP2.BackgroundTransparency=1 SP2.BorderSizePixel=0 SP2.Size=UDim2.new(0,214,0,26) SP2.Active=false
             end
             C.CornerRadius=UDim.new(0,5)
@@ -2230,7 +2221,6 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     end
     local function ConfigSpacer()
         local S=Instance.new("Frame")
-        S.Name="SPACER"
         S.Parent=ConfigPage.__Page
         S.BackgroundTransparency=1
         S.BorderSizePixel=0
@@ -3208,32 +3198,16 @@ task.delay(3,function()
     local sk={}
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
-    local pw,cell,over,homeW,kids,contentH=0,"?",0,0,0,0
-    local pageInfo={}
+    local pw,cell,over=0,"?",0
     pcall(function()
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
         end
         local gl=Folder:GetChildren()[1]
         if gl then
-            homeW=math.floor(gl.AbsoluteSize.X)
             local grid=gl:FindFirstChildOfClass("UIGridLayout")
-            if grid then
-                cell=tostring(grid.CellSize)
-                contentH=math.floor(grid.AbsoluteContentSize.Y)
-                for _,c in ipairs(gl:GetChildren()) do if c:IsA("Frame") then kids+=1 end end
-            end
+            if grid then cell=tostring(grid.CellSize) end
         end
-        for _,page in ipairs(Folder:GetChildren()) do
-            if page:IsA("ScrollingFrame") then
-                local k,h2=0,0
-                for _,c in ipairs(page:GetChildren()) do if c:IsA("Frame") then k+=1 end end
-                local g2=page:FindFirstChildOfClass("UIGridLayout")
-                if g2 then h2=math.floor(g2.AbsoluteContentSize.Y) end
-                table.insert(pageInfo,page.Name..":"..k.."/"..h2)
-            end
-        end
-    end)
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") then
                 for _,h in ipairs(page:GetChildren()) do
@@ -3248,7 +3222,8 @@ task.delay(3,function()
                 end
             end
         end
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
+    end)
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3408,4 +3383,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
+Library.Version=41
 return Library
