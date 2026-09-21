@@ -57,7 +57,9 @@ local function ApplyTheme(t)
         pcall(function()
             if t and t.Parent and t:IsA("GuiButton") then
                 local sel=t.TextColor3==Color3.new(1,1,1)
-                t.BackgroundColor3=sel and CurrentTheme.Hi or CurrentTheme.Panel
+                t.BackgroundTransparency=1
+                t.Font=sel and Enum.Font.GothamBold or Enum.Font.GothamSemibold
+                t.TextXAlignment=sel and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
             end
         end)
     end
@@ -916,16 +918,16 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         local Layout=Instance.new("UIGridLayout")
         Tab.Name="Tab"
         Tab.Parent=Tabs
-        Tab.BackgroundColor3=visible and CurrentTheme.Hi or CurrentTheme.Panel
+        Tab.BackgroundTransparency=1
         Tab.BorderSizePixel=0
         Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
-        Tab.Font=Enum.Font.GothamSemibold
+        Tab.Font=visible and Enum.Font.GothamBold or Enum.Font.GothamSemibold
         Tab.Text=pageName
         Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
         Tab.TextSize=11
         Tab.TextTransparency=0
-        Tab.TextXAlignment=Enum.TextXAlignment.Center
+        Tab.TextXAlignment=visible and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
         TC.CornerRadius=UDim.new(0,5)
         TC.Parent=Tab
         Home.Name=pageName
@@ -980,10 +982,9 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             for _,t in ipairs(Tabs:GetChildren()) do
                 if t:IsA("GuiButton") then
                     local selected=t==Tab
-                    t.BackgroundColor3=
-                        selected
-                        and CurrentTheme.Hi
-                        or CurrentTheme.Panel
+                    t.BackgroundTransparency=1
+                    t.Font=selected and Enum.Font.GothamBold or Enum.Font.GothamSemibold
+                    t.TextXAlignment=selected and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
                     t.TextColor3=
                         selected
                         and Color3.new(1,1,1)
@@ -993,8 +994,8 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=CurrentTheme.Hi then Tab.BackgroundColor3=CurrentTheme.Row end end)
-Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and CurrentTheme.Hi or CurrentTheme.Panel end)
+Tab.MouseEnter:Connect(function() Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) end)
+Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Center then Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) else Tab.Font=Enum.Font.GothamSemibold Tab.TextColor3=Color3.fromRGB(140,140,140) Tab.TextXAlignment=Enum.TextXAlignment.Left end end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
@@ -3375,5 +3376,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=37
+Library.Version=38
 return Library
