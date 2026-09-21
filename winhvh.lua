@@ -3248,19 +3248,7 @@ task.delay(3,function()
                 end
             end
         end
-    pcall(function()
-        for _,page in ipairs(Folder:GetChildren()) do
-            if page:IsA("ScrollingFrame") then
-                for _,c in ipairs(page:GetChildren()) do
-                    if c.Name=="SPACER" then
-                        c.BackgroundColor3=Color3.fromRGB(255,0,0)
-                        c.BackgroundTransparency=0
-                    end
-                end
-            end
-        end
-    end)
-    print("[winhvh] diagSPACERS: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
 end)
 return PageYep
 end
