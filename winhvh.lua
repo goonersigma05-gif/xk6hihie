@@ -1450,6 +1450,7 @@ or Color3.fromRGB(170, 170, 170)
                 UpdateRightRow()
                 UpdateSwitchVisual()
                 pcall(callback,active)
+                if SettingsState.AlwaysTrigger and Library.Notify then pcall(function() Library:Notify(tostring(name).." turned "..(active and "on" or "off")) end) end
                 task.defer(UpdateCanvas)
             end
             local modeOpen=false
@@ -2856,7 +2857,7 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=false,Notifications=true,CustomKick=true}
+local SettingsState={KeybindList=false,Notifications=true,CustomKick=true,AlwaysTrigger=false}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
@@ -2893,7 +2894,7 @@ SettingsPanel.Parent=Frame
 SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
 SettingsPanel.BorderSizePixel=0
 SettingsPanel.Position=UDim2.new(.27,36,0,32)
-SettingsPanel.Size=UDim2.new(0,210,0,140)
+SettingsPanel.Size=UDim2.new(0,210,0,172)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
 RegTheme(SettingsPanel,"Panel")
@@ -2936,6 +2937,9 @@ do
     local r3=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,106)
     r3.OnChange=function(v) SettingsState.CustomKick=v end
     SettingSetters["CustomKick"]=function(v) r3.Set(v) SettingsState.CustomKick=v==true end
+    local r5=MakeCheckRow(SettingsPanel,"Always trigger",SettingsState.AlwaysTrigger,138)
+    r5.OnChange=function(v) SettingsState.AlwaysTrigger=v end
+    SettingSetters["AlwaysTrigger"]=function(v) r5.Set(v) SettingsState.AlwaysTrigger=v==true end
 end
 --// HOTKEYS LIST PANEL (draggable, left side)
 local HotkeysPanel=Instance.new("Frame")
@@ -3371,5 +3375,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=36
+Library.Version=37
 return Library
