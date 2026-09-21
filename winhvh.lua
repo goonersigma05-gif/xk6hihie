@@ -1319,6 +1319,8 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             -- diamond icon shows no text; assignments shown in Hotkeys list
             TB.Parent=H
             TB.BackgroundTransparency=1
+            TB.Text=""
+            TB.TextTransparency=1
             TB.Position=UDim2.new(.84,0,0,0)
             TB.Size=UDim2.new(0,34,0,26)
             TB.AutoButtonColor=false
@@ -3383,5 +3385,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=41
+Library.Version=42
 return Library
