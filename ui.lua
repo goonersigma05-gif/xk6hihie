@@ -1029,7 +1029,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
             B.Text=name or ""
             B.TextColor3=Color3.new(1,1,1)
             B.TextSize=11
-            B.TextTruncate=Enum.TextTruncate.AtEnd
+            B.TextScaled=true
             local Dot=Instance.new("Frame")
             Dot.Parent=H
             Dot.BackgroundColor3=Color3.new(1,1,1)
@@ -1154,7 +1154,7 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             T.TextColor3=Color3.fromRGB(235,235,235)
             T.TextSize=10
             T.TextXAlignment=Enum.TextXAlignment.Left
-            T.TextTruncate=Enum.TextTruncate.AtEnd
+            T.TextScaled=true
             T.ClipsDescendants=true
             Bind.Parent=H
             Bind.BackgroundTransparency=1
@@ -1858,7 +1858,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             T.TextColor3=Color3.new(1,1,1)
             T.TextSize=11
             T.TextXAlignment=Enum.TextXAlignment.Left
-            T.TextTruncate=Enum.TextTruncate.AtEnd
+            T.TextScaled=true
             T.ClipsDescendants=true
             Num.Parent=H
             Num.BackgroundColor3=Color3.fromRGB(10,10,10)
@@ -1953,7 +1953,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextBox") local BC=Instance.new("UICorner")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,150,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,150,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,60,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.PlaceholderText=(o and o.Placeholder) or ""
             BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             B.FocusLost:Connect(function() pcall(callback,B.Text) end)
@@ -1970,7 +1970,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local Icon=Instance.new("ImageLabel") local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Scroll=Instance.new("ScrollingFrame") local Layout=Instance.new("UIListLayout")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,140,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,140,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundTransparency=1 B.Size=UDim2.new(1,0,0,30) B.Text="" B.AutoButtonColor=false
             Icon.Visible=false
             local function MakeHam(y)
@@ -2040,7 +2040,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             callback=callback or function() end
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,140,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,140,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.68,0,0,5) B.Size=UDim2.new(0,60,0,20) B.Font=Enum.Font.GothamSemibold B.Text=default and tostring(default.Name or default) or "None" B.TextColor3=Color3.new(1,1,1) B.TextSize=9
             local value=default local listening=false
             B.MouseButton1Click:Connect(function() listening=true B.Text="Press key..." end)
@@ -2055,7 +2055,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             default=typeof(default)=="Color3" and default or Color3.new(1,1,1)
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local BC=Instance.new("UICorner")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,160,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,160,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=default B.Position=UDim2.new(.78,0,0,5) B.Size=UDim2.new(0,40,0,20) B.Text="" B.AutoButtonColor=false B.ZIndex=50 BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("ImageButton") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
             Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
@@ -2776,7 +2776,7 @@ local function MakeCheckRow(parent,labelText,default,y)
     H.Parent=parent H.BackgroundColor3=Color3.fromRGB(20,20,20) H.BorderSizePixel=0 H.Position=UDim2.new(0,8,0,y) H.Size=UDim2.new(1,-16,0,26) H.ZIndex=91
     RegTheme(H,"Row")
     HC.CornerRadius=UDim.new(0,5) HC.Parent=H
-    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92
+    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92 T.TextScaled=true T.ClipsDescendants=true
     Box.Parent=H Box.BackgroundColor3=Color3.fromRGB(35,35,35) Box.BorderSizePixel=0 Box.Position=UDim2.new(1,-26,0.5,-8) Box.Size=UDim2.new(0,16,0,16) Box.Text="" Box.AutoButtonColor=false Box.ZIndex=92
     BoxC.CornerRadius=UDim.new(0,4) BoxC.Parent=Box
     local BS=Instance.new("UIStroke") BS.Color=Color3.fromRGB(70,70,70) BS.Parent=Box
@@ -3021,7 +3021,7 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81 R.TextScaled=true R.ClipsDescendants=true
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
             RegTheme(R,"Row")
         end
@@ -3229,5 +3229,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=19
+Library.Version=20
 return Library
