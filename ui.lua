@@ -2732,7 +2732,7 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=true,Notifications=true,CustomKick=true}
+local SettingsState={KeybindList=false,Notifications=true,CustomKick=true}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
@@ -2970,7 +2970,7 @@ KPMode.MouseButton1Click:Connect(function()
 end)
 OpenKeybindPopup=function(ctx)
     if not ctx or not ctx.Anchor then return end
-    if PopupCtx==ctx and KeyPopup.Visible then KeyPopup.Visible=false PopupCtx=nil KPList.Visible=false return end
+    if PopupCtx and PopupCtx.Anchor==ctx.Anchor and KeyPopup.Visible then KeyPopup.Visible=false PopupCtx=nil KPList.Visible=false return end
     PopupCtx=ctx
     KPList.Visible=false KPList.Size=UDim2.new(1,-16,0,0)
     local ok,ap=pcall(function() return ctx.Anchor.AbsolutePosition end)
@@ -3201,5 +3201,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=14
+Library.Version=15
 return Library
