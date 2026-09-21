@@ -3421,4 +3421,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
+Library.Version=45
 return Library
