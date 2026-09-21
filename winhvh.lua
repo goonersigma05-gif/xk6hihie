@@ -1012,7 +1012,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
                 end
             end
         end
-        local function BuildHSVGrid(parent,cols,rows)
+        local function BuildHSVGrid(parent,cols,rows,baseZ)
             local cw=280/cols
             local ch=99/rows
             for gy=0,rows-1 do
@@ -1023,6 +1023,7 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
                     Cell.BorderSizePixel=0
                     Cell.Position=UDim2.new(0,gx*cw,0,gy*ch)
                     Cell.Size=UDim2.new(0,math.ceil(cw),0,math.ceil(ch))
+                    Cell.ZIndex=baseZ+1
                 end
             end
         end
@@ -1180,7 +1181,7 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             T.Parent=H
             T.BackgroundTransparency=1
             T.Position=UDim2.new(.04,0,0,0)
-            T.Size=UDim2.new(0,134,0,26)
+            T.Size=picker and UDim2.new(0,112,0,26) or UDim2.new(0,134,0,26)
             T.Font=Enum.Font.GothamSemibold
             T.Text=name or ""
             T.TextColor3=Color3.fromRGB(235,235,235)
@@ -1191,7 +1192,7 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             Bind.Parent=H
             Bind.BackgroundTransparency=1
             Bind.BorderSizePixel=0
-            Bind.Position=UDim2.new(.72,0,0,4)
+            Bind.Position=picker and UDim2.new(.58,0,0,4) or UDim2.new(.72,0,0,4)
             Bind.Size=UDim2.new(0,18,0,18)
             Bind.Font=Enum.Font.GothamSemibold
             Bind.Text=""
@@ -1492,14 +1493,14 @@ or Color3.fromRGB(170, 170, 170)
                 Canvas.Size=UDim2.new(1,-16,1,-16)
                 Canvas.ZIndex=61
                 Canvas.ClipsDescendants=true
-                BuildHSVGrid(Canvas,28,10)
+                BuildHSVGrid(Canvas,28,10,61)
                 Circle.Parent=Canvas
                 Circle.AnchorPoint=Vector2.new(.5,.5)
                 Circle.BackgroundColor3=color
                 Circle.BorderColor3=Color3.new(0,0,0)
                 Circle.BorderSizePixel=2
                 Circle.Size=UDim2.new(0,10,0,10)
-                Circle.ZIndex=62
+                Circle.ZIndex=63
                 Circle.Position=UDim2.new(.5,0,.5,0)
                 CC.CornerRadius=UDim.new(1,0)
                 CC.Parent=Circle
@@ -2109,8 +2110,8 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
             Canvas.Parent=Panel Canvas.BackgroundColor3=Color3.fromRGB(0,0,0) Canvas.BorderSizePixel=0 Canvas.Position=UDim2.new(0,8,0,8) Canvas.Size=UDim2.new(1,-16,1,-16) Canvas.ZIndex=301 Canvas.ClipsDescendants=true
-            BuildHSVGrid(Canvas,28,10)
-            Circle.Parent=Canvas Circle.AnchorPoint=Vector2.new(.5,.5) Circle.BackgroundColor3=default Circle.BorderColor3=Color3.new(0,0,0) Circle.BorderSizePixel=2 Circle.Size=UDim2.new(0,10,0,10) Circle.ZIndex=302 Circle.Position=UDim2.new(.5,0,.5,0)
+            BuildHSVGrid(Canvas,28,10,301)
+            Circle.Parent=Canvas Circle.AnchorPoint=Vector2.new(.5,.5) Circle.BackgroundColor3=default Circle.BorderColor3=Color3.new(0,0,0) Circle.BorderSizePixel=2 Circle.Size=UDim2.new(0,10,0,10) Circle.ZIndex=303 Circle.Position=UDim2.new(.5,0,.5,0)
             CC.CornerRadius=UDim.new(1,0) CC.Parent=Circle
             local value=default local open=false local dragging=false
             local function positionPicker()
@@ -3307,5 +3308,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=31
+Library.Version=32
 return Library
