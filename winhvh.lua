@@ -2082,7 +2082,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local Icon=Instance.new("ImageLabel") local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Scroll=Instance.new("ScrollingFrame") local Layout=Instance.new("UIListLayout")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,140,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,140,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
             B.Parent=H B.BackgroundTransparency=1 B.Size=UDim2.new(1,0,0,30) B.Text="" B.AutoButtonColor=false
             Icon.Visible=false
             local function MakeHam(y)
@@ -3154,7 +3154,7 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1)             R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.TextScaled=true R.ClipsDescendants=true
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.ClipsDescendants=true
             R.LayoutOrder=n
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
             RegTheme(R,"Row")
