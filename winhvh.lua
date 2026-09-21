@@ -237,9 +237,9 @@ TabLayout.Padding=UDim.new(0,6)
     local CenterDivider=Instance.new("Frame")
     CenterDivider.Name="winhvh_Divider"
     CenterDivider.Parent=Pages
-    CenterDivider.BackgroundColor3=Color3.fromRGB(45,45,45)
+    CenterDivider.BackgroundColor3=Color3.fromRGB(70,70,70)
     CenterDivider.BorderSizePixel=0
-    CenterDivider.Position=UDim2.new(.5,0,.06,0)
+    CenterDivider.Position=UDim2.new(0,223,.06,0)
     CenterDivider.Size=UDim2.new(0,1,0,295)
     CenterDivider.ZIndex=5
     Title.Parent=Frame
@@ -3264,5 +3264,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=23
+Library.Version=24
 return Library
