@@ -3205,6 +3205,7 @@ task.delay(3,function()
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
     local pw,cell,over,homeW,kids,contentH=0,"?",0,0,0,0
+    local pageInfo={}
     pcall(function()
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
@@ -3221,6 +3222,16 @@ task.delay(3,function()
         end
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") then
+                local k,h2=0,0
+                for _,c in ipairs(page:GetChildren()) do if c:IsA("Frame") then k+=1 end end
+                local g2=page:FindFirstChildOfClass("UIGridLayout")
+                if g2 then h2=math.floor(g2.AbsoluteContentSize.Y) end
+                table.insert(pageInfo,page.Name..":"..k.."/"..h2)
+            end
+        end
+    end)
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page:IsA("ScrollingFrame") then
                 for _,h in ipairs(page:GetChildren()) do
                     if h:IsA("Frame") and h.AbsoluteSize.X>100 then
                         local hr=h.AbsolutePosition.X+h.AbsoluteSize.X
@@ -3234,7 +3245,7 @@ task.delay(3,function()
             end
         end
     end)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
 end)
 return PageYep
 end
