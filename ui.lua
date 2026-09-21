@@ -3079,7 +3079,32 @@ task.delay(3,function()
     local sk={}
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." setters="..table.concat(sk,","))
+    local pw,cell,over=0,"?",0
+    pcall(function()
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
+        end
+        local gl=Folder:GetChildren()[1]
+        if gl then
+            local grid=gl:FindFirstChildOfClass("UIGridLayout")
+            if grid then cell=tostring(grid.CellSize) end
+        end
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page:IsA("ScrollingFrame") then
+                for _,h in ipairs(page:GetChildren()) do
+                    if h:IsA("Frame") and h.AbsoluteSize.X>100 then
+                        local hr=h.AbsolutePosition.X+h.AbsoluteSize.X
+                        for _,c in ipairs(h:GetDescendants()) do
+                            if c:IsA("GuiObject") and c.Visible and c.AbsoluteSize.X>0 then
+                                if c.AbsolutePosition.X+c.AbsoluteSize.X>hr+1 then over+=1 break end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end)
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3239,5 +3264,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=21
+Library.Version=22
 return Library
