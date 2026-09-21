@@ -1910,7 +1910,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             BC.Parent=B
             Trail.Parent=B
             Trail.BackgroundColor3=Color3.new(1,1,1)
-            Trail.Size=UDim2.new(0,1,1,0)
+            Trail.Size=UDim2.new(0,0,1,0)
             Trail.ZIndex=2
             RegTheme(Trail,"Accent")
             TC.CornerRadius=UDim.new(0,4)
@@ -1976,7 +1976,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,150,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
-            B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,60,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.PlaceholderText=(o and o.Placeholder) or ""
+            B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,60,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.TextXAlignment=Enum.TextXAlignment.Center B.PlaceholderText=(o and o.Placeholder) or ""
             BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             B.FocusLost:Connect(function() pcall(callback,B.Text) end)
             RegisterElement(H,name,"TextBox")
@@ -3280,5 +3280,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=26
+Library.Version=27
 return Library
