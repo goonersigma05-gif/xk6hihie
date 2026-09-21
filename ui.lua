@@ -993,6 +993,16 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
         local function RegisterElement(obj,name,typ)
             Register(obj,name,Home,typ)
             RegTheme(obj,"Row")
+            for _,d in ipairs(obj:GetDescendants()) do
+                if d:IsA("TextLabel") or d:IsA("TextButton") then
+                    d.TextScaled=true
+                    if not d:FindFirstChildOfClass("UITextSizeConstraint") then
+                        local c=Instance.new("UITextSizeConstraint")
+                        c.MaxTextSize=d.TextSize
+                        c.Parent=d
+                    end
+                end
+            end
         end
         --// LABEL
         function Elements:addLabel(name,info)
@@ -3229,5 +3239,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=20
+Library.Version=21
 return Library
