@@ -3244,7 +3244,6 @@ task.delay(3,function()
                 end
             end
         end
-    end)
     print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
 end)
 return PageYep
