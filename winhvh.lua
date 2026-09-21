@@ -3131,22 +3131,40 @@ function Library:RegisterHotkey(key,label)
     return {Set=function(k) if typeof(k)=="EnumItem" then src.Key=k RefreshHotkeys() end end,Remove=function() for i,s in ipairs(HotkeySources) do if s==src then table.remove(HotkeySources,i) break end end RefreshHotkeys() end}
 end
 table.insert(HotkeySources,{Label="gui keybind",Get=function() return UIToggleKey end})
---// NOTIFY TOAST (gated by Show notifications)
+--// NOTIFY TOAST (themed, bottom-center pop, gated by Show notifications)
+Library._toasts=Library._toasts or {}
 function Library:Notify(text,dur)
     if not Library.NotificationsEnabled then return end
     dur=tonumber(dur) or 3
-    local T=Instance.new("Frame") local TC=Instance.new("UICorner") local L=Instance.new("TextLabel")
-    T.Parent=Gui T.BackgroundColor3=Color3.fromRGB(10,10,10) T.BorderSizePixel=0 T.AnchorPoint=Vector2.new(1,1) T.Position=UDim2.new(1,-14,1,-14) T.Size=UDim2.new(0,220,0,30) T.ZIndex=300
+    local idx=#Library._toasts+1
+    local baseY=-70-((idx-1)*38)
+    local T=Instance.new("Frame") local TC=Instance.new("UICorner")
+    local Dot=Instance.new("Frame") local DotC=Instance.new("UICorner") local DotS=Instance.new("UIStroke")
+    local I=Instance.new("TextLabel") local L=Instance.new("TextLabel")
+    T.Parent=Gui T.BackgroundColor3=CurrentTheme.Row T.BorderSizePixel=0
+    T.AnchorPoint=Vector2.new(.5,1) T.Position=UDim2.new(.5,0,1,baseY+18) T.Size=UDim2.new(0,280,0,30) T.ZIndex=300
     TC.CornerRadius=UDim.new(0,6) TC.Parent=T
-    L.Parent=T L.BackgroundTransparency=1 L.Size=UDim2.new(1,-16,1,0) L.Position=UDim2.new(0,8,0,0) L.Font=Enum.Font.GothamSemibold L.Text=tostring(text or "") L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.ZIndex=301
-    T.BackgroundTransparency=1 L.TextTransparency=1
-TweenService:Create(T,TweenInfo.new(.25),{BackgroundTransparency=0}):Play()
-TweenService:Create(L,TweenInfo.new(.25),{TextTransparency=0}):Play()
+    RegTheme(T,"Row")
+    Dot.Parent=T Dot.BackgroundTransparency=1 Dot.AnchorPoint=Vector2.new(.5,.5) Dot.Position=UDim2.new(0,18,0.5,0) Dot.Size=UDim2.new(0,14,0,14) Dot.ZIndex=301
+    DotC.CornerRadius=UDim.new(1,0) DotC.Parent=Dot
+    DotS.Color=CurrentTheme.Accent DotS.Thickness=1.5 DotS.Transparency=1 DotS.Parent=Dot
+    I.Parent=Dot I.BackgroundTransparency=1 I.Size=UDim2.new(1,0,1,0) I.Font=Enum.Font.GothamBold I.Text="i" I.TextColor3=CurrentTheme.Accent I.TextSize=10 I.TextTransparency=1 I.ZIndex=302
+    L.Parent=T L.BackgroundTransparency=1 L.Position=UDim2.new(0,34,0,0) L.Size=UDim2.new(1,-42,1,0) L.Font=Enum.Font.GothamSemibold L.Text=tostring(text or "") L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.TextTransparency=1 L.ZIndex=301 L.TextScaled=true L.ClipsDescendants=true
+    do local LC=Instance.new("UITextSizeConstraint") LC.MaxTextSize=11 LC.Parent=L end
+    table.insert(Library._toasts,T)
+    T.BackgroundTransparency=1
+    TweenService:Create(T,TweenInfo.new(.3,Enum.EasingStyle.Back,Enum.EasingDirection.Out),{Position=UDim2.new(.5,0,1,baseY),BackgroundTransparency=0}):Play()
+    TweenService:Create(L,TweenInfo.new(.25),{TextTransparency=0}):Play()
+    TweenService:Create(I,TweenInfo.new(.25),{TextTransparency=0}):Play()
+    TweenService:Create(DotS,TweenInfo.new(.25),{Transparency=0}):Play()
     task.delay(dur,function()
         if not T.Parent then return end
-TweenService:Create(T,TweenInfo.new(.3),{BackgroundTransparency=1}):Play()
-TweenService:Create(L,TweenInfo.new(.3),{TextTransparency=1}):Play()
+        TweenService:Create(T,TweenInfo.new(.3),{BackgroundTransparency=1}):Play()
+        TweenService:Create(L,TweenInfo.new(.3),{TextTransparency=1}):Play()
+        TweenService:Create(I,TweenInfo.new(.3),{TextTransparency=1}):Play()
+        TweenService:Create(DotS,TweenInfo.new(.3),{Transparency=1}):Play()
         task.wait(.32)
+        for i,v in ipairs(Library._toasts) do if v==T then table.remove(Library._toasts,i) break end end
         pcall(function() T:Destroy() end)
     end)
 end
@@ -3342,5 +3360,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=34
+Library.Version=35
 return Library
