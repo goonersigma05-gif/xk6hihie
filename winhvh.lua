@@ -957,7 +957,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Layout.VerticalAlignment=Enum.VerticalAlignment.Top
         Layout.SortOrder=Enum.SortOrder.LayoutOrder
         Layout.CellSize=UDim2.new(0,214,0,26)
-        Layout.CellPadding=UDim2.new(0,6,0,5)
+        Layout.CellPadding=UDim2.new(0,6,0,3)
         local function UpdateCanvas()
             local h=Layout.AbsoluteContentSize.Y+12
             Home.CanvasSize=UDim2.new(
