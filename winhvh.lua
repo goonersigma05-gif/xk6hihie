@@ -1071,6 +1071,7 @@ Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Cen
         --// SPACER (invisible grid cell for layout)
         function Elements:addSpacer()
             local S=Instance.new("Frame")
+            S.Name="SPACER"
             S.Parent=Home
             S.BackgroundTransparency=1
             S.BorderSizePixel=0
@@ -1933,6 +1934,7 @@ currentBind.Name:gsub("MouseButton", "MB")
                 for _,c in ipairs(Home:GetChildren()) do if c:IsA("Frame") then fc+=1 end end
                 if fc%2==1 then
                     local SP=Instance.new("Frame")
+                    SP.Name="SPACER"
                     SP.Parent=Home SP.BackgroundTransparency=1 SP.BorderSizePixel=0 SP.Size=UDim2.new(0,214,0,26) SP.Active=false
                 end
             end
@@ -1943,6 +1945,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             H.ClipsDescendants=true
             do
                 local SP2=Instance.new("Frame")
+                SP2.Name="SPACER"
                 SP2.Parent=Home SP2.BackgroundTransparency=1 SP2.BorderSizePixel=0 SP2.Size=UDim2.new(0,214,0,26) SP2.Active=false
             end
             C.CornerRadius=UDim.new(0,5)
@@ -2227,6 +2230,7 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     end
     local function ConfigSpacer()
         local S=Instance.new("Frame")
+        S.Name="SPACER"
         S.Parent=ConfigPage.__Page
         S.BackgroundTransparency=1
         S.BorderSizePixel=0
@@ -3244,7 +3248,19 @@ task.delay(3,function()
                 end
             end
         end
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
+    pcall(function()
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page:IsA("ScrollingFrame") then
+                for _,c in ipairs(page:GetChildren()) do
+                    if c.Name=="SPACER" then
+                        c.BackgroundColor3=Color3.fromRGB(255,0,0)
+                        c.BackgroundTransparency=0
+                    end
+                end
+            end
+        end
+    end)
+    print("[winhvh] diagSPACERS: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
 end)
 return PageYep
 end
