@@ -2028,6 +2028,10 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                     table.insert(values,v) local O=Instance.new("TextButton") local OC=Instance.new("UICorner")
                     O.Parent=Scroll O.BackgroundColor3=Color3.fromRGB(15,15,15) O.BorderSizePixel=0 O.Size=UDim2.new(1,0,0,24) O.AutoButtonColor=false O.Font=Enum.Font.GothamSemibold O.Text=tostring(v) O.TextColor3=Color3.new(1,1,1) O.TextSize=10 O.ZIndex=102
                     OC.CornerRadius=UDim.new(0,6) OC.Parent=O visual(O,v)
+                    O.TextScaled=true
+                    local OCC=Instance.new("UITextSizeConstraint")
+                    OCC.MaxTextSize=10
+                    OCC.Parent=O
                     O.MouseEnter:Connect(function() if not ((multi and selections[v]) or selected==v) then O.BackgroundColor3=Color3.fromRGB(10,10,10) end end)
                     O.MouseLeave:Connect(function() visual(O,v) end)
                     O.MouseButton1Click:Connect(function()
@@ -3264,5 +3268,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=24
+Library.Version=25
 return Library
