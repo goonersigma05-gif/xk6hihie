@@ -1935,29 +1935,11 @@ currentBind.Name:gsub("MouseButton", "MB")
             local Knob=Instance.new("Frame")
             local KC=Instance.new("UICorner")
             local Num=Instance.new("TextBox")
-            do
-                local fc=0
-                for _,c in ipairs(Home:GetChildren()) do if c:IsA("Frame") then fc+=1 end end
-                if fc%2==1 then
-                    local SP=Instance.new("Frame")
-                    SP.Name="SPACER"
-                    SP.Parent=Home SP.BackgroundTransparency=1 SP.BorderSizePixel=0 SP.Size=UDim2.new(0,214,0,26) SP.Active=false
-                    OrderSeq+=1
-                    SP.LayoutOrder=OrderSeq
-                end
-            end
             H.Parent=Home
             H.BackgroundColor3=Color3.fromRGB(23,23,23)
             H.BorderSizePixel=0
-            H.Size=UDim2.new(0,434,0,26)
+            H.Size=UDim2.new(0,214,0,26)
             H.ClipsDescendants=true
-            do
-                local SP2=Instance.new("Frame")
-                SP2.Name="SPACER"
-                SP2.Parent=Home SP2.BackgroundTransparency=1 SP2.BorderSizePixel=0 SP2.Size=UDim2.new(0,214,0,26) SP2.Active=false
-                OrderSeq+=1
-                SP2.LayoutOrder=OrderSeq
-            end
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
             T.Parent=H
