@@ -1389,16 +1389,16 @@ or Color3.fromRGB(170, 170, 170)
             SetMode=function(mode)
                 local newMode=mode=="Hold" and "Hold" or "Toggle"
                 if toggleMode==newMode then
-                    ModeButton.Text=toggleMode
-                    ModeMenu.Visible=false
+                    if ModeButton then ModeButton.Text=toggleMode end
+                    if ModeMenu then ModeMenu.Visible=false end
                     modeOpen=false
                     UpdateRightRow()
                     UpdateSwitchVisual()
                     return
                 end
                 toggleMode=newMode
-                ModeButton.Text=toggleMode
-                ModeMenu.Visible=false
+                if ModeButton then ModeButton.Text=toggleMode end
+                if ModeMenu then ModeMenu.Visible=false end
                 modeOpen=false
                 if active then SetActive(false,true) else UpdateRightRow() UpdateSwitchVisual() end
             end
@@ -1677,7 +1677,7 @@ Bind.MouseButton1Click:Connect(function()
         SetBind=function(k) currentBind=k UpdateRightRow() RefreshHotkeys() end,
         HasMode=holdToggle,
         GetMode=function() return toggleMode end,
-        SetModeFn=function(m) if ModeButton then SetMode(m) end end,
+        SetModeFn=function(m) SetMode(m) end,
     })
 end)
                 UIS.InputBegan:Connect(function(i,gp)
@@ -1893,7 +1893,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             Num.TextSize=10
             Num.TextEditable=true
             Num.ZIndex=5
-            Num.TextXAlignment=Enum.TextXAlignment.Right
+            Num.TextXAlignment=Enum.TextXAlignment.Center
             Num.ClearTextOnFocus=false
             local NumC=Instance.new("UICorner")
             NumC.CornerRadius=UDim.new(0,4)
@@ -1921,6 +1921,7 @@ currentBind.Name:gsub("MouseButton", "MB")
             Knob.AnchorPoint=Vector2.new(.5,.5)
             Knob.Position=UDim2.new(0,0,.5,0)
             Knob.ZIndex=4
+            Knob.Visible=false
             KC.CornerRadius=UDim.new(1,0)
             KC.Parent=Knob
             local function Set(v,callCallback)
@@ -2973,7 +2974,7 @@ for _,modeName in ipairs({"toggled","hold"}) do
     O.Parent=KPList O.BackgroundColor3=Color3.fromRGB(10,10,10) O.BorderSizePixel=0 O.Size=UDim2.new(1,-8,0,20) O.AutoButtonColor=false O.Font=Enum.Font.GothamSemibold O.Text=modeName O.TextColor3=Color3.new(1,1,1) O.TextSize=10 O.ZIndex=206
     OC.CornerRadius=UDim.new(0,4) OC.Parent=O
     O.MouseButton1Click:Connect(function()
-        if PopupCtx and PopupCtx.HasMode and PopupCtx.SetModeFn then
+        if PopupCtx and PopupCtx.SetModeFn then
             pcall(PopupCtx.SetModeFn, modeName=="hold" and "Hold" or "Toggle")
         end
         KPList.Visible=false KPList.Size=UDim2.new(1,-16,0,0)
@@ -3018,7 +3019,7 @@ KPRemove.MouseButton1Click:Connect(function()
     RefreshKeyPopup()
 end)
 KPMode.MouseButton1Click:Connect(function()
-    if not PopupCtx or not PopupCtx.HasMode then return end
+    if not PopupCtx then return end
     KPList.Visible=not KPList.Visible
     KPList.Size=KPList.Visible and UDim2.new(1,-16,0,48) or UDim2.new(1,-16,0,0)
 end)
@@ -3280,5 +3281,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=27
+Library.Version=28
 return Library
