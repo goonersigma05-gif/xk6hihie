@@ -1451,7 +1451,7 @@ or Color3.fromRGB(170, 170, 170)
                 UpdateRightRow()
                 UpdateSwitchVisual()
                 pcall(callback,active)
-                if SettingsState.AlwaysTrigger and Library.Notify then pcall(function() Library:Notify(tostring(name).." turned "..(active and "on" or "off")) end) end
+                if SettingsState and SettingsState.AlwaysTrigger and Library.Notify then pcall(function() Library:Notify(tostring(name).." turned "..(active and "on" or "off")) end) end
                 task.defer(UpdateCanvas)
             end
             local modeOpen=false
@@ -3376,5 +3376,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=38
+Library.Version=39
 return Library
