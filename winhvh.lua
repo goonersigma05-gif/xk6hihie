@@ -13,29 +13,40 @@ local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
 --// THEME ENGINE (module scope; UI hooks assigned inside CreateWindow)
 local Themes={
-    {Name="Onyx",Accent=Color3.new(1,1,1),Window=Color3.fromRGB(18,18,18),Panel=Color3.fromRGB(13,13,13),Row=Color3.fromRGB(23,23,23),Hi=Color3.fromRGB(28,28,28)},
-    {Name="Midnight Blue",Accent=Color3.fromRGB(130,170,255),Window=Color3.fromRGB(19,23,35),Panel=Color3.fromRGB(14,17,27),Row=Color3.fromRGB(52,64,94),Hi=Color3.fromRGB(66,80,114)},
-    {Name="Crimson Night",Accent=Color3.fromRGB(220,70,80),Window=Color3.fromRGB(22,14,16),Panel=Color3.fromRGB(16,10,12),Row=Color3.fromRGB(34,20,24),Hi=Color3.fromRGB(48,28,32)},
-    {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(13,20,15),Panel=Color3.fromRGB(9,15,11),Row=Color3.fromRGB(18,32,22),Hi=Color3.fromRGB(26,46,32)},
-    {Name="Espresso",Accent=Color3.fromRGB(215,160,95),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(16,12,9),Row=Color3.fromRGB(37,28,20),Hi=Color3.fromRGB(52,40,28)},
-    {Name="Gray",Accent=Color3.fromRGB(225,225,225),Window=Color3.fromRGB(24,24,24),Panel=Color3.fromRGB(17,17,17),Row=Color3.fromRGB(36,36,36),Hi=Color3.fromRGB(52,52,52)},
-    {Name="Obsidian Purple",Accent=Color3.fromRGB(175,115,255),Window=Color3.fromRGB(17,13,24),Panel=Color3.fromRGB(12,9,17),Row=Color3.fromRGB(26,19,38),Hi=Color3.fromRGB(38,28,54)},
-    {Name="PinkEdition",Accent=Color3.fromRGB(255,115,185),Window=Color3.fromRGB(25,14,20),Panel=Color3.fromRGB(18,10,14),Row=Color3.fromRGB(40,22,32),Hi=Color3.fromRGB(56,32,46)},
-    {Name="Rust & Bone",Accent=Color3.fromRGB(220,135,65),Window=Color3.fromRGB(23,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,29,20),Hi=Color3.fromRGB(54,41,28)},
-    {Name="Blood Moon",Accent=Color3.fromRGB(255,45,45),Window=Color3.fromRGB(16,10,10),Panel=Color3.fromRGB(11,7,7),Row=Color3.fromRGB(30,16,16),Hi=Color3.fromRGB(44,22,22)},
-    {Name="Arctic Frost",Accent=Color3.fromRGB(150,220,255),Window=Color3.fromRGB(14,18,24),Panel=Color3.fromRGB(10,13,18),Row=Color3.fromRGB(22,30,40),Hi=Color3.fromRGB(32,44,58)},
-    {Name="Toxic",Accent=Color3.fromRGB(140,255,70),Window=Color3.fromRGB(12,18,10),Panel=Color3.fromRGB(9,13,8),Row=Color3.fromRGB(20,30,16),Hi=Color3.fromRGB(30,44,24)},
-    {Name="Sunset",Accent=Color3.fromRGB(255,140,60),Window=Color3.fromRGB(24,15,12),Panel=Color3.fromRGB(17,11,9),Row=Color3.fromRGB(40,24,18),Hi=Color3.fromRGB(58,34,26)},
-    {Name="Lavender",Accent=Color3.fromRGB(200,170,255),Window=Color3.fromRGB(19,16,25),Panel=Color3.fromRGB(14,12,19),Row=Color3.fromRGB(30,26,42),Hi=Color3.fromRGB(44,38,60)},
-    {Name="Gold Rush",Accent=Color3.fromRGB(255,205,70),Window=Color3.fromRGB(22,18,12),Panel=Color3.fromRGB(16,13,9),Row=Color3.fromRGB(38,30,18),Hi=Color3.fromRGB(55,43,26)},
+    {Name="Gray",Accent=Color3.fromRGB(200,200,200),Window=Color3.fromRGB(22,22,22),Panel=Color3.fromRGB(16,16,16),Row=Color3.fromRGB(32,32,32),Hi=Color3.fromRGB(48,48,48),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(150,150,150)},
+    {Name="Crimson Night",Accent=Color3.fromRGB(230,70,85),Window=Color3.fromRGB(26,14,16),Panel=Color3.fromRGB(18,10,12),Row=Color3.fromRGB(38,22,26),Hi=Color3.fromRGB(54,30,36),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(160,140,140)},
+    {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(12,20,14),Panel=Color3.fromRGB(9,14,10),Row=Color3.fromRGB(20,34,24),Hi=Color3.fromRGB(30,48,34),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(140,160,140)},
+    {Name="Espresso",Accent=Color3.fromRGB(215,165,100),Window=Color3.fromRGB(24,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,28,20),Hi=Color3.fromRGB(54,40,28),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(165,150,135)},
+    {Name="Midnight Blue",Accent=Color3.fromRGB(110,160,255),Window=Color3.fromRGB(14,17,27),Panel=Color3.fromRGB(10,12,19),Row=Color3.fromRGB(24,30,46),Hi=Color3.fromRGB(34,42,62),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(150,160,175)},
+    {Name="Obsidian Purple",Accent=Color3.fromRGB(180,120,255),Window=Color3.fromRGB(18,13,25),Panel=Color3.fromRGB(13,10,18),Row=Color3.fromRGB(30,20,40),Hi=Color3.fromRGB(44,30,56),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(165,150,180)},
+    {Name="PinkEdition",Accent=Color3.fromRGB(255,90,160),Window=Color3.fromRGB(243,236,240),Panel=Color3.fromRGB(255,255,255),Row=Color3.fromRGB(255,255,255),Hi=Color3.fromRGB(250,220,230),Text=Color3.fromRGB(40,40,45),Sub=Color3.fromRGB(130,130,135)},
+    {Name="Rust & Bone",Accent=Color3.fromRGB(225,140,70),Window=Color3.fromRGB(25,18,13),Panel=Color3.fromRGB(18,13,10),Row=Color3.fromRGB(40,29,20),Hi=Color3.fromRGB(56,41,28),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(170,150,130)},
+    {Name="Serene Lavender",Accent=Color3.fromRGB(170,160,200),Window=Color3.fromRGB(30,28,36),Panel=Color3.fromRGB(22,21,27),Row=Color3.fromRGB(44,42,54),Hi=Color3.fromRGB(60,58,72),Text=Color3.fromRGB(240,240,245),Sub=Color3.fromRGB(160,155,175)},
+    {Name="Slate Gold",Accent=Color3.fromRGB(230,190,90),Window=Color3.fromRGB(22,19,13),Panel=Color3.fromRGB(16,14,10),Row=Color3.fromRGB(36,30,20),Hi=Color3.fromRGB(52,43,28),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(170,155,130)},
+    {Name="Soft White",Accent=Color3.fromRGB(120,130,145),Window=Color3.fromRGB(235,235,238),Panel=Color3.fromRGB(250,250,252),Row=Color3.fromRGB(255,255,255),Hi=Color3.fromRGB(225,228,235),Text=Color3.fromRGB(45,45,50),Sub=Color3.fromRGB(130,130,135)},
+    {Name="Steel",Accent=Color3.fromRGB(140,170,200),Window=Color3.fromRGB(18,22,28),Panel=Color3.fromRGB(13,16,21),Row=Color3.fromRGB(28,34,44),Hi=Color3.fromRGB(40,48,62),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(150,160,175)},
 }
 local CurrentTheme=Themes[1]
 local AllTabRefs={}
+local ThemeGuis={}
 local ThemeRegistry={}
 local function RegTheme(obj,role) if obj then table.insert(ThemeRegistry,{o=obj,r=role}) end return obj end
 local UpdateThemeUI=function() end
 local SaveSettingsFn=function() end
+local function EffBg(obj)
+    local o=obj
+    while o and o:IsA("GuiObject") do
+        if (o.BackgroundTransparency or 0)<0.5 then return o.BackgroundColor3 end
+        o=o.Parent
+    end
+    return nil
+end
+local function BgIsLight(bg)
+    if not bg then return false end
+    return (bg.R+bg.G+bg.B)/3>=0.45
+end
 local function ApplyTheme(t)
+    t=t or CurrentTheme
     if type(t)~="table" or not t.Name then return end
     CurrentTheme=t
     for _,e in ipairs(ThemeRegistry) do
@@ -47,23 +58,59 @@ local function ApplyTheme(t)
                 elseif e.r=="Row" then o.BackgroundColor3=t.Row
                 elseif e.r=="Hi" then o.BackgroundColor3=t.Hi
                 elseif e.r=="Accent" or e.r=="Dot" then o.BackgroundColor3=t.Accent
+                elseif e.r=="Text" then
+                    if o:IsA("TextLabel") or o:IsA("TextButton") then o.TextColor3=t.Text
+                    elseif o:IsA("Frame") then o.BackgroundColor3=t.Text end
                 end
             end)
         end
     end
+    pcall(function()
+        for _,g in ipairs(ThemeGuis) do
+            pcall(function()
+                if g and g.Parent then
+        for _,d in ipairs(g:GetDescendants()) do
+            if d:IsA("TextLabel") or d:IsA("TextButton") or d:IsA("TextBox") then
+                local tc=d.TextColor3
+                if BgIsLight(EffBg(d)) then
+                    if tc.R>0.8 and tc.G>0.8 and tc.B>0.8 then
+                        d.TextColor3=t.Text
+                    elseif math.abs(tc.R-tc.G)<0.2 and math.abs(tc.G-tc.B)<0.2 and math.abs(tc.R-tc.B)<0.2 then
+                        local avg=(tc.R+tc.G+tc.B)/3
+                        if avg>=0.3 and avg<=0.85 then d.TextColor3=t.Sub end
+                    end
+                    if d:IsA("TextBox") then
+                        local pc=d.PlaceholderColor3
+                        if pc.R>0.8 and pc.G>0.8 and pc.B>0.8 then d.PlaceholderColor3=t.Text end
+                    end
+                end
+            elseif d:IsA("UIStroke") then
+                local par=d.Parent
+                local sc=d.Color
+                if par and par:IsA("GuiObject") and BgIsLight(EffBg(par)) then
+                    if sc.R>0.8 and sc.G>0.8 and sc.B>0.8 then d.Color=t.Text end
+                end
+            end
+        end
+                end
+            end)
+        end
+    end)
     pcall(UpdateThemeUI)
     pcall(SaveSettingsFn)
     for _,t in ipairs(AllTabRefs) do
         pcall(function()
             if t and t.Parent and t:IsA("GuiButton") then
-                local sel=t.TextColor3==Color3.new(1,1,1)
+                local sel=t.TextXAlignment==Enum.TextXAlignment.Center
                 t.BackgroundTransparency=1
                 t.Font=sel and Enum.Font.GothamBold or Enum.Font.GothamSemibold
                 t.TextXAlignment=sel and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
+                t.TextColor3=sel and CurrentTheme.Text or CurrentTheme.Sub
             end
         end)
     end
 end
+function Library.ApplyTheme() ApplyTheme(CurrentTheme) end
 local function FindTheme(name)
     for _,t in ipairs(Themes) do if t.Name:lower()==tostring(name or ""):lower() then return t end end
     return nil
@@ -187,6 +234,7 @@ function Library:CreateWindow(windowname,windowinfo)
     local CreditText=Instance.new("TextLabel")
     Gui.Name="fu8rj82n"
     Gui.Parent=game.CoreGui
+    table.insert(ThemeGuis,Gui)
     Gui.ResetOnSpawn=false
     Gui.ZIndexBehavior=Enum.ZIndexBehavior.Global
     Frame.Parent=Gui
@@ -286,6 +334,7 @@ TabLayout.Padding=UDim.new(0,6)
     PageHeader.TextXAlignment=Enum.TextXAlignment.Left
     local PageUnderline=Instance.new("Frame")
     PageUnderline.Parent=Frame
+    RegTheme(PageUnderline,"Accent")
     PageUnderline.BackgroundColor3=Color3.new(1,1,1)
     PageUnderline.BorderSizePixel=0
     PageUnderline.Position=UDim2.new(.245,0,.10,20)
@@ -614,6 +663,7 @@ pos=UDim2.new(resizeStartPos.X.Scale, resizeStartPos.X.Offset+d.X, resizeStartPo
     Min.ZIndex=50
     MinCorner.CornerRadius=UDim.new(0,5)
     MinCorner.Parent=Min
+    Min.Visible=false
     Min.MouseButton1Click:Connect(function() Gui:Destroy() end)
     --// FLOAT
     local Float=Instance.new("TextButton")
@@ -928,7 +978,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Tab.AutoButtonColor=false
         Tab.Font=visible and Enum.Font.GothamBold or Enum.Font.GothamSemibold
         Tab.Text=pageName
-        Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
+        Tab.TextColor3=visible and CurrentTheme.Text or CurrentTheme.Sub
         Tab.TextSize=11
         Tab.TextTransparency=0
         Tab.TextXAlignment=visible and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
@@ -993,15 +1043,15 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
                     t.TextXAlignment=selected and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
                     t.TextColor3=
                         selected
-                        and Color3.new(1,1,1)
-                        or Color3.fromRGB(140,140,140)
+                        and CurrentTheme.Text
+                        or CurrentTheme.Sub
                 end
             end
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) end)
-Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Center then Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) else Tab.Font=Enum.Font.GothamSemibold Tab.TextColor3=Color3.fromRGB(140,140,140) Tab.TextXAlignment=Enum.TextXAlignment.Left end end)
+Tab.MouseEnter:Connect(function() Tab.Font=Enum.Font.GothamBold Tab.TextColor3=CurrentTheme.Text end)
+Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Center then Tab.Font=Enum.Font.GothamBold Tab.TextColor3=CurrentTheme.Text else Tab.Font=Enum.Font.GothamSemibold Tab.TextColor3=CurrentTheme.Sub Tab.TextXAlignment=Enum.TextXAlignment.Left end end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
@@ -2074,6 +2124,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                 Bar.BorderSizePixel=0
                 Bar.Position=UDim2.new(.84,0,0,y)
                 Bar.Size=UDim2.new(0,14,0,2)
+                RegTheme(Bar,"Text")
                 return Bar
             end
             MakeHam(8) MakeHam(12) MakeHam(16)
@@ -2110,7 +2161,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                 values={} for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then ch:Destroy() end end
                 for _,v in ipairs(valuesList or {}) do
                     table.insert(values,v) local O=Instance.new("TextButton") local OC=Instance.new("UICorner")
-                    O.Parent=Scroll O.BackgroundColor3=Color3.fromRGB(15,15,15) O.BorderSizePixel=0 O.Size=UDim2.new(1,0,0,24) O.AutoButtonColor=false O.Font=Enum.Font.GothamSemibold O.Text=tostring(v) O.TextColor3=Color3.new(1,1,1) O.TextSize=10 O.ZIndex=102
+                    O.Parent=Scroll O.BackgroundColor3=Color3.fromRGB(15,15,15) O.BorderSizePixel=0 O.Size=UDim2.new(1,0,0,24) O.AutoButtonColor=false O.Font=Enum.Font.GothamSemibold O.Text=tostring(v) O.TextColor3=CurrentTheme.Text O.TextSize=10 O.ZIndex=102
                     OC.CornerRadius=UDim.new(0,6) OC.Parent=O visual(O,v)
                     O.TextScaled=true
                     local OCC=Instance.new("UITextSizeConstraint")
@@ -2374,8 +2425,8 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     local function RefreshThemeList()
         for _,e in ipairs(ThemeRows) do
             local sel=e.Theme==CurrentTheme
-            e.Row.BackgroundColor3=sel and CurrentTheme.Hi or Color3.fromRGB(20,20,20)
-            e.Label.TextColor3=sel and Color3.new(1,1,1) or Color3.fromRGB(150,150,150)
+            e.Row.BackgroundColor3=sel and CurrentTheme.Hi or CurrentTheme.Panel
+            e.Label.TextColor3=sel and CurrentTheme.Text or CurrentTheme.Sub
         end
     end
     RefreshThemeList()
@@ -3136,7 +3187,7 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.ClipsDescendants=true
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=CurrentTheme.Text R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.ClipsDescendants=true
             R.LayoutOrder=n
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
             RegTheme(R,"Row")
@@ -3144,7 +3195,7 @@ RefreshHotkeys=function()
     end
     if n==0 then
         local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end
+        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=CurrentTheme.Sub R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end
         RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         n=1
     end
@@ -3177,7 +3228,7 @@ function Library:Notify(text,dur)
     DotC.CornerRadius=UDim.new(1,0) DotC.Parent=Dot
     DotS.Color=CurrentTheme.Accent DotS.Thickness=1.5 DotS.Transparency=1 DotS.Parent=Dot
     I.Parent=Dot I.BackgroundTransparency=1 I.Size=UDim2.new(1,0,1,0) I.Font=Enum.Font.GothamBold I.Text="i" I.TextColor3=CurrentTheme.Accent I.TextSize=10 I.TextTransparency=1 I.ZIndex=302
-    L.Parent=T L.BackgroundTransparency=1 L.Position=UDim2.new(0,34,0,0) L.Size=UDim2.new(1,-42,1,0) L.Font=Enum.Font.GothamSemibold L.Text=tostring(text or "") L.TextColor3=Color3.new(1,1,1) L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.TextTransparency=1 L.ZIndex=301 L.TextScaled=true L.ClipsDescendants=true
+    L.Parent=T L.BackgroundTransparency=1 L.Position=UDim2.new(0,34,0,0) L.Size=UDim2.new(1,-42,1,0) L.Font=Enum.Font.GothamSemibold L.Text=tostring(text or "") L.TextColor3=CurrentTheme.Text L.TextSize=11 L.TextXAlignment=Enum.TextXAlignment.Left L.TextTransparency=1 L.ZIndex=301 L.TextScaled=true L.ClipsDescendants=true
     do local LC=Instance.new("UITextSizeConstraint") LC.MaxTextSize=11 LC.Parent=L end
     table.insert(Library._toasts,T)
     T.BackgroundTransparency=1
