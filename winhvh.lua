@@ -57,7 +57,9 @@ local function ApplyTheme(t)
         pcall(function()
             if t and t.Parent and t:IsA("GuiButton") then
                 local sel=t.TextColor3==Color3.new(1,1,1)
-                t.BackgroundColor3=sel and CurrentTheme.Hi or CurrentTheme.Panel
+                t.BackgroundTransparency=1
+                t.Font=sel and Enum.Font.GothamBold or Enum.Font.GothamSemibold
+                t.TextXAlignment=sel and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
             end
         end)
     end
@@ -203,6 +205,7 @@ function Library:CreateWindow(windowname,windowinfo)
     Dash.BorderSizePixel=0
     Dash.Position=UDim2.new(.018,0,.168,0)
     Dash.Size=UDim2.new(0,130,0,318)
+    Dash.ClipsDescendants=true
     RegTheme(Dash,"Panel")
     local DashStroke=Instance.new("UIStroke")
     DashStroke.Color=Color3.fromRGB(40,40,40)
@@ -233,6 +236,7 @@ TabLayout.Padding=UDim.new(0,6)
     Pages.BorderSizePixel=0
     Pages.Position=UDim2.new(.245,0,.168,0)
     Pages.Size=UDim2.new(0,456,0,318)
+    Pages.ClipsDescendants=true
     RegTheme(Pages,"Panel")
     local PagesStroke=Instance.new("UIStroke")
     PagesStroke.Color=Color3.fromRGB(40,40,40)
@@ -698,9 +702,11 @@ Dash.Size=UDim2.new(0, 130, 0, contentHeight)
 Tabs.Size=UDim2.new(0, 122, 0, contentHeight-9)
 Pages.Size=UDim2.new(0, 456, 0, contentHeight)
     --// Update page sizes
+    local homeW2=Pages.AbsoluteSize.X
+    if homeW2<50 then homeW2=456 end
     for _,page in ipairs(Folder:GetChildren()) do
         if page:IsA("ScrollingFrame") then
-page.Size=UDim2.new(1, -3, 0, contentHeight-13)
+page.Size=UDim2.new(0, homeW2-12, 0, contentHeight-13)
         end
     end
     --// Update page canvases
@@ -916,16 +922,16 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         local Layout=Instance.new("UIGridLayout")
         Tab.Name="Tab"
         Tab.Parent=Tabs
-        Tab.BackgroundColor3=visible and CurrentTheme.Hi or CurrentTheme.Panel
+        Tab.BackgroundTransparency=1
         Tab.BorderSizePixel=0
         Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
-        Tab.Font=Enum.Font.GothamSemibold
+        Tab.Font=visible and Enum.Font.GothamBold or Enum.Font.GothamSemibold
         Tab.Text=pageName
         Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
         Tab.TextSize=11
         Tab.TextTransparency=0
-        Tab.TextXAlignment=Enum.TextXAlignment.Center
+        Tab.TextXAlignment=visible and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
         TC.CornerRadius=UDim.new(0,5)
         TC.Parent=Tab
         Home.Name=pageName
@@ -934,7 +940,9 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Home.BackgroundTransparency=1
         Home.BorderSizePixel=0
         Home.Position=UDim2.new(0,6,.06,0)
-        Home.Size=UDim2.new(1,-12,0,295)
+        local homeW0=Pages.AbsoluteSize.X
+        if homeW0<50 then homeW0=456 end
+        Home.Size=UDim2.new(0,homeW0-12,0,295)
         Home.ScrollBarThickness=2
         Home.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
         Home.CanvasSize=UDim2.new(0,0,0,0)
@@ -949,7 +957,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Layout.VerticalAlignment=Enum.VerticalAlignment.Top
         Layout.SortOrder=Enum.SortOrder.LayoutOrder
         Layout.CellSize=UDim2.new(0,214,0,26)
-        Layout.CellPadding=UDim2.new(0,6,0,5)
+        Layout.CellPadding=UDim2.new(0,6,0,3)
         local function UpdateCanvas()
             local h=Layout.AbsoluteContentSize.Y+12
             Home.CanvasSize=UDim2.new(
@@ -980,10 +988,9 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             for _,t in ipairs(Tabs:GetChildren()) do
                 if t:IsA("GuiButton") then
                     local selected=t==Tab
-                    t.BackgroundColor3=
-                        selected
-                        and CurrentTheme.Hi
-                        or CurrentTheme.Panel
+                    t.BackgroundTransparency=1
+                    t.Font=selected and Enum.Font.GothamBold or Enum.Font.GothamSemibold
+                    t.TextXAlignment=selected and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
                     t.TextColor3=
                         selected
                         and Color3.new(1,1,1)
@@ -993,14 +1000,18 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=CurrentTheme.Hi then Tab.BackgroundColor3=CurrentTheme.Row end end)
-Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and CurrentTheme.Hi or CurrentTheme.Panel end)
+Tab.MouseEnter:Connect(function() Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) end)
+Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Center then Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) else Tab.Font=Enum.Font.GothamSemibold Tab.TextColor3=Color3.fromRGB(140,140,140) Tab.TextXAlignment=Enum.TextXAlignment.Left end end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
+        local OrderSeq=0
+        Elements.__Order=function() OrderSeq+=1 return OrderSeq end
         local function RegisterElement(obj,name,typ)
             Register(obj,name,Home,typ)
             RegTheme(obj,"Row")
+            OrderSeq+=1
+            obj.LayoutOrder=OrderSeq
             for _,d in ipairs(obj:GetDescendants()) do
                 if d:IsA("TextLabel") or d:IsA("TextButton") then
                     d.TextScaled=true
@@ -1060,6 +1071,19 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
                 NumberSequenceKeypoint.new(1,0),
             }
             G2.Parent=Ov2
+        end
+        --// SPACER (invisible grid cell for layout)
+        function Elements:addSpacer()
+            local S=Instance.new("Frame")
+            S.Name="SPACER"
+            S.Parent=Home
+            S.BackgroundTransparency=1
+            S.BorderSizePixel=0
+            S.Size=UDim2.new(0,214,0,26)
+            S.Active=false
+            OrderSeq+=1
+            S.LayoutOrder=OrderSeq
+            return S
         end
         --// LABEL
         function Elements:addLabel(name,info)
@@ -1306,6 +1330,8 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             -- diamond icon shows no text; assignments shown in Hotkeys list
             TB.Parent=H
             TB.BackgroundTransparency=1
+            TB.Text=""
+            TB.TextTransparency=1
             TB.Position=UDim2.new(.84,0,0,0)
             TB.Size=UDim2.new(0,34,0,26)
             TB.AutoButtonColor=false
@@ -1440,6 +1466,7 @@ or Color3.fromRGB(170, 170, 170)
                 UpdateRightRow()
                 UpdateSwitchVisual()
                 pcall(callback,active)
+                if SettingsState and SettingsState.AlwaysTrigger and Library.Notify then pcall(function() Library:Notify(tostring(name).." turned "..(active and "on" or "off")) end) end
                 task.defer(UpdateCanvas)
             end
             local modeOpen=false
@@ -1913,7 +1940,10 @@ currentBind.Name:gsub("MouseButton", "MB")
                 for _,c in ipairs(Home:GetChildren()) do if c:IsA("Frame") then fc+=1 end end
                 if fc%2==1 then
                     local SP=Instance.new("Frame")
+                    SP.Name="SPACER"
                     SP.Parent=Home SP.BackgroundTransparency=1 SP.BorderSizePixel=0 SP.Size=UDim2.new(0,214,0,26) SP.Active=false
+                    OrderSeq+=1
+                    SP.LayoutOrder=OrderSeq
                 end
             end
             H.Parent=Home
@@ -1923,7 +1953,10 @@ currentBind.Name:gsub("MouseButton", "MB")
             H.ClipsDescendants=true
             do
                 local SP2=Instance.new("Frame")
+                SP2.Name="SPACER"
                 SP2.Parent=Home SP2.BackgroundTransparency=1 SP2.BorderSizePixel=0 SP2.Size=UDim2.new(0,214,0,26) SP2.Active=false
+                OrderSeq+=1
+                SP2.LayoutOrder=OrderSeq
             end
             C.CornerRadius=UDim.new(0,5)
             C.Parent=H
@@ -2172,6 +2205,7 @@ UIS.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseB
         task.defer(UpdateCanvas)
         UpdateWindowLayout()
         Elements.AddLabel=Elements.addLabel
+        Elements.AddSpacer=Elements.addSpacer
         Elements.AddButton=Elements.addButton
         Elements.AddToggle=Elements.addToggle
         Elements.AddSlider=Elements.addSlider
@@ -2206,11 +2240,13 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     end
     local function ConfigSpacer()
         local S=Instance.new("Frame")
+        S.Name="SPACER"
         S.Parent=ConfigPage.__Page
         S.BackgroundTransparency=1
         S.BorderSizePixel=0
         S.Size=UDim2.new(0,214,0,26)
         S.Active=false
+        if ConfigPage.__Order then S.LayoutOrder=ConfigPage.__Order() end
     end
     do
         local T=Instance.new("TextLabel")
@@ -2307,6 +2343,7 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     -- R4: theme row (opens theme panel on the right)
     local ThemeRowH=Instance.new("Frame") local ThemeRowC=Instance.new("UICorner")
     ThemeRowH.Parent=ConfigPage.__Page ThemeRowH.BackgroundColor3=Color3.fromRGB(23,23,23) ThemeRowH.BorderSizePixel=0 ThemeRowH.Size=UDim2.new(0,214,0,26)
+    if ConfigPage.__Order then ThemeRowH.LayoutOrder=ConfigPage.__Order() end
     ThemeRowC.CornerRadius=UDim.new(0,5) ThemeRowC.Parent=ThemeRowH
     RegTheme(ThemeRowH,"Row")
     ThemeRowText=Instance.new("TextLabel")
@@ -2845,10 +2882,15 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=false,Notifications=true,CustomKick=true}
+local SettingsState={KeybindList=false,Notifications=true,CustomKick=true,AlwaysTrigger=false}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
+function Library:ThemeObject(obj,role)
+    if typeof(obj)~="Instance" then return end
+    RegTheme(obj,role or "Row")
+    ApplyTheme(CurrentTheme)
+end
 local function KeyToText(k)
     if typeof(k)~="EnumItem" then return "?" end
     local n=tostring(k.Name or "?")
@@ -2882,7 +2924,7 @@ SettingsPanel.Parent=Frame
 SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
 SettingsPanel.BorderSizePixel=0
 SettingsPanel.Position=UDim2.new(.27,36,0,32)
-SettingsPanel.Size=UDim2.new(0,210,0,140)
+SettingsPanel.Size=UDim2.new(0,210,0,172)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
 RegTheme(SettingsPanel,"Panel")
@@ -2925,6 +2967,9 @@ do
     local r3=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,106)
     r3.OnChange=function(v) SettingsState.CustomKick=v end
     SettingSetters["CustomKick"]=function(v) r3.Set(v) SettingsState.CustomKick=v==true end
+    local r5=MakeCheckRow(SettingsPanel,"Always trigger",SettingsState.AlwaysTrigger,138)
+    r5.OnChange=function(v) SettingsState.AlwaysTrigger=v end
+    SettingSetters["AlwaysTrigger"]=function(v) r5.Set(v) SettingsState.AlwaysTrigger=v==true end
 end
 --// HOTKEYS LIST PANEL (draggable, left side)
 local HotkeysPanel=Instance.new("Frame")
@@ -3109,7 +3154,8 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.TextScaled=true R.ClipsDescendants=true
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1)             R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.TextScaled=true R.ClipsDescendants=true
+            R.LayoutOrder=n
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
             RegTheme(R,"Row")
         end
@@ -3175,16 +3221,32 @@ task.delay(3,function()
     local sk={}
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
-    local pw,cell,over=0,"?",0
+    local pw,cell,over,homeW,kids,contentH=0,"?",0,0,0,0
+    local pageInfo={}
     pcall(function()
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
         end
         local gl=Folder:GetChildren()[1]
         if gl then
+            homeW=math.floor(gl.AbsoluteSize.X)
             local grid=gl:FindFirstChildOfClass("UIGridLayout")
-            if grid then cell=tostring(grid.CellSize) end
+            if grid then
+                cell=tostring(grid.CellSize)
+                contentH=math.floor(grid.AbsoluteContentSize.Y)
+                for _,c in ipairs(gl:GetChildren()) do if c:IsA("Frame") then kids+=1 end end
+            end
         end
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page:IsA("ScrollingFrame") then
+                local k,h2=0,0
+                for _,c in ipairs(page:GetChildren()) do if c:IsA("Frame") then k+=1 end end
+                local g2=page:FindFirstChildOfClass("UIGridLayout")
+                if g2 then h2=math.floor(g2.AbsoluteContentSize.Y) end
+                table.insert(pageInfo,page.Name..":"..k.."/"..h2)
+            end
+        end
+    end)
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") then
                 for _,h in ipairs(page:GetChildren()) do
@@ -3199,8 +3261,7 @@ task.delay(3,function()
                 end
             end
         end
-    end)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3360,5 +3421,4 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=35
 return Library
