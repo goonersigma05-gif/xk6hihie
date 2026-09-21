@@ -1012,6 +1012,20 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
                 end
             end
         end
+        local function BuildHSVGrid(parent,cols,rows)
+            local cw=280/cols
+            local ch=99/rows
+            for gy=0,rows-1 do
+                for gx=0,cols-1 do
+                    local Cell=Instance.new("Frame")
+                    Cell.Parent=parent
+                    Cell.BackgroundColor3=Color3.fromHSV(gx/math.max(1,cols-1),1-gy/math.max(1,rows-1),1)
+                    Cell.BorderSizePixel=0
+                    Cell.Position=UDim2.new(0,gx*cw,0,gy*ch)
+                    Cell.Size=UDim2.new(0,math.ceil(cw),0,math.ceil(ch))
+                end
+            end
+        end
         --// LABEL
         function Elements:addLabel(name,info)
             local o=type(name)=="table" and name or nil
@@ -1450,7 +1464,7 @@ or Color3.fromRGB(170, 170, 170)
                 local CBC=Instance.new("UICorner")
                 local Panel=Instance.new("Frame")
                 local PC=Instance.new("UICorner")
-                local Canvas=Instance.new("ImageButton")
+                local Canvas=Instance.new("Frame")
                 local Circle=Instance.new("Frame")
                 local CC=Instance.new("UICorner")
                 CB.Parent=H
@@ -1472,12 +1486,13 @@ or Color3.fromRGB(170, 170, 170)
                 PC.CornerRadius=UDim.new(0,6)
                 PC.Parent=Panel
                 Canvas.Parent=Panel
-                Canvas.BackgroundTransparency=1
+                Canvas.BackgroundColor3=Color3.fromRGB(0,0,0)
+                Canvas.BorderSizePixel=0
                 Canvas.Position=UDim2.new(0,8,0,8)
                 Canvas.Size=UDim2.new(1,-16,1,-16)
-                Canvas.Image="rbxassetid://143332548"
                 Canvas.ZIndex=61
-                Canvas.AutoButtonColor=false
+                Canvas.ClipsDescendants=true
+                BuildHSVGrid(Canvas,28,10)
                 Circle.Parent=Canvas
                 Circle.AnchorPoint=Vector2.new(.5,.5)
                 Circle.BackgroundColor3=color
@@ -2090,10 +2105,11 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false C.CornerRadius=UDim.new(0,5) C.Parent=H
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,160,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=default B.Position=UDim2.new(.78,0,0,5) B.Size=UDim2.new(0,40,0,20) B.Text="" B.AutoButtonColor=false B.ZIndex=50 BC.CornerRadius=UDim.new(0,5) BC.Parent=B
-            local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("ImageButton") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
+            local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("Frame") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
             Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
-            Canvas.Parent=Panel Canvas.BackgroundTransparency=1 Canvas.Position=UDim2.new(0,8,0,8) Canvas.Size=UDim2.new(1,-16,1,-16) Canvas.Image="rbxassetid://143332548" Canvas.ZIndex=301 Canvas.AutoButtonColor=false
+            Canvas.Parent=Panel Canvas.BackgroundColor3=Color3.fromRGB(0,0,0) Canvas.BorderSizePixel=0 Canvas.Position=UDim2.new(0,8,0,8) Canvas.Size=UDim2.new(1,-16,1,-16) Canvas.ZIndex=301 Canvas.ClipsDescendants=true
+            BuildHSVGrid(Canvas,28,10)
             Circle.Parent=Canvas Circle.AnchorPoint=Vector2.new(.5,.5) Circle.BackgroundColor3=default Circle.BorderColor3=Color3.new(0,0,0) Circle.BorderSizePixel=2 Circle.Size=UDim2.new(0,10,0,10) Circle.ZIndex=302 Circle.Position=UDim2.new(.5,0,.5,0)
             CC.CornerRadius=UDim.new(1,0) CC.Parent=Circle
             local value=default local open=false local dragging=false
@@ -2810,7 +2826,8 @@ local function MakeCheckRow(parent,labelText,default,y)
     H.Parent=parent H.BackgroundColor3=Color3.fromRGB(20,20,20) H.BorderSizePixel=0 H.Position=UDim2.new(0,8,0,y) H.Size=UDim2.new(1,-16,0,26) H.ZIndex=91
     RegTheme(H,"Row")
     HC.CornerRadius=UDim.new(0,5) HC.Parent=H
-    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=10 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92 T.TextScaled=true T.ClipsDescendants=true
+    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=9 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92 T.TextScaled=true T.ClipsDescendants=true
+    do local TC=Instance.new("UITextSizeConstraint") TC.MaxTextSize=9 TC.Parent=T end
     Box.Parent=H Box.BackgroundColor3=Color3.fromRGB(35,35,35) Box.BorderSizePixel=0 Box.Position=UDim2.new(1,-26,0.5,-8) Box.Size=UDim2.new(0,16,0,16) Box.Text="" Box.AutoButtonColor=false Box.ZIndex=92
     BoxC.CornerRadius=UDim.new(0,4) BoxC.Parent=Box
     local BS=Instance.new("UIStroke") BS.Color=Color3.fromRGB(70,70,70) BS.Parent=Box
@@ -2842,8 +2859,10 @@ do
     local KeyPill=Instance.new("TextButton") local KeyPillC=Instance.new("UICorner")
     KeyRow.Parent=SettingsPanel KeyRow.BackgroundColor3=Color3.fromRGB(20,20,20) KeyRow.BorderSizePixel=0 KeyRow.Position=UDim2.new(0,8,0,8) KeyRow.Size=UDim2.new(1,-16,0,26) KeyRow.ZIndex=91
     KeyRowC.CornerRadius=UDim.new(0,5) KeyRowC.Parent=KeyRow
-    KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=10 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left KeyLabel.ZIndex=92
-    KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=10 KeyPill.AutoButtonColor=false KeyPill.ZIndex=92
+    KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=9 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left KeyLabel.ZIndex=92
+    KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=9 KeyPill.AutoButtonColor=false KeyPill.ZIndex=92
+    do local KC=Instance.new("UITextSizeConstraint") KC.MaxTextSize=9 KC.Parent=KeyLabel end
+    do local KC2=Instance.new("UITextSizeConstraint") KC2.MaxTextSize=9 KC2.Parent=KeyPill end
     KeyPillC.CornerRadius=UDim.new(0,5) KeyPillC.Parent=KeyPill
     RegTheme(KeyRow,"Row")
     local listening=false
@@ -3055,14 +3074,14 @@ RefreshHotkeys=function()
             n+=1
             local ks=key and KeyToText(key) or " "
             local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81 R.TextScaled=true R.ClipsDescendants=true
+            R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=CurrentTheme.Row R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="["..ks.."] "..tostring(src.Label or "") R.TextColor3=Color3.new(1,1,1) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end R.TextScaled=true R.ClipsDescendants=true
             RC.CornerRadius=UDim.new(0,5) RC.Parent=R
             RegTheme(R,"Row")
         end
     end
     if n==0 then
         local R=Instance.new("TextButton") local RC=Instance.new("UICorner")
-        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10 R.ZIndex=81
+        R.Name="HKRow" R.Parent=HotkeyList R.BackgroundColor3=Color3.fromRGB(0,0,0) R.BorderSizePixel=0 R.Size=UDim2.new(1,0,0,22) R.AutoButtonColor=false R.Font=Enum.Font.GothamSemibold R.Text="No hotkeys" R.TextColor3=Color3.fromRGB(120,120,120) R.TextSize=10 R.ZIndex=81; do local _zc=Instance.new("UITextSizeConstraint") _zc.MaxTextSize=10 _zc.Parent=R end
         RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         n=1
     end
@@ -3288,5 +3307,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=30
+Library.Version=31
 return Library
