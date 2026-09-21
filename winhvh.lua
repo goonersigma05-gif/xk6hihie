@@ -3223,6 +3223,27 @@ task.delay(3,function()
     table.sort(sk)
     local pw,cell,over,homeW,kids,contentH=0,"?",0,0,0,0
     local pageInfo={}
+    local mainCells={}
+    pcall(function()
+        for _,page in ipairs(Folder:GetChildren()) do
+            if page.Name=="Main" and page:IsA("ScrollingFrame") then
+                local tmp={}
+                for _,c in ipairs(page:GetChildren()) do
+                    if c:IsA("Frame") then
+                        local lbl="?"
+                        pcall(function()
+                            for _,d in ipairs(c:GetDescendants()) do
+                                if d:IsA("TextLabel") and tostring(d.Text)~="" then lbl=tostring(d.Text):sub(1,22) break end
+                            end
+                        end)
+                        table.insert(tmp,{o=c.LayoutOrder or 0,t=lbl})
+                    end
+                end
+                table.sort(tmp,function(a,b) return a.o<b.o end)
+                for _,e in ipairs(tmp) do table.insert(mainCells,e.o..":"..e.t) end
+            end
+        end
+    end)
     pcall(function()
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
@@ -3261,7 +3282,7 @@ task.delay(3,function()
                 end
             end
         end
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." pages={"..table.concat(pageInfo,",").."} main={"..table.concat(mainCells,"|").."} setters="..table.concat(sk,","))
 end)
 return PageYep
 end
