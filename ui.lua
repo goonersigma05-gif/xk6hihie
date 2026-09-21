@@ -1120,7 +1120,7 @@ B.MouseButton1Click:Connect(function() pcall(callback or function() end) end)
             T.Parent=H
             T.BackgroundTransparency=1
             T.Position=UDim2.new(.04,0,0,0)
-            T.Size=UDim2.new(0,138,0,26)
+            T.Size=UDim2.new(0,134,0,26)
             T.Font=Enum.Font.GothamSemibold
             T.Text=name or ""
             T.TextColor3=Color3.fromRGB(235,235,235)
@@ -1835,8 +1835,8 @@ currentBind.Name:gsub("MouseButton", "MB")
             Num.Parent=H
             Num.BackgroundColor3=Color3.fromRGB(10,10,10)
             Num.BorderSizePixel=0
-            Num.Position=UDim2.new(.84,0,0,2)
-            Num.Size=UDim2.new(0,42,0,13)
+            Num.Position=UDim2.new(.80,0,0,2)
+            Num.Size=UDim2.new(0,36,0,13)
             Num.Font=Enum.Font.GothamSemibold
             Num.Text=formatValue(value)
             Num.TextColor3=Color3.fromRGB(235,235,235)
@@ -1942,7 +1942,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local Icon=Instance.new("ImageLabel") local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Scroll=Instance.new("ScrollingFrame") local Layout=Instance.new("UIListLayout")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,150,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,2) T.Size=UDim2.new(0,140,0,26) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
             B.Parent=H B.BackgroundTransparency=1 B.Size=UDim2.new(1,0,0,30) B.Text="" B.AutoButtonColor=false
             Icon.Visible=false
             local function MakeHam(y)
@@ -1950,7 +1950,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                 Bar.Parent=H
                 Bar.BackgroundColor3=Color3.new(1,1,1)
                 Bar.BorderSizePixel=0
-                Bar.Position=UDim2.new(.88,0,0,y)
+                Bar.Position=UDim2.new(.84,0,0,y)
                 Bar.Size=UDim2.new(0,14,0,2)
                 return Bar
             end
@@ -3201,5 +3201,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=15
+Library.Version=16
 return Library
