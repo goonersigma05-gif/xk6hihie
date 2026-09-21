@@ -1012,20 +1012,54 @@ Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.ne
                 end
             end
         end
-        local function BuildHSVGrid(parent,cols,rows,baseZ)
-            local cw=280/cols
-            local ch=99/rows
-            for gy=0,rows-1 do
-                for gx=0,cols-1 do
-                    local Cell=Instance.new("Frame")
-                    Cell.Parent=parent
-                    Cell.BackgroundColor3=Color3.fromHSV(gx/math.max(1,cols-1),1-gy/math.max(1,rows-1),1)
-                    Cell.BorderSizePixel=0
-                    Cell.Position=UDim2.new(0,gx*cw,0,gy*ch)
-                    Cell.Size=UDim2.new(0,math.ceil(cw),0,math.ceil(ch))
-                    Cell.ZIndex=baseZ+1
-                end
-            end
+        local function BuildHSVGrid(parent,baseZ)
+            local Base=Instance.new("Frame")
+            Base.Parent=parent
+            Base.BackgroundColor3=Color3.new(1,1,1)
+            Base.BorderSizePixel=0
+            Base.Position=UDim2.new(0,0,0,0)
+            Base.Size=UDim2.new(1,0,1,0)
+            Base.ZIndex=baseZ+1
+            local HG=Instance.new("UIGradient")
+            HG.Rotation=0
+            HG.Color=ColorSequence.new{
+                ColorSequenceKeypoint.new(0,Color3.fromRGB(255,0,0)),
+                ColorSequenceKeypoint.new(1/6,Color3.fromRGB(255,255,0)),
+                ColorSequenceKeypoint.new(2/6,Color3.fromRGB(0,255,0)),
+                ColorSequenceKeypoint.new(3/6,Color3.fromRGB(0,255,255)),
+                ColorSequenceKeypoint.new(4/6,Color3.fromRGB(0,0,255)),
+                ColorSequenceKeypoint.new(5/6,Color3.fromRGB(255,0,255)),
+                ColorSequenceKeypoint.new(1,Color3.fromRGB(255,0,0)),
+            }
+            HG.Parent=Base
+            local Ov1=Instance.new("Frame")
+            Ov1.Parent=parent
+            Ov1.BackgroundColor3=Color3.new(1,1,1)
+            Ov1.BorderSizePixel=0
+            Ov1.Position=UDim2.new(0,0,0,0)
+            Ov1.Size=UDim2.new(1,0,1,0)
+            Ov1.ZIndex=baseZ+2
+            local G1=Instance.new("UIGradient")
+            G1.Rotation=0
+            G1.Transparency=NumberSequence.new{
+                NumberSequenceKeypoint.new(0,0),
+                NumberSequenceKeypoint.new(1,1),
+            }
+            G1.Parent=Ov1
+            local Ov2=Instance.new("Frame")
+            Ov2.Parent=parent
+            Ov2.BackgroundColor3=Color3.fromRGB(0,0,0)
+            Ov2.BorderSizePixel=0
+            Ov2.Position=UDim2.new(0,0,0,0)
+            Ov2.Size=UDim2.new(1,0,1,0)
+            Ov2.ZIndex=baseZ+3
+            local G2=Instance.new("UIGradient")
+            G2.Rotation=90
+            G2.Transparency=NumberSequence.new{
+                NumberSequenceKeypoint.new(0,1),
+                NumberSequenceKeypoint.new(1,0),
+            }
+            G2.Parent=Ov2
         end
         --// LABEL
         function Elements:addLabel(name,info)
@@ -1493,14 +1527,14 @@ or Color3.fromRGB(170, 170, 170)
                 Canvas.Size=UDim2.new(1,-16,1,-16)
                 Canvas.ZIndex=61
                 Canvas.ClipsDescendants=true
-                BuildHSVGrid(Canvas,28,10,61)
+                BuildHSVGrid(Canvas,61)
                 Circle.Parent=Canvas
                 Circle.AnchorPoint=Vector2.new(.5,.5)
                 Circle.BackgroundColor3=color
                 Circle.BorderColor3=Color3.new(0,0,0)
                 Circle.BorderSizePixel=2
                 Circle.Size=UDim2.new(0,10,0,10)
-                Circle.ZIndex=63
+                Circle.ZIndex=65
                 Circle.Position=UDim2.new(.5,0,.5,0)
                 CC.CornerRadius=UDim.new(1,0)
                 CC.Parent=Circle
@@ -1540,7 +1574,7 @@ or Color3.fromRGB(170, 170, 170)
 local x=math.clamp((i.Position.X-p.X)/s.X, 0, 1)
 local y=math.clamp((i.Position.Y-p.Y)/s.Y, 0, 1)
                     Circle.Position=UDim2.new(x,0,y,0)
-color=Color3.fromHSV(x, 1-y, 1)
+color=Color3.fromHSV(x, x, 1-y)
                     CB.BackgroundColor3=color
                     Circle.BackgroundColor3=color
                     pcall(colorcb,color)
@@ -2110,8 +2144,8 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
             Canvas.Parent=Panel Canvas.BackgroundColor3=Color3.fromRGB(0,0,0) Canvas.BorderSizePixel=0 Canvas.Position=UDim2.new(0,8,0,8) Canvas.Size=UDim2.new(1,-16,1,-16) Canvas.ZIndex=301 Canvas.ClipsDescendants=true
-            BuildHSVGrid(Canvas,28,10,301)
-            Circle.Parent=Canvas Circle.AnchorPoint=Vector2.new(.5,.5) Circle.BackgroundColor3=default Circle.BorderColor3=Color3.new(0,0,0) Circle.BorderSizePixel=2 Circle.Size=UDim2.new(0,10,0,10) Circle.ZIndex=303 Circle.Position=UDim2.new(.5,0,.5,0)
+            BuildHSVGrid(Canvas,301)
+            Circle.Parent=Canvas Circle.AnchorPoint=Vector2.new(.5,.5) Circle.BackgroundColor3=default Circle.BorderColor3=Color3.new(0,0,0) Circle.BorderSizePixel=2 Circle.Size=UDim2.new(0,10,0,10) Circle.ZIndex=305 Circle.Position=UDim2.new(.5,0,.5,0)
             CC.CornerRadius=UDim.new(1,0) CC.Parent=Circle
             local value=default local open=false local dragging=false
             local function positionPicker()
@@ -2123,7 +2157,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                 local s=Canvas.AbsoluteSize local p=Canvas.AbsolutePosition
                 if s.X<=0 or s.Y<=0 then return end
                 local x=math.clamp((i.Position.X-p.X)/s.X,0,1) local y=math.clamp((i.Position.Y-p.Y)/s.Y,0,1)
-                value=Color3.fromHSV(x,1-y,1) Circle.Position=UDim2.new(x,0,y,0) Circle.BackgroundColor3=value B.BackgroundColor3=value pcall(callback,value)
+                value=Color3.fromHSV(x,x,1-y) Circle.Position=UDim2.new(x,0,y,0) Circle.BackgroundColor3=value B.BackgroundColor3=value pcall(callback,value)
             end
 B.MouseButton1Click:Connect(function() open=not open if open then positionPicker() Panel.Visible=true Circle.BackgroundColor3=value else Panel.Visible=false end end)
 Canvas.InputBegan:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseButton1 or i.UserInputType==Enum.UserInputType.Touch then dragging=true setColor(i) end end)
@@ -3308,5 +3342,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=32
+Library.Version=33
 return Library
