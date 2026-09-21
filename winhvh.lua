@@ -1496,14 +1496,12 @@ or Color3.fromRGB(170, 170, 170)
                     task.defer(UpdateCanvas)
                 end
                 local function PositionPicker()
-                    if not CB.Parent then return end
-                    local p=CB.AbsolutePosition
-                    local y=p.Y+CB.AbsoluteSize.Y+4
-                    local x=p.X-120
+                    if not H.Parent then return end
+                    local hp=H.AbsolutePosition
                     local vp=Gui.AbsoluteSize
-                    x=math.clamp(x,4,math.max(4,vp.X-300))
-                    y=math.clamp(y,4,math.max(4,vp.Y-120))
-                    Panel.Position=UDim2.fromOffset(x,y)
+                    local x=hp.X+H.AbsoluteSize.X+8
+                    local y=hp.Y
+                    Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-300)),math.clamp(y,4,math.max(4,vp.Y-120)))
                 end
                 CB.MouseButton1Click:Connect(function()
                     open=not open
@@ -2100,7 +2098,8 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             CC.CornerRadius=UDim.new(1,0) CC.Parent=Circle
             local value=default local open=false local dragging=false
             local function positionPicker()
-                local p=B.AbsolutePosition local x=p.X-120 local y=p.Y+B.AbsoluteSize.Y+4 local vp=Gui.AbsoluteSize
+                local hp=H.AbsolutePosition local vp=Gui.AbsoluteSize
+                local x=hp.X+H.AbsoluteSize.X+8 local y=hp.Y
                 Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-300)),math.clamp(y,4,math.max(4,vp.Y-120)))
             end
             local function setColor(i)
@@ -2811,7 +2810,7 @@ local function MakeCheckRow(parent,labelText,default,y)
     H.Parent=parent H.BackgroundColor3=Color3.fromRGB(20,20,20) H.BorderSizePixel=0 H.Position=UDim2.new(0,8,0,y) H.Size=UDim2.new(1,-16,0,26) H.ZIndex=91
     RegTheme(H,"Row")
     HC.CornerRadius=UDim.new(0,5) HC.Parent=H
-    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92 T.TextScaled=true T.ClipsDescendants=true
+    T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(0,8,0,0) T.Size=UDim2.new(1,-60,1,0) T.Font=Enum.Font.GothamSemibold T.Text=labelText T.TextColor3=Color3.new(1,1,1) T.TextSize=10 T.TextXAlignment=Enum.TextXAlignment.Left T.ZIndex=92 T.TextScaled=true T.ClipsDescendants=true
     Box.Parent=H Box.BackgroundColor3=Color3.fromRGB(35,35,35) Box.BorderSizePixel=0 Box.Position=UDim2.new(1,-26,0.5,-8) Box.Size=UDim2.new(0,16,0,16) Box.Text="" Box.AutoButtonColor=false Box.ZIndex=92
     BoxC.CornerRadius=UDim.new(0,4) BoxC.Parent=Box
     local BS=Instance.new("UIStroke") BS.Color=Color3.fromRGB(70,70,70) BS.Parent=Box
@@ -2830,7 +2829,7 @@ local SettingsCorner=Instance.new("UICorner")
 SettingsPanel.Parent=Frame
 SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
 SettingsPanel.BorderSizePixel=0
-SettingsPanel.Position=UDim2.new(1,10,0,40)
+SettingsPanel.Position=UDim2.new(.27,36,0,32)
 SettingsPanel.Size=UDim2.new(0,210,0,140)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
@@ -2843,8 +2842,8 @@ do
     local KeyPill=Instance.new("TextButton") local KeyPillC=Instance.new("UICorner")
     KeyRow.Parent=SettingsPanel KeyRow.BackgroundColor3=Color3.fromRGB(20,20,20) KeyRow.BorderSizePixel=0 KeyRow.Position=UDim2.new(0,8,0,8) KeyRow.Size=UDim2.new(1,-16,0,26) KeyRow.ZIndex=91
     KeyRowC.CornerRadius=UDim.new(0,5) KeyRowC.Parent=KeyRow
-    KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=11 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left KeyLabel.ZIndex=92
-    KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=11 KeyPill.AutoButtonColor=false KeyPill.ZIndex=92
+    KeyLabel.Parent=KeyRow KeyLabel.BackgroundTransparency=1 KeyLabel.Position=UDim2.new(0,8,0,0) KeyLabel.Size=UDim2.new(1,-70,1,0) KeyLabel.Font=Enum.Font.GothamSemibold KeyLabel.Text="UI Toggle :" KeyLabel.TextColor3=Color3.new(1,1,1) KeyLabel.TextSize=10 KeyLabel.TextXAlignment=Enum.TextXAlignment.Left KeyLabel.ZIndex=92
+    KeyPill.Parent=KeyRow KeyPill.BackgroundColor3=Color3.fromRGB(10,10,10) KeyPill.BorderSizePixel=0 KeyPill.Position=UDim2.new(1,-52,0.5,-9) KeyPill.Size=UDim2.new(0,44,0,18) KeyPill.Font=Enum.Font.GothamSemibold KeyPill.Text=UIToggleKey.Name KeyPill.TextColor3=Color3.new(1,1,1) KeyPill.TextSize=10 KeyPill.AutoButtonColor=false KeyPill.ZIndex=92
     KeyPillC.CornerRadius=UDim.new(0,5) KeyPillC.Parent=KeyPill
     RegTheme(KeyRow,"Row")
     local listening=false
@@ -3289,5 +3288,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=29
+Library.Version=30
 return Library
