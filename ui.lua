@@ -1925,7 +1925,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextBox") local BC=Instance.new("UICorner")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,210,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,150,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.735,0,0,5) B.Size=UDim2.new(0,75,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.PlaceholderText=(o and o.Placeholder) or ""
             BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             B.FocusLost:Connect(function() pcall(callback,B.Text) end)
@@ -2012,7 +2012,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             callback=callback or function() end
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,200,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,140,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,85,0,20) B.Font=Enum.Font.GothamSemibold B.Text=default and tostring(default.Name or default) or "None" B.TextColor3=Color3.new(1,1,1) B.TextSize=9
             local value=default local listening=false
             B.MouseButton1Click:Connect(function() listening=true B.Text="Press key..." end)
@@ -2027,7 +2027,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             default=typeof(default)=="Color3" and default or Color3.new(1,1,1)
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextButton") local BC=Instance.new("UICorner")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26) H.ClipsDescendants=false C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,230,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,160,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextTruncate=Enum.TextTruncate.AtEnd T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=default B.Position=UDim2.new(.82,0,0,5) B.Size=UDim2.new(0,45,0,20) B.Text="" B.AutoButtonColor=false B.ZIndex=50 BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("ImageButton") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
             Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
@@ -2817,45 +2817,25 @@ local HotkeysHead=Instance.new("TextLabel")
 local HotkeyList=Instance.new("Frame")
 local HotkeyLayout=Instance.new("UIListLayout")
 HotkeysPanel.Parent=Gui
-HotkeysPanel.BackgroundColor3=Color3.fromRGB(12,12,12)
+HotkeysPanel.BackgroundTransparency=1
 HotkeysPanel.BorderSizePixel=0
 HotkeysPanel.Position=UDim2.new(0,15,0.5,-10)
 HotkeysPanel.Size=UDim2.new(0,150,0,34)
 HotkeysPanel.Visible=SettingsState.KeybindList
 HotkeysPanel.Active=true
 HotkeysPanel.ZIndex=80
-RegTheme(HotkeysPanel,"Panel")
 HotkeysCorner.CornerRadius=UDim.new(0,6)
 HotkeysCorner.Parent=HotkeysPanel
 HotkeysHead.Parent=HotkeysPanel
 HotkeysHead.BackgroundTransparency=1
 HotkeysHead.BorderSizePixel=0
-HotkeysHead.Size=UDim2.new(1,-40,0,20)
-HotkeysHead.Position=UDim2.new(0,32,0,4)
+HotkeysHead.Size=UDim2.new(1,-16,0,20)
+HotkeysHead.Position=UDim2.new(0,8,0,2)
 HotkeysHead.Font=Enum.Font.GothamSemibold
 HotkeysHead.Text="hotkeys"
-HotkeysHead.TextColor3=Color3.new(1,1,1)
+HotkeysHead.TextColor3=Color3.fromRGB(200,200,200)
 HotkeysHead.TextSize=11
 HotkeysHead.TextXAlignment=Enum.TextXAlignment.Left
-local HotkeysIcon=Instance.new("Frame")
-HotkeysIcon.Parent=HotkeysPanel
-HotkeysIcon.BackgroundTransparency=1
-HotkeysIcon.AnchorPoint=Vector2.new(.5,.5)
-HotkeysIcon.Position=UDim2.new(0,13,0,14)
-HotkeysIcon.Size=UDim2.new(0,9,0,9)
-HotkeysIcon.Rotation=45
-HotkeysIcon.ZIndex=82
-local HotkeysIconStroke=Instance.new("UIStroke")
-HotkeysIconStroke.Color=Color3.new(1,1,1)
-HotkeysIconStroke.Thickness=1.5
-HotkeysIconStroke.Parent=HotkeysIcon
-local HotkeysDiv=Instance.new("Frame")
-HotkeysDiv.Parent=HotkeysPanel
-HotkeysDiv.BackgroundColor3=Color3.new(1,1,1)
-HotkeysDiv.BorderSizePixel=0
-HotkeysDiv.Position=UDim2.new(0,22,0,9)
-HotkeysDiv.Size=UDim2.new(0,1,0,10)
-HotkeysDiv.ZIndex=82
 HotkeyList.Parent=HotkeysPanel
 HotkeyList.BackgroundTransparency=1
 HotkeyList.Position=UDim2.new(0,8,0,28)
@@ -3221,5 +3201,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=13
+Library.Version=14
 return Library
