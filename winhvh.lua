@@ -205,6 +205,7 @@ function Library:CreateWindow(windowname,windowinfo)
     Dash.BorderSizePixel=0
     Dash.Position=UDim2.new(.018,0,.168,0)
     Dash.Size=UDim2.new(0,130,0,318)
+    Dash.ClipsDescendants=true
     RegTheme(Dash,"Panel")
     local DashStroke=Instance.new("UIStroke")
     DashStroke.Color=Color3.fromRGB(40,40,40)
@@ -235,6 +236,7 @@ TabLayout.Padding=UDim.new(0,6)
     Pages.BorderSizePixel=0
     Pages.Position=UDim2.new(.245,0,.168,0)
     Pages.Size=UDim2.new(0,456,0,318)
+    Pages.ClipsDescendants=true
     RegTheme(Pages,"Panel")
     local PagesStroke=Instance.new("UIStroke")
     PagesStroke.Color=Color3.fromRGB(40,40,40)
@@ -3376,5 +3378,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=39
+Library.Version=40
 return Library
