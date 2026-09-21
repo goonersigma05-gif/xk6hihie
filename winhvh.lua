@@ -702,9 +702,11 @@ Dash.Size=UDim2.new(0, 130, 0, contentHeight)
 Tabs.Size=UDim2.new(0, 122, 0, contentHeight-9)
 Pages.Size=UDim2.new(0, 456, 0, contentHeight)
     --// Update page sizes
+    local homeW2=Pages.AbsoluteSize.X
+    if homeW2<50 then homeW2=456 end
     for _,page in ipairs(Folder:GetChildren()) do
         if page:IsA("ScrollingFrame") then
-page.Size=UDim2.new(1, -3, 0, contentHeight-13)
+page.Size=UDim2.new(0, homeW2-12, 0, contentHeight-13)
         end
     end
     --// Update page canvases
@@ -938,7 +940,9 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Home.BackgroundTransparency=1
         Home.BorderSizePixel=0
         Home.Position=UDim2.new(0,6,.06,0)
-        Home.Size=UDim2.new(1,-12,0,295)
+        local homeW0=Pages.AbsoluteSize.X
+        if homeW0<50 then homeW0=456 end
+        Home.Size=UDim2.new(0,homeW0-12,0,295)
         Home.ScrollBarThickness=2
         Home.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
         Home.CanvasSize=UDim2.new(0,0,0,0)
@@ -3200,15 +3204,20 @@ task.delay(3,function()
     local sk={}
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
-    local pw,cell,over=0,"?",0
+    local pw,cell,over,homeW,kids,contentH=0,"?",0,0,0,0
     pcall(function()
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") and pw==0 then pw=math.floor(page.AbsoluteSize.X) end
         end
         local gl=Folder:GetChildren()[1]
         if gl then
+            homeW=math.floor(gl.AbsoluteSize.X)
             local grid=gl:FindFirstChildOfClass("UIGridLayout")
-            if grid then cell=tostring(grid.CellSize) end
+            if grid then
+                cell=tostring(grid.CellSize)
+                contentH=math.floor(grid.AbsoluteContentSize.Y)
+                for _,c in ipairs(gl:GetChildren()) do if c:IsA("Frame") then kids+=1 end end
+            end
         end
         for _,page in ipairs(Folder:GetChildren()) do
             if page:IsA("ScrollingFrame") then
@@ -3225,7 +3234,7 @@ task.delay(3,function()
             end
         end
     end)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." pageW="..tostring(pw).." homeW="..tostring(homeW).." kids="..tostring(kids).." contentH="..tostring(contentH).." cell="..tostring(cell).." overflows="..tostring(over).." setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3385,5 +3394,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=42
+Library.Version=67
 return Library
