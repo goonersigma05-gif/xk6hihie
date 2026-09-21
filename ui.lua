@@ -2732,7 +2732,7 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=true,Notifications=true,CustomCursor=true,CustomKick=true}
+local SettingsState={KeybindList=true,Notifications=true,CustomKick=true}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
@@ -2768,7 +2768,7 @@ SettingsPanel.Parent=Frame
 SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
 SettingsPanel.BorderSizePixel=0
 SettingsPanel.Position=UDim2.new(1,10,0,40)
-SettingsPanel.Size=UDim2.new(0,210,0,172)
+SettingsPanel.Size=UDim2.new(0,210,0,140)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
 RegTheme(SettingsPanel,"Panel")
@@ -2801,17 +2801,14 @@ do
 end
 do
     local r1=MakeCheckRow(SettingsPanel,"Keybind list",SettingsState.KeybindList,42)
-    r1.OnChange=function(v) SettingsState.KeybindList=v if HotkeysPanel then HotkeysPanel.Visible=v end end
-    SettingSetters["KeybindList"]=function(v) r1.Set(v) SettingsState.KeybindList=v==true if HotkeysPanel then HotkeysPanel.Visible=v==true end end
+    r1.OnChange=function(v) SettingsState.KeybindList=v SlideHotkeys(v) end
+    SettingSetters["KeybindList"]=function(v) r1.Set(v) SettingsState.KeybindList=v==true SlideHotkeys(v==true) end
     local r2=MakeCheckRow(SettingsPanel,"Show notifications",SettingsState.Notifications,74)
     r2.OnChange=function(v) SettingsState.Notifications=v Library.NotificationsEnabled=v end
     SettingSetters["Notifications"]=function(v) r2.Set(v) SettingsState.Notifications=v==true Library.NotificationsEnabled=v==true end
-    local r3=MakeCheckRow(SettingsPanel,"Custom cursor",SettingsState.CustomCursor,106)
-    r3.OnChange=function(v) SettingsState.CustomCursor=v if type(SetCustomCursor)=="function" then SetCustomCursor(v) end end
-    SettingSetters["CustomCursor"]=function(v) r3.Set(v) SettingsState.CustomCursor=v==true if type(SetCustomCursor)=="function" then SetCustomCursor(v==true) end end
-    local r4=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,138)
-    r4.OnChange=function(v) SettingsState.CustomKick=v end
-    SettingSetters["CustomKick"]=function(v) r4.Set(v) SettingsState.CustomKick=v==true end
+    local r3=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,106)
+    r3.OnChange=function(v) SettingsState.CustomKick=v end
+    SettingSetters["CustomKick"]=function(v) r3.Set(v) SettingsState.CustomKick=v==true end
 end
 --// HOTKEYS LIST PANEL (draggable, left side)
 local HotkeysPanel=Instance.new("Frame")
@@ -2822,8 +2819,8 @@ local HotkeyLayout=Instance.new("UIListLayout")
 HotkeysPanel.Parent=Gui
 HotkeysPanel.BackgroundColor3=Color3.fromRGB(12,12,12)
 HotkeysPanel.BorderSizePixel=0
-HotkeysPanel.Position=UDim2.new(0,12,0,.35)
-HotkeysPanel.Size=UDim2.new(0,170,0,34)
+HotkeysPanel.Position=UDim2.new(0,15,0.5,-10)
+HotkeysPanel.Size=UDim2.new(0,150,0,34)
 HotkeysPanel.Visible=SettingsState.KeybindList
 HotkeysPanel.Active=true
 HotkeysPanel.ZIndex=80
@@ -2831,22 +2828,20 @@ RegTheme(HotkeysPanel,"Panel")
 HotkeysCorner.CornerRadius=UDim.new(0,6)
 HotkeysCorner.Parent=HotkeysPanel
 HotkeysHead.Parent=HotkeysPanel
-HotkeysHead.BackgroundColor3=Color3.fromRGB(0,0,0)
+HotkeysHead.BackgroundTransparency=1
 HotkeysHead.BorderSizePixel=0
-HotkeysHead.Size=UDim2.new(1,-16,0,24)
-HotkeysHead.Position=UDim2.new(0,8,0,4)
-HotkeysHead.Font=Enum.Font.GothamBold
-HotkeysHead.Text="Hotkeys :"
+HotkeysHead.Size=UDim2.new(1,-40,0,20)
+HotkeysHead.Position=UDim2.new(0,32,0,4)
+HotkeysHead.Font=Enum.Font.GothamSemibold
+HotkeysHead.Text="hotkeys"
 HotkeysHead.TextColor3=Color3.new(1,1,1)
-HotkeysHead.TextSize=12
-local HotkeysHeadCorner=Instance.new("UICorner")
-HotkeysHeadCorner.CornerRadius=UDim.new(0,5)
-HotkeysHeadCorner.Parent=HotkeysHead
+HotkeysHead.TextSize=11
+HotkeysHead.TextXAlignment=Enum.TextXAlignment.Left
 local HotkeysIcon=Instance.new("Frame")
 HotkeysIcon.Parent=HotkeysPanel
 HotkeysIcon.BackgroundTransparency=1
 HotkeysIcon.AnchorPoint=Vector2.new(.5,.5)
-HotkeysIcon.Position=UDim2.new(0,24,0,16)
+HotkeysIcon.Position=UDim2.new(0,13,0,14)
 HotkeysIcon.Size=UDim2.new(0,9,0,9)
 HotkeysIcon.Rotation=45
 HotkeysIcon.ZIndex=82
@@ -2854,6 +2849,13 @@ local HotkeysIconStroke=Instance.new("UIStroke")
 HotkeysIconStroke.Color=Color3.new(1,1,1)
 HotkeysIconStroke.Thickness=1.5
 HotkeysIconStroke.Parent=HotkeysIcon
+local HotkeysDiv=Instance.new("Frame")
+HotkeysDiv.Parent=HotkeysPanel
+HotkeysDiv.BackgroundColor3=Color3.new(1,1,1)
+HotkeysDiv.BorderSizePixel=0
+HotkeysDiv.Position=UDim2.new(0,22,0,9)
+HotkeysDiv.Size=UDim2.new(0,1,0,10)
+HotkeysDiv.ZIndex=82
 HotkeyList.Parent=HotkeysPanel
 HotkeyList.BackgroundTransparency=1
 HotkeyList.Position=UDim2.new(0,8,0,28)
@@ -2877,6 +2879,22 @@ HotkeysHead.InputChanged:Connect(function(i) if i.UserInputType==Enum.UserInputT
 HotkeysPanel.Position=UDim2.new(hp.X.Scale,hp.X.Offset+d.X,hp.Y.Scale,hp.Y.Offset+d.Y)
         end
     end)
+end
+local hkSlideToken=0
+local function SlideHotkeys(show)
+    hkSlideToken+=1
+    local tk=hkSlideToken
+    if show then
+        HotkeysPanel.Visible=true
+        local p=HotkeysPanel.Position
+        HotkeysPanel.Position=UDim2.new(p.X.Scale,p.X.Offset-160,p.Y.Scale,p.Y.Offset)
+        TweenService:Create(HotkeysPanel,TweenInfo.new(.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out),{Position=p}):Play()
+    else
+        local p=HotkeysPanel.Position
+        local tw=TweenService:Create(HotkeysPanel,TweenInfo.new(.18,Enum.EasingStyle.Quad,Enum.EasingDirection.In),{Position=UDim2.new(p.X.Scale,p.X.Offset-160,p.Y.Scale,p.Y.Offset)})
+        tw:Play()
+        tw.Completed:Connect(function() if tk==hkSlideToken and not SettingsState.KeybindList then HotkeysPanel.Visible=false end end)
+    end
 end
 --// KEYBIND EDITOR POPUP (diamond click)
 local KeyPopup=Instance.new("Frame")
@@ -3006,7 +3024,7 @@ RefreshHotkeys=function()
         RC.CornerRadius=UDim.new(0,5) RC.Parent=R
         n=1
     end
-HotkeysPanel.Size=UDim2.new(0,170,0,36+n*26)
+HotkeysPanel.Size=UDim2.new(0,150,0,36+n*26)
 end
 function Library:RegisterHotkey(key,label)
     if key~=nil and typeof(key)~="EnumItem" then return nil end
@@ -3017,64 +3035,6 @@ function Library:RegisterHotkey(key,label)
     return {Set=function(k) if typeof(k)=="EnumItem" then src.Key=k RefreshHotkeys() end end,Remove=function() for i,s in ipairs(HotkeySources) do if s==src then table.remove(HotkeySources,i) break end end RefreshHotkeys() end}
 end
 table.insert(HotkeySources,{Label="gui keybind",Get=function() return UIToggleKey end})
---// CUSTOM CURSOR (white arrow follower)
-local CursorOn=false
-local CursorGui=Instance.new("ScreenGui")
-CursorGui.Name="winhvh_Cursor"
-CursorGui.ResetOnSpawn=false
-CursorGui.ZIndexBehavior=Enum.ZIndexBehavior.Global
-CursorGui.DisplayOrder=999
-CursorGui.Enabled=false
-CursorGui.Parent=Gui.Parent
-local Arrow=Instance.new("ImageLabel")
-Arrow.Parent=CursorGui
-Arrow.BackgroundTransparency=1
-Arrow.BorderSizePixel=0
-Arrow.Position=UDim2.new(.5,0,.5,0)
-Arrow.Size=UDim2.new(0,32,0,32)
-Arrow.Image="rbxassetid://2794114347"
-Arrow.ZIndex=2
-local ArrowBackup=Instance.new("Frame")
-ArrowBackup.Parent=CursorGui
-ArrowBackup.BackgroundTransparency=1
-ArrowBackup.Position=UDim2.new(.5,0,.5,0)
-ArrowBackup.Size=UDim2.new(0,22,0,22)
-ArrowBackup.Visible=false
-do
-    local function BackupBar(w,h,px,py,rot)
-        local B=Instance.new("Frame")
-        B.Parent=ArrowBackup B.BackgroundColor3=Color3.new(1,1,1) B.BorderSizePixel=0 B.AnchorPoint=Vector2.new(.5,.5) B.Position=UDim2.new(0,px,0,py) B.Size=UDim2.new(0,w,0,h) B.Rotation=rot
-        local S=Instance.new("UIStroke") S.Color=Color3.fromRGB(0,0,0) S.Thickness=1 S.Parent=B
-    end
-    BackupBar(3,17,11,10,45)
-    BackupBar(3,8,5,8,12)
-    BackupBar(3,8,9,4,78)
-end
-task.delay(3,function()
-    local loaded=false
-    pcall(function() loaded=Arrow.IsLoaded end)
-    if not loaded and ArrowBackup.Parent then
-        Arrow.Visible=false
-        ArrowBackup.Visible=true
-    end
-end)
-local function SetCustomCursor(on)
-    CursorOn=on==true
-    CursorGui.Enabled=CursorOn
-    pcall(function() UIS.MouseIconEnabled=not CursorOn end)
-end
-Gui.Destroying:Connect(function()
-    CursorOn=false
-    pcall(function() UIS.MouseIconEnabled=true end)
-    pcall(function() CursorGui:Destroy() end)
-end)
-UIS.InputChanged:Connect(function(i)
-    if CursorOn and i.UserInputType==Enum.UserInputType.MouseMovement then
-Arrow.Position=UDim2.new(0,i.Position.X-4,0,i.Position.Y-2)
-ArrowBackup.Position=UDim2.new(0,i.Position.X-5,0,i.Position.Y-3)
-    end
-end)
-if SettingsState.CustomCursor then SetCustomCursor(true) end
 --// NOTIFY TOAST (gated by Show notifications)
 function Library:Notify(text,dur)
     if not Library.NotificationsEnabled then return end
@@ -3098,12 +3058,10 @@ RefreshHotkeys()
 task.delay(3,function()
     local rows=0
     for _,ch in ipairs(HotkeyList:GetChildren()) do if ch.Name=="HKRow" then rows+=1 end end
-    local par="?"
-    pcall(function() par=CursorGui.Parent and CursorGui.Parent.Name or "nilparent" end)
     local sk={}
     pcall(function() for key in pairs(SettingSetters) do sk[#sk+1]=tostring(key) end end)
     table.sort(sk)
-    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." cursorOn="..tostring(CursorOn).." cursorGui="..tostring(CursorGui.Enabled).." cursorParent="..tostring(par).." setters="..table.concat(sk,","))
+    print("[winhvh] diag: hotkeysVisible="..tostring(HotkeysPanel.Visible).." hotkeyRows="..tostring(rows).." setters="..table.concat(sk,","))
 end)
 return PageYep
 end
@@ -3263,5 +3221,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=12
+Library.Version=13
 return Library
