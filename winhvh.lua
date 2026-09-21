@@ -3384,6 +3384,7 @@ function Library:ShowIntro(lines, titleText, holdTime)
     local CharCorner=Instance.new("UICorner")
     CharBox.Parent=IntroGui
     CharBox.BackgroundColor3=Color3.fromRGB(200,200,200)
+    CharBox.BackgroundTransparency=1
     CharBox.BorderSizePixel=0
     CharBox.AnchorPoint=Vector2.new(0,0)
     CharBox.Position=UDim2.new(0,12,1.2,0)
@@ -3405,6 +3406,7 @@ function Library:ShowIntro(lines, titleText, holdTime)
     LoadedLabel.Size=UDim2.new(1,0,0,16)
     LoadedLabel.Font=Enum.Font.GothamBold
     LoadedLabel.Text=titleText.." Loaded"
+    LoadedLabel.Visible=false
     LoadedLabel.TextColor3=Color3.fromRGB(20,20,20)
     LoadedLabel.TextSize=11
     --// Build character model
