@@ -1513,7 +1513,7 @@ or Color3.fromRGB(170, 170, 170)
                 Panel.Parent=Gui
                 Panel.BackgroundColor3=Color3.fromRGB(25,25,25)
                 Panel.Position=UDim2.new(0,0,0,0)
-                Panel.Size=UDim2.new(0,296,0,115)
+                Panel.Size=UDim2.new(0,210,0,110)
                 Panel.Visible=false
                 Panel.ZIndex=60
                 Panel.BorderSizePixel=0
@@ -1551,7 +1551,7 @@ or Color3.fromRGB(170, 170, 170)
                     local vp=Gui.AbsoluteSize
                     local x=hp.X+H.AbsoluteSize.X+8
                     local y=hp.Y
-                    Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-300)),math.clamp(y,4,math.max(4,vp.Y-120)))
+                    Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-214)),math.clamp(y,4,math.max(4,vp.Y-114)))
                 end
                 CB.MouseButton1Click:Connect(function()
                     open=not open
@@ -2141,7 +2141,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,160,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
             B.Parent=H B.BackgroundColor3=default B.Position=UDim2.new(.78,0,0,5) B.Size=UDim2.new(0,40,0,20) B.Text="" B.AutoButtonColor=false B.ZIndex=50 BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             local Panel=Instance.new("Frame") local PC=Instance.new("UICorner") local Canvas=Instance.new("Frame") local Circle=Instance.new("Frame") local CC=Instance.new("UICorner")
-            Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,296,0,115) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
+            Panel.Parent=Gui Panel.BackgroundColor3=Color3.fromRGB(25,25,25) Panel.Size=UDim2.new(0,210,0,110) Panel.Visible=false Panel.BorderSizePixel=0 Panel.Active=true Panel.ZIndex=300
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
             Canvas.Parent=Panel Canvas.BackgroundColor3=Color3.fromRGB(0,0,0) Canvas.BorderSizePixel=0 Canvas.Position=UDim2.new(0,8,0,8) Canvas.Size=UDim2.new(1,-16,1,-16) Canvas.ZIndex=301 Canvas.ClipsDescendants=true
             BuildHSVGrid(Canvas,301)
@@ -2151,7 +2151,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local function positionPicker()
                 local hp=H.AbsolutePosition local vp=Gui.AbsoluteSize
                 local x=hp.X+H.AbsoluteSize.X+8 local y=hp.Y
-                Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-300)),math.clamp(y,4,math.max(4,vp.Y-120)))
+                Panel.Position=UDim2.fromOffset(math.clamp(x,4,math.max(4,vp.X-214)),math.clamp(y,4,math.max(4,vp.Y-114)))
             end
             local function setColor(i)
                 local s=Canvas.AbsoluteSize local p=Canvas.AbsolutePosition
@@ -3342,5 +3342,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=33
+Library.Version=34
 return Library
