@@ -194,7 +194,7 @@ function Library:CreateWindow(windowname,windowinfo)
     Frame.Size=UDim2.new(0,620,0,400)
     Frame.Active=true
     RegTheme(Frame,"Window")
-    Scale.Scale=1.1
+    Scale.Scale=1
     Scale.Parent=Frame
     Corner.CornerRadius=UDim.new(0,7)
     Corner.Parent=Frame
@@ -204,6 +204,10 @@ function Library:CreateWindow(windowname,windowinfo)
     Dash.Position=UDim2.new(.018,0,.168,0)
     Dash.Size=UDim2.new(0,130,0,318)
     RegTheme(Dash,"Panel")
+    local DashStroke=Instance.new("UIStroke")
+    DashStroke.Color=Color3.fromRGB(40,40,40)
+    DashStroke.Thickness=1
+    DashStroke.Parent=Dash
     DashCorner.CornerRadius=UDim.new(0,6)
     DashCorner.Parent=Dash
     Tabs.Parent=Dash
@@ -212,7 +216,7 @@ Tabs.BorderSizePixel=0
 Tabs.Position=UDim2.new(.03,0,.035,0)
 Tabs.Size=UDim2.new(0,122,1,-18)
 Tabs.CanvasSize=UDim2.new(0,0,0,0)
-Tabs.ScrollBarThickness=3
+Tabs.ScrollBarThickness=2
 Tabs.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
 Tabs.ScrollBarImageTransparency=0.15
 Tabs.ScrollingDirection=Enum.ScrollingDirection.Y
@@ -230,6 +234,10 @@ TabLayout.Padding=UDim.new(0,6)
     Pages.Position=UDim2.new(.245,0,.168,0)
     Pages.Size=UDim2.new(0,456,0,318)
     RegTheme(Pages,"Panel")
+    local PagesStroke=Instance.new("UIStroke")
+    PagesStroke.Color=Color3.fromRGB(40,40,40)
+    PagesStroke.Thickness=1
+    PagesStroke.Parent=Pages
     PagesCorner.CornerRadius=UDim.new(0,6)
     PagesCorner.Parent=Pages
     Folder.Parent=Pages
@@ -244,18 +252,18 @@ TabLayout.Padding=UDim.new(0,6)
     CenterDivider.ZIndex=5
     Title.Parent=Frame
     Title.BackgroundTransparency=1
-    Title.Position=UDim2.new(.025,0,.015,0)
-    Title.Size=UDim2.new(0,180,0,20)
+    Title.Position=UDim2.new(0,16,0,8)
+    Title.Size=UDim2.new(0,200,0,22)
     Title.Font=Enum.Font.GothamBold
     Title.Text=windowname or "winhvh"
     Title.TextColor3=Color3.new(1,1,1)
-    Title.TextSize=13
+    Title.TextSize=16
     Title.TextXAlignment=Enum.TextXAlignment.Left
     local Subtitle=Instance.new("TextLabel")
     Subtitle.Parent=Frame
     Subtitle.BackgroundTransparency=1
-    Subtitle.Position=UDim2.new(.025,0,.06,0)
-    Subtitle.Size=UDim2.new(0,180,0,14)
+    Subtitle.Position=UDim2.new(0,16,0,30)
+    Subtitle.Size=UDim2.new(0,200,0,14)
     Subtitle.Font=Enum.Font.GothamSemibold
     Subtitle.Text=windowinfo or "da hood"
     Subtitle.TextColor3=Color3.fromRGB(130,130,130)
@@ -376,7 +384,7 @@ TabLayout.Padding=UDim.new(0,6)
     SearchImg.BorderSizePixel=0
     SearchImg.AnchorPoint=Vector2.new(.5,.5)
     SearchImg.Position=UDim2.new(.5,0,.5,0)
-    SearchImg.Size=UDim2.new(0,16,0,16)
+    SearchImg.Size=UDim2.new(0,18,0,18)
     SearchImg.Image="rbxassetid://11496279127"
     SearchImg.ScaleType=Enum.ScaleType.Fit
     SearchImg.ZIndex=52
@@ -461,7 +469,7 @@ TabLayout.Padding=UDim.new(0,6)
     GearImg.BorderSizePixel=0
     GearImg.AnchorPoint=Vector2.new(.5,.5)
     GearImg.Position=UDim2.new(.5,0,.5,0)
-    GearImg.Size=UDim2.new(0,16,0,16)
+    GearImg.Size=UDim2.new(0,18,0,18)
     GearImg.Image="rbxassetid://9405931596"
     GearImg.ScaleType=Enum.ScaleType.Fit
     GearImg.ZIndex=52
@@ -669,7 +677,7 @@ Float.Position=UDim2.new(fp.X.Scale, fp.X.Offset+d.X, fp.Y.Scale, fp.Y.Offset+d.
     --// PERFORMANCE / UI SCALE
     local PerformanceMode=false
     local UIRefreshQueued=false
-    local UIScaleValue=1.1
+    local UIScaleValue=1
     local function QueueCanvasUpdate(fn)
         if PerformanceMode then
             if UIRefreshQueued then return end
@@ -927,7 +935,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         Home.BorderSizePixel=0
         Home.Position=UDim2.new(0,6,.06,0)
         Home.Size=UDim2.new(1,-12,0,295)
-        Home.ScrollBarThickness=4
+        Home.ScrollBarThickness=2
         Home.ScrollBarImageColor3=Color3.fromRGB(70,70,70)
         Home.CanvasSize=UDim2.new(0,0,0,0)
         Home.ScrollingDirection=Enum.ScrollingDirection.Y
@@ -1976,8 +1984,8 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             local H=Instance.new("Frame") local C=Instance.new("UICorner") local T=Instance.new("TextLabel") local B=Instance.new("TextBox") local BC=Instance.new("UICorner")
             H.Parent=Home H.BackgroundColor3=Color3.fromRGB(23,23,23) H.BorderSizePixel=0 H.Size=UDim2.new(0,214,0,26)
             C.CornerRadius=UDim.new(0,5) C.Parent=H
-            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,150,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
-            B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.70,0,0,5) B.Size=UDim2.new(0,60,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.TextXAlignment=Enum.TextXAlignment.Center B.PlaceholderText=(o and o.Placeholder) or ""
+            T.Parent=H T.BackgroundTransparency=1 T.Position=UDim2.new(.024,0,0,3) T.Size=UDim2.new(0,90,0,24) T.Font=Enum.Font.GothamSemibold T.Text=name or "" T.TextColor3=Color3.new(1,1,1) T.TextSize=11 T.TextXAlignment=Enum.TextXAlignment.Left T.TextScaled=true T.ClipsDescendants=true
+            B.Parent=H B.BackgroundColor3=Color3.fromRGB(5,5,5) B.Position=UDim2.new(.45,0,0,5) B.Size=UDim2.new(0,110,0,20) B.Font=Enum.Font.GothamSemibold B.Text=tostring(default or "") B.TextColor3=Color3.new(1,1,1) B.TextSize=9 B.ClearTextOnFocus=false B.TextXAlignment=Enum.TextXAlignment.Center B.PlaceholderText=(o and o.Placeholder) or ""
             BC.CornerRadius=UDim.new(0,5) BC.Parent=B
             B.FocusLost:Connect(function() pcall(callback,B.Text) end)
             RegisterElement(H,name,"TextBox")
@@ -2008,7 +2016,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
             MakeHam(8) MakeHam(12) MakeHam(16)
             Panel.Parent=H Panel.BackgroundColor3=Color3.fromRGB(23,23,23) Panel.Position=UDim2.new(0,0,0,30) Panel.Size=UDim2.new(0,214,0,115) Panel.BorderSizePixel=0 Panel.Visible=false Panel.ZIndex=100 Panel.Active=true
             PC.CornerRadius=UDim.new(0,6) PC.Parent=Panel
-            Scroll.Parent=Panel Scroll.BackgroundTransparency=1 Scroll.BorderSizePixel=0 Scroll.Position=UDim2.new(0,4,0,5) Scroll.Size=UDim2.new(1,-8,1,-10) Scroll.ScrollBarThickness=3 Scroll.ScrollBarImageColor3=Color3.fromRGB(70,70,70) Scroll.ZIndex=101
+            Scroll.Parent=Panel Scroll.BackgroundTransparency=1 Scroll.BorderSizePixel=0 Scroll.Position=UDim2.new(0,4,0,5) Scroll.Size=UDim2.new(1,-8,1,-10) Scroll.ScrollBarThickness=2 Scroll.ScrollBarImageColor3=Color3.fromRGB(70,70,70) Scroll.ZIndex=101
             Layout.Parent=Scroll Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center Layout.SortOrder=Enum.SortOrder.LayoutOrder Layout.Padding=UDim.new(0,5)
             local open=false local selected=nil local values={} local selections={}
             local function canvas() Scroll.CanvasSize=UDim2.new(0,0,0,Layout.AbsoluteContentSize.Y+8) end
@@ -2282,7 +2290,7 @@ local ConfigPage=PageYep:addPage("Config", 6, false, 6)
     ThemeSearch.Parent=ThemePanel ThemeSearch.BackgroundColor3=Color3.fromRGB(10,10,10) ThemeSearch.BorderSizePixel=0 ThemeSearch.Position=UDim2.new(0,80,0,8) ThemeSearch.Size=UDim2.new(1,-88,0,22) ThemeSearch.Font=Enum.Font.GothamSemibold ThemeSearch.PlaceholderText="Search..." ThemeSearch.PlaceholderColor3=Color3.fromRGB(100,100,100) ThemeSearch.Text="" ThemeSearch.TextColor3=Color3.new(1,1,1) ThemeSearch.TextSize=10 ThemeSearch.ClearTextOnFocus=false ThemeSearch.ZIndex=91
     ThemeSearchC.CornerRadius=UDim.new(0,5) ThemeSearchC.Parent=ThemeSearch
     local ThemeList=Instance.new("ScrollingFrame") local ThemeListLayout=Instance.new("UIListLayout")
-    ThemeList.Parent=ThemePanel ThemeList.BackgroundTransparency=1 ThemeList.BorderSizePixel=0 ThemeList.Position=UDim2.new(0,8,0,38) ThemeList.Size=UDim2.new(1,-16,1,-46) ThemeList.ScrollBarThickness=3 ThemeList.ScrollBarImageColor3=Color3.fromRGB(70,70,70) ThemeList.CanvasSize=UDim2.new(0,0,0,0) ThemeList.AutomaticCanvasSize=Enum.AutomaticSize.Y ThemeList.ZIndex=91
+    ThemeList.Parent=ThemePanel ThemeList.BackgroundTransparency=1 ThemeList.BorderSizePixel=0 ThemeList.Position=UDim2.new(0,8,0,38) ThemeList.Size=UDim2.new(1,-16,1,-46) ThemeList.ScrollBarThickness=2 ThemeList.ScrollBarImageColor3=Color3.fromRGB(70,70,70) ThemeList.CanvasSize=UDim2.new(0,0,0,0) ThemeList.AutomaticCanvasSize=Enum.AutomaticSize.Y ThemeList.ZIndex=91
     ThemeListLayout.Parent=ThemeList ThemeListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center ThemeListLayout.SortOrder=Enum.SortOrder.LayoutOrder ThemeListLayout.Padding=UDim.new(0,4)
     local ThemeRows={}
     for _,t in ipairs(Themes) do
@@ -2522,7 +2530,7 @@ SetStatus("Deleted: "..name, true)
         end
         AutoLoad=false
         PerformanceMode=false
-        UIScaleValue=1.1
+        UIScaleValue=1
         Scale.Scale=UIScaleValue
         CurrentConfig="Default"
         local character=G.LP and G.LP.Character
@@ -3281,5 +3289,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=28
+Library.Version=29
 return Library
