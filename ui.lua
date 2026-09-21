@@ -370,6 +370,19 @@ TabLayout.Padding=UDim.new(0,6)
     MagHandle.Size=UDim2.new(0,2,0,7)
     MagHandle.Rotation=45
     MagHandle.ZIndex=51
+    local SearchImg=Instance.new("ImageLabel")
+    SearchImg.Parent=SearchIcon
+    SearchImg.BackgroundTransparency=1
+    SearchImg.BorderSizePixel=0
+    SearchImg.AnchorPoint=Vector2.new(.5,.5)
+    SearchImg.Position=UDim2.new(.5,0,.5,0)
+    SearchImg.Size=UDim2.new(0,16,0,16)
+    SearchImg.Image="rbxassetid://11496279127"
+    SearchImg.ZIndex=52
+    task.delay(3,function()
+        local ok,loaded=pcall(function() return SearchImg.IsLoaded end)
+        if not ok or not loaded then SearchImg.Visible=false end
+    end)
     local searchOpen=false
     ExpandSearch=function()
         if searchOpen then return end
@@ -441,6 +454,19 @@ TabLayout.Padding=UDim.new(0,6)
         GearDotCorner.Parent=GearDot
     end
     GearBtn.MouseButton1Click:Connect(function() ToggleSettingsPanel() end)
+    local GearImg=Instance.new("ImageLabel")
+    GearImg.Parent=GearBtn
+    GearImg.BackgroundTransparency=1
+    GearImg.BorderSizePixel=0
+    GearImg.AnchorPoint=Vector2.new(.5,.5)
+    GearImg.Position=UDim2.new(.5,0,.5,0)
+    GearImg.Size=UDim2.new(0,16,0,16)
+    GearImg.Image="rbxassetid://9405931596"
+    GearImg.ZIndex=52
+    task.delay(3,function()
+        local ok,loaded=pcall(function() return GearImg.IsLoaded end)
+        if not ok or not loaded then GearImg.Visible=false end
+    end)
     --// CREDITS
     Credits.Visible=false
     Credits.Parent=Frame
@@ -3201,5 +3227,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=17
+Library.Version=18
 return Library
