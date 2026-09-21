@@ -2018,7 +2018,7 @@ Num.Focused:Connect(function() task.defer(function() Num.CursorPosition=#Num.Tex
                     for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then for _,x in ipairs(values) do if ch.Text==tostring(x) then visual(ch,x) break end end end end
                     if fire then pcall(callback,selections) end
                 else
-                    for _,x in ipairs(values) do if tostring(x)==tostring(v) then selected=x T.Text=tostring(x) for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then visual(ch,x) end end if fire then pcall(callback,x) end return end end
+                    for _,x in ipairs(values) do if tostring(x)==tostring(v) then selected=x T.Text=tostring(name).." - "..tostring(x) for _,ch in ipairs(Scroll:GetChildren()) do if ch:IsA("TextButton") then visual(ch,x) end end if fire then pcall(callback,x) end return end end
                 end
             end
             B.MouseButton1Click:Connect(function() open=not open Panel.Visible=open H.Size=UDim2.new(0,214,0,open and 145 or 26) Icon.ImageColor3=open and Color3.new(1,1,1) or Color3.new(1,1,1) task.defer(UpdateCanvas) end)
@@ -3264,5 +3264,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=22
+Library.Version=23
 return Library
