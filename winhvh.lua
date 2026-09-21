@@ -57,9 +57,7 @@ local function ApplyTheme(t)
         pcall(function()
             if t and t.Parent and t:IsA("GuiButton") then
                 local sel=t.TextColor3==Color3.new(1,1,1)
-                t.BackgroundTransparency=1
-                t.Font=sel and Enum.Font.GothamBold or Enum.Font.GothamSemibold
-                t.TextXAlignment=sel and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
+                t.BackgroundColor3=sel and CurrentTheme.Hi or CurrentTheme.Panel
             end
         end)
     end
@@ -205,7 +203,6 @@ function Library:CreateWindow(windowname,windowinfo)
     Dash.BorderSizePixel=0
     Dash.Position=UDim2.new(.018,0,.168,0)
     Dash.Size=UDim2.new(0,130,0,318)
-    Dash.ClipsDescendants=true
     RegTheme(Dash,"Panel")
     local DashStroke=Instance.new("UIStroke")
     DashStroke.Color=Color3.fromRGB(40,40,40)
@@ -236,7 +233,6 @@ TabLayout.Padding=UDim.new(0,6)
     Pages.BorderSizePixel=0
     Pages.Position=UDim2.new(.245,0,.168,0)
     Pages.Size=UDim2.new(0,456,0,318)
-    Pages.ClipsDescendants=true
     RegTheme(Pages,"Panel")
     local PagesStroke=Instance.new("UIStroke")
     PagesStroke.Color=Color3.fromRGB(40,40,40)
@@ -920,16 +916,16 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function() Search(SearchBox.T
         local Layout=Instance.new("UIGridLayout")
         Tab.Name="Tab"
         Tab.Parent=Tabs
-        Tab.BackgroundTransparency=1
+        Tab.BackgroundColor3=visible and CurrentTheme.Hi or CurrentTheme.Panel
         Tab.BorderSizePixel=0
         Tab.Size=UDim2.new(0,116,0,24)
         Tab.AutoButtonColor=false
-        Tab.Font=visible and Enum.Font.GothamBold or Enum.Font.GothamSemibold
+        Tab.Font=Enum.Font.GothamSemibold
         Tab.Text=pageName
         Tab.TextColor3=visible and Color3.new(1,1,1) or Color3.fromRGB(140,140,140)
         Tab.TextSize=11
         Tab.TextTransparency=0
-        Tab.TextXAlignment=visible and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
+        Tab.TextXAlignment=Enum.TextXAlignment.Center
         TC.CornerRadius=UDim.new(0,5)
         TC.Parent=Tab
         Home.Name=pageName
@@ -984,9 +980,10 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             for _,t in ipairs(Tabs:GetChildren()) do
                 if t:IsA("GuiButton") then
                     local selected=t==Tab
-                    t.BackgroundTransparency=1
-                    t.Font=selected and Enum.Font.GothamBold or Enum.Font.GothamSemibold
-                    t.TextXAlignment=selected and Enum.TextXAlignment.Center or Enum.TextXAlignment.Left
+                    t.BackgroundColor3=
+                        selected
+                        and CurrentTheme.Hi
+                        or CurrentTheme.Panel
                     t.TextColor3=
                         selected
                         and Color3.new(1,1,1)
@@ -996,8 +993,8 @@ Home:GetPropertyChangedSignal("AbsoluteSize"):Connect(UpdateCanvas)
             task.defer(UpdateCanvas)
         end
         Tab.MouseButton1Click:Connect(ShowPage)
-Tab.MouseEnter:Connect(function() Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) end)
-Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Center then Tab.Font=Enum.Font.GothamBold Tab.TextColor3=Color3.new(1,1,1) else Tab.Font=Enum.Font.GothamSemibold Tab.TextColor3=Color3.fromRGB(140,140,140) Tab.TextXAlignment=Enum.TextXAlignment.Left end end)
+Tab.MouseEnter:Connect(function() if Tab.BackgroundColor3~=CurrentTheme.Hi then Tab.BackgroundColor3=CurrentTheme.Row end end)
+Tab.MouseLeave:Connect(function() Tab.BackgroundColor3=Tab.TextColor3==Color3.new(1,1,1) and CurrentTheme.Hi or CurrentTheme.Panel end)
         local Elements={}
         Elements.__Tab=Tab
         Elements.__Page=Home
@@ -1063,16 +1060,6 @@ Tab.MouseLeave:Connect(function() if Tab.TextXAlignment==Enum.TextXAlignment.Cen
                 NumberSequenceKeypoint.new(1,0),
             }
             G2.Parent=Ov2
-        end
-        --// SPACER (invisible grid cell for layout)
-        function Elements:addSpacer()
-            local S=Instance.new("Frame")
-            S.Parent=Home
-            S.BackgroundTransparency=1
-            S.BorderSizePixel=0
-            S.Size=UDim2.new(0,214,0,26)
-            S.Active=false
-            return S
         end
         --// LABEL
         function Elements:addLabel(name,info)
@@ -1453,7 +1440,6 @@ or Color3.fromRGB(170, 170, 170)
                 UpdateRightRow()
                 UpdateSwitchVisual()
                 pcall(callback,active)
-                if SettingsState and SettingsState.AlwaysTrigger and Library.Notify then pcall(function() Library:Notify(tostring(name).." turned "..(active and "on" or "off")) end) end
                 task.defer(UpdateCanvas)
             end
             local modeOpen=false
@@ -2186,7 +2172,6 @@ UIS.InputEnded:Connect(function(i) if i.UserInputType==Enum.UserInputType.MouseB
         task.defer(UpdateCanvas)
         UpdateWindowLayout()
         Elements.AddLabel=Elements.addLabel
-        Elements.AddSpacer=Elements.addSpacer
         Elements.AddButton=Elements.addButton
         Elements.AddToggle=Elements.addToggle
         Elements.AddSlider=Elements.addSlider
@@ -2860,15 +2845,10 @@ task.defer(function()
 end)
 --// v2.7: SETTINGS PANEL + HOTKEYS LIST + CUSTOM CURSOR + NOTIFY
 Library.NotificationsEnabled=true
-local SettingsState={KeybindList=false,Notifications=true,CustomKick=true,AlwaysTrigger=false}
+local SettingsState={KeybindList=false,Notifications=true,CustomKick=true}
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
-function Library:ThemeObject(obj,role)
-    if typeof(obj)~="Instance" then return end
-    RegTheme(obj,role or "Row")
-    ApplyTheme(CurrentTheme)
-end
 local function KeyToText(k)
     if typeof(k)~="EnumItem" then return "?" end
     local n=tostring(k.Name or "?")
@@ -2902,7 +2882,7 @@ SettingsPanel.Parent=Frame
 SettingsPanel.BackgroundColor3=Color3.fromRGB(15,15,15)
 SettingsPanel.BorderSizePixel=0
 SettingsPanel.Position=UDim2.new(.27,36,0,32)
-SettingsPanel.Size=UDim2.new(0,210,0,172)
+SettingsPanel.Size=UDim2.new(0,210,0,140)
 SettingsPanel.Visible=false
 SettingsPanel.ZIndex=90
 RegTheme(SettingsPanel,"Panel")
@@ -2945,9 +2925,6 @@ do
     local r3=MakeCheckRow(SettingsPanel,"Custom kick",SettingsState.CustomKick,106)
     r3.OnChange=function(v) SettingsState.CustomKick=v end
     SettingSetters["CustomKick"]=function(v) r3.Set(v) SettingsState.CustomKick=v==true end
-    local r5=MakeCheckRow(SettingsPanel,"Always trigger",SettingsState.AlwaysTrigger,138)
-    r5.OnChange=function(v) SettingsState.AlwaysTrigger=v end
-    SettingSetters["AlwaysTrigger"]=function(v) r5.Set(v) SettingsState.AlwaysTrigger=v==true end
 end
 --// HOTKEYS LIST PANEL (draggable, left side)
 local HotkeysPanel=Instance.new("Frame")
@@ -3383,5 +3360,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=41
+Library.Version=35
 return Library
