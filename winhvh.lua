@@ -2864,6 +2864,11 @@ local SettingsState={KeybindList=false,Notifications=true,CustomKick=true,Always
 Library.Settings=SettingsState
 local SettingSetters={}
 function Library:SetSetting(name,value) local s=SettingSetters[name] if s then s(value) end end
+function Library:ThemeObject(obj,role)
+    if typeof(obj)~="Instance" then return end
+    RegTheme(obj,role or "Row")
+    ApplyTheme(CurrentTheme)
+end
 local function KeyToText(k)
     if typeof(k)~="EnumItem" then return "?" end
     local n=tostring(k.Name or "?")
@@ -3378,5 +3383,5 @@ function Library:ShowIntro(lines, titleText, holdTime)
     end)
     return IntroGui
 end
-Library.Version=40
+Library.Version=41
 return Library
