@@ -248,6 +248,11 @@ function Library:CreateWindow(windowname,windowinfo)
     Scale.Parent=Frame
     Corner.CornerRadius=UDim.new(0,7)
     Corner.Parent=Frame
+    local FrameStroke=Instance.new("UIStroke")
+    FrameStroke.Color=Color3.fromRGB(55,58,70)
+    FrameStroke.Thickness=1.4
+    FrameStroke.ApplyStrokeMode=Enum.ApplyStrokeMode.Border
+    FrameStroke.Parent=Frame
     Dash.Parent=Frame
     Dash.BackgroundColor3=Color3.fromRGB(13,13,13)
     Dash.BorderSizePixel=0
