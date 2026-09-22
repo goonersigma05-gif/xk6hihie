@@ -13,7 +13,7 @@ local HttpService=game:GetService("HttpService")
 local TweenService=game:GetService("TweenService")
 --// THEME ENGINE (module scope; UI hooks assigned inside CreateWindow)
 local Themes={
-    {Name="Gray",Accent=Color3.fromRGB(170,190,210),Window=Color3.fromRGB(20,22,28),Panel=Color3.fromRGB(15,17,22),Row=Color3.fromRGB(30,34,44),Hi=Color3.fromRGB(44,48,62),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(150,160,175)},
+    {Name="Gray",Accent=Color3.fromRGB(90,150,255),Window=Color3.fromRGB(20,22,28),Panel=Color3.fromRGB(15,17,22),Row=Color3.fromRGB(30,34,44),Hi=Color3.fromRGB(44,48,62),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(150,160,175)},
     {Name="Crimson Night",Accent=Color3.fromRGB(230,70,85),Window=Color3.fromRGB(26,14,16),Panel=Color3.fromRGB(18,10,12),Row=Color3.fromRGB(38,22,26),Hi=Color3.fromRGB(54,30,36),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(160,140,140)},
     {Name="Dark Forest",Accent=Color3.fromRGB(90,210,130),Window=Color3.fromRGB(12,20,14),Panel=Color3.fromRGB(9,14,10),Row=Color3.fromRGB(20,34,24),Hi=Color3.fromRGB(30,48,34),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(140,160,140)},
     {Name="Espresso",Accent=Color3.fromRGB(215,165,100),Window=Color3.fromRGB(24,18,13),Panel=Color3.fromRGB(17,13,10),Row=Color3.fromRGB(38,28,20),Hi=Color3.fromRGB(54,40,28),Text=Color3.new(1,1,1),Sub=Color3.fromRGB(165,150,135)},
