@@ -381,22 +381,34 @@ function VapeLib:Window(opts)
 			Padding(Settings, 10, 8, 10, 8)
 
 			local mod = {Name = modName, Container = Container, Enabled = enabled, _suffix = ""}
+			local expanded = enabled == true
+			Settings.Visible = expanded
+			Dots.TextColor3 = expanded and THEME.Text or THEME.TextDark
 			local function applyVisual()
 				Title.TextColor3 = mod.Enabled and THEME.Accent or THEME.Text
 			end
 			local function pushArray()
 				SetArray(modName, mod.Enabled, mod._suffix)
 			end
+			local function refreshFold()
+				expanded = mod.Enabled
+				Settings.Visible = expanded
+				Dots.TextColor3 = expanded and THEME.Text or THEME.TextDark
+			end
 
+			local ignoreHeader = false
 			Header.MouseButton1Click:Connect(function()
-				-- clicking name toggles (but not when clicking dots)
+				if ignoreHeader then return end
+				-- KillAura style folding: enable = show features under, disable = hide them
 				mod.Enabled = not mod.Enabled
 				applyVisual()
 				pushArray()
+				refreshFold()
 				if callback then task.spawn(callback, mod.Enabled) end
 			end)
-			local expanded = false
-			Dots.MouseButton1Click:Connect(function(ev)
+			Dots.MouseButton1Click:Connect(function()
+				ignoreHeader = true
+				task.delay(0.15, function() ignoreHeader = false end)
 				expanded = not expanded
 				Settings.Visible = expanded
 				Dots.TextColor3 = expanded and THEME.Text or THEME.TextDark
@@ -410,11 +422,18 @@ function VapeLib:Window(opts)
 				mod.Enabled = v == true
 				applyVisual()
 				pushArray()
+				refreshFold()
 				if not silent and callback then task.spawn(callback, mod.Enabled) end
 			end
 
 			local function ensureOpen()
-				if not expanded then expanded = true Settings.Visible = true end
+				-- no auto-open: settings stay folded until module is enabled (KillAura style).
+				-- keep visible state in sync if already enabled
+				if mod.Enabled and not expanded then
+					expanded = true
+					Settings.Visible = true
+					Dots.TextColor3 = THEME.Text
+				end
 			end
 
 			function mod:Toggle(t)
@@ -523,20 +542,111 @@ function VapeLib:Window(opts)
 				local n = c.Name or "Color"
 				local cur = c.Default or THEME.Accent
 				local cb = c.Callback
-				local row = Create("Frame", {Size = UDim2.new(1, 0, 0, 24), BackgroundTransparency = 1, Parent = Settings})
-				Create("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, -40, 1, 0), Font = Enum.Font.Gotham, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, TextColor3 = THEME.TextDim, Text = n, Parent = row})
-				local prev = Create("TextButton", {Text = "", AnchorPoint = Vector2.new(1, 0.5), Position = UDim2.new(1, 0, 0.5, 0), Size = UDim2.new(0, 26, 0, 16), BackgroundColor3 = cur, AutoButtonColor = false, Parent = row})
+				local h, s, v = 0.38, 0.85, 1
+				pcall(function()
+					h, s, v = cur:ToHSV()
+				end)
+				local row = Create("Frame", {Size = UDim2.new(1, 0, 0, 24), AutomaticSize = Enum.AutomaticSize.Y, BackgroundTransparency = 1, Parent = Settings})
+				Create("TextLabel", {BackgroundTransparency = 1, Size = UDim2.new(1, -40, 0, 24), Font = Enum.Font.Gotham, TextSize = 12, TextXAlignment = Enum.TextXAlignment.Left, TextColor3 = THEME.TextDim, Text = n, Parent = row})
+				local prev = Create("TextButton", {Text = "", AnchorPoint = Vector2.new(1, 0), Position = UDim2.new(1, 0, 0, 3), Size = UDim2.new(0, 26, 0, 16), BackgroundColor3 = cur, AutoButtonColor = false, Parent = row})
 				Corner(prev, UDim.new(0, 4))
-				local hues = {0, 0.13, 0.33, 0.5, 0.66, 0.83}
-				local hi = 1
-				prev.MouseButton1Click:Connect(function()
-					hi = hi % #hues + 1
-					cur = Color3.fromHSV(hues[hi], 0.85, 1)
+				Stroke(prev, THEME.Stroke, 1)
+
+				-- real palette popup: SV square (color + brightness) + hue bar
+				local Picker = Create("Frame", {Position = UDim2.new(0, 0, 0, 28), Size = UDim2.new(1, 0, 0, 148), BackgroundColor3 = Color3.fromRGB(18, 18, 23), Visible = false, Parent = row, ZIndex = 5})
+				Corner(Picker, UDim.new(0, 6))
+				Stroke(Picker, THEME.Stroke, 1)
+				Padding(Picker, 8, 8, 8, 8)
+
+				local SV = Create("TextButton", {Text = "", AutoButtonColor = false, Size = UDim2.new(1, 0, 0, 100), BackgroundColor3 = Color3.fromHSV(h, 1, 1), Parent = Picker})
+				Corner(SV, UDim.new(0, 4))
+				-- saturation overlay (white left -> transparent right)
+				local SatOverlay = Create("Frame", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, Parent = SV})
+				Corner(SatOverlay, UDim.new(0, 4))
+				Create("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0), NumberSequenceKeypoint.new(1, 1)}), Rotation = 0, Parent = SatOverlay})
+				-- brightness overlay (transparent top -> black bottom)
+				local ValOverlay = Create("Frame", {Size = UDim2.new(1, 0, 1, 0), BackgroundColor3 = Color3.fromRGB(0, 0, 0), BackgroundTransparency = 0, BorderSizePixel = 0, Parent = SV})
+				Corner(ValOverlay, UDim.new(0, 4))
+				Create("UIGradient", {Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 1), NumberSequenceKeypoint.new(1, 0)}), Rotation = 90, Parent = ValOverlay})
+				local SVCursor = Create("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), Size = UDim2.new(0, 10, 0, 10), BackgroundTransparency = 1, Parent = SV, ZIndex = 3})
+				Create("UIStroke", {Color = Color3.fromRGB(255, 255, 255), Thickness = 2, Parent = SVCursor})
+				Corner(SVCursor, UDim.new(1, 0))
+
+				local HueBar = Create("TextButton", {Text = "", AutoButtonColor = false, Position = UDim2.new(0, 0, 0, 108), Size = UDim2.new(1, 0, 0, 12), BackgroundColor3 = Color3.fromRGB(255, 255, 255), Parent = Picker})
+				Corner(HueBar, UDim.new(1, 0))
+				Create("UIGradient", {Color = ColorSequence.new({
+					ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+					ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0)),
+					ColorSequenceKeypoint.new(0.33, Color3.fromRGB(0, 255, 0)),
+					ColorSequenceKeypoint.new(0.5, Color3.fromRGB(0, 255, 255)),
+					ColorSequenceKeypoint.new(0.67, Color3.fromRGB(0, 0, 255)),
+					ColorSequenceKeypoint.new(0.83, Color3.fromRGB(255, 0, 255)),
+					ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0)),
+				}), Parent = HueBar})
+				local HueCursor = Create("Frame", {AnchorPoint = Vector2.new(0.5, 0.5), Position = UDim2.new(h, 0, 0.5, 0), Size = UDim2.new(0, 4, 0, 16), BackgroundColor3 = Color3.fromRGB(255, 255, 255), BorderSizePixel = 0, Parent = HueBar, ZIndex = 3})
+				Corner(HueCursor, UDim.new(0, 2))
+
+				local function applyPicker()
+					cur = Color3.fromHSV(h, s, v)
 					prev.BackgroundColor3 = cur
+					SV.BackgroundColor3 = Color3.fromHSV(h, 1, 1)
+					SVCursor.Position = UDim2.new(s, 0, 1 - v, 0)
+					HueCursor.Position = UDim2.new(h, 0, 0.5, 0)
 					if cb then task.spawn(cb, cur) end
+				end
+
+				local dragSV, dragH = false, false
+				SV.InputBegan:Connect(function(i)
+					if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+						dragSV = true
+						local rx = math.clamp((i.Position.X - SV.AbsolutePosition.X) / math.max(1, SV.AbsoluteSize.X), 0, 1)
+						local ry = math.clamp((i.Position.Y - SV.AbsolutePosition.Y) / math.max(1, SV.AbsoluteSize.Y), 0, 1)
+						s, v = rx, 1 - ry
+						applyPicker()
+					end
+				end)
+				HueBar.InputBegan:Connect(function(i)
+					if i.UserInputType == Enum.UserInputType.MouseButton1 or i.UserInputType == Enum.UserInputType.Touch then
+						dragH = true
+						h = math.clamp((i.Position.X - HueBar.AbsolutePosition.X) / math.max(1, HueBar.AbsoluteSize.X), 0, 1)
+						applyPicker()
+					end
+				end)
+				UserInputService.InputEnded:Connect(function(i)
+					if i.UserInputType == Enum.UserInputType.MouseButton1 then dragSV, dragH = false, false end
+				end)
+				UserInputService.InputChanged:Connect(function(i)
+					if i.UserInputType == Enum.UserInputType.MouseMovement or i.UserInputType == Enum.UserInputType.Touch then
+						if dragSV then
+							s = math.clamp((i.Position.X - SV.AbsolutePosition.X) / math.max(1, SV.AbsoluteSize.X), 0, 1)
+							v = 1 - math.clamp((i.Position.Y - SV.AbsolutePosition.Y) / math.max(1, SV.AbsoluteSize.Y), 0, 1)
+							applyPicker()
+						elseif dragH then
+							h = math.clamp((i.Position.X - HueBar.AbsolutePosition.X) / math.max(1, HueBar.AbsoluteSize.X), 0, 1)
+							applyPicker()
+						end
+					end
+				end)
+
+				applyPicker()
+				prev.MouseButton1Click:Connect(function()
+					Picker.Visible = not Picker.Visible
+					if Picker.Visible then
+						row.Size = UDim2.new(1, 0, 0, 180)
+						ensureOpen()
+						-- if module is disabled, still allow picker: force settings visible
+						Settings.Visible = true
+					else
+						row.Size = UDim2.new(1, 0, 0, 24)
+						if not mod.Enabled then Settings.Visible = false end
+					end
 				end)
 				ensureOpen()
-				return {Get = function() return cur end}
+				return {Get = function() return cur end, Set = function(col)
+					cur = col
+					pcall(function() h, s, v = col:ToHSV() end)
+					applyPicker()
+				end}
 			end
 
 			function mod:Textbox(t)
