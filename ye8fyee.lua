@@ -50,6 +50,7 @@ end
 
 local ICONS = {
 	Combat = "◤",
+	Visuals = "◉",
 	Render = "◉",
 	Utility = "✕",
 	World = "○",
@@ -244,7 +245,7 @@ function VapeLib:Window(opts)
 	Create("Frame", {Size = UDim2.new(1, -24, 0, 1), Position = UDim2.new(0, 12, 0, 46), BackgroundColor3 = THEME.Stroke, BackgroundTransparency = 0.3, BorderSizePixel = 0, Parent = Nav})
 
 	local NavScroll = Create("ScrollingFrame", {
-		Position = UDim2.new(0, 0, 0, 52), Size = UDim2.new(1, 0, 1, -96),
+		Position = UDim2.new(0, 0, 0, 52), Size = UDim2.new(1, 0, 1, -52),
 		BackgroundTransparency = 1, BorderSizePixel = 0, ScrollBarThickness = 0,
 		CanvasSize = UDim2.new(0, 0, 0, 0), AutomaticCanvasSize = Enum.AutomaticSize.Y, Parent = Nav,
 	})
@@ -257,17 +258,7 @@ function VapeLib:Window(opts)
 		TextColor3 = THEME.TextDark, Text = "  MISC", LayoutOrder = 100, Parent = NavScroll, Visible = false,
 	})
 
-	local NavBottom = Create("Frame", {Size = UDim2.new(1, 0, 0, 38), Position = UDim2.new(0, 0, 1, -38), BackgroundTransparency = 1, Parent = Nav})
-	Create("Frame", {Size = UDim2.new(1, -24, 0, 1), Position = UDim2.new(0, 12, 0, 0), BackgroundColor3 = THEME.Stroke, BackgroundTransparency = 0.3, BorderSizePixel = 0, Parent = NavBottom})
-	local function BottomIcon(x, txt)
-		local b = Create("TextButton", {Position = UDim2.new(0, x, 0, 8), Size = UDim2.new(0, 28, 0, 24), BackgroundTransparency = 1, Font = Enum.Font.GothamBold, TextSize = 14, TextColor3 = THEME.TextDim, Text = txt, AutoButtonColor = false, Parent = NavBottom})
-		b.MouseEnter:Connect(function() b.TextColor3 = THEME.Text end)
-		b.MouseLeave:Connect(function() b.TextColor3 = THEME.TextDim end)
-		return b
-	end
-	BottomIcon(12, "◯")
-	BottomIcon(52, "+")
-	BottomIcon(185, "▂")
+	-- no bottom bar (clean, like request: only tabs + gear)
 
 	--// ===== RIGHT PANEL (module list) =====
 	local List = Create("Frame", {
@@ -319,11 +310,13 @@ function VapeLib:Window(opts)
 		local btnOrder = isMisc and (200 + #tabOrder) or (10 + #tabOrder)
 		if isMisc then MiscLabel.Visible = true end
 
-		-- nav button
+		-- nav button (Text scourge fix: must be empty or Roblox shows "Button" behind labels)
 		local Btn = Create("TextButton", {
+			Text = "",
 			Size = UDim2.new(1, 0, 0, 36), BackgroundColor3 = THEME.Panel,
-			Font = Enum.Font.GothamMedium, TextSize = 13, TextXAlignment = Enum.TextXAlignment.Left,
-			TextColor3 = THEME.TextDim, AutoButtonColor = false, LayoutOrder = btnOrder, Parent = NavScroll,
+			Font = Enum.Font.GothamMedium, TextSize = 13,
+			AutoButtonColor = false, LayoutOrder = btnOrder, Parent = NavScroll,
+			ClipsDescendants = true,
 		})
 		Corner(Btn, UDim.new(0, 6))
 		Create("TextLabel", {BackgroundTransparency = 1, Position = UDim2.new(0, 12, 0, 0), Size = UDim2.new(0, 22, 1, 0), Font = Enum.Font.Gotham, TextSize = 13, TextColor3 = THEME.TextDim, Text = icon, Parent = Btn})
